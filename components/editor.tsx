@@ -1,14 +1,16 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-import { Clock } from "lucide-react"
-import { Textarea } from "@/components/ui/textarea"
-import type { FileData } from "@/components/dashboard"
+import { Clock, Edit2 } from "lucide-react"
+import type { FileData } from "@/types"
 import { debounce } from "lodash"
 import { MediaDialog } from "@/components/media-dialog"
 import { EditorToolbar } from "@/components/editor-toolbar"
-import { MetadataSidebar } from "@/components/metadata-sidebar"
+import { UnifiedSidebar } from "@/components/unified-sidebar"
 import { getUserPreferences, saveUserPreferences } from "@/lib/user-preferences"
+import { EditorContent, handleToolbarAction, type CursorPosition } from "@/components/editor-content"
+import matter from "gray-matter"
+import { RenameFileDialog } from "@/components/rename-file-dialog"
 
 interface EditorProps {
   file: FileData
@@ -20,12 +22,14 @@ export function Editor({ file, onSave }: EditorProps) {
   const [lastSaved, setLastSaved] = useState<Date | null>(null)
   const [isMediaDialogOpen, setIsMediaDialogOpen] = useState(false)
   const [isSidebarVisible, setIsSidebarVisible] = useState(true)
+  const [fileTitle, setFileTitle] = useState("")
+  const [isRenameDialogOpen, setIsRenameDialogOpen] = useState(false)
 
   // Reference to the textarea element
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
   // Track cursor position for inserting at cursor
-  const [cursorPosition, setCursorPosition] = useState<{ start: number; end: number }>({ start: 0, end: 0 })
+  const [cursorPosition, setCursorPosition] = useState<CursorPosition>({ start: 0, end: 0 })
 
   // Use refs to track the previous file and whether we're currently saving
   const prevFileRef = useRef<FileData | null>(null)
@@ -85,17 +89,22 @@ export function Editor({ file, onSave }: EditorProps) {
     }
   }, [file])
 
+  // Add this effect to parse the front matter and extract the title
+  useEffect(() => {
+    if (file && file.content) {
+      try {
+        const { data } = matter(file.content || "")
+        setFileTitle(data.title || "")
+      } catch (error) {
+        console.error("Error parsing front matter:", error)
+        setFileTitle("")
+      }
+    }
+  }, [file])
+
   // Handle content changes from user input
   const handleContentChange = (newContent: string) => {
     setContent(newContent)
-
-    // Save cursor position
-    if (textareaRef.current) {
-      setCursorPosition({
-        start: textareaRef.current.selectionStart,
-        end: textareaRef.current.selectionEnd,
-      })
-    }
 
     // Only auto-save if we're past the initial load
     if (!initialLoadRef.current && file) {
@@ -135,85 +144,13 @@ export function Editor({ file, onSave }: EditorProps) {
   }
 
   // Handle toolbar actions
-  const handleToolbarAction = (action: string, value?: string) => {
+  const handleToolbarActionClick = (action: string, value?: string) => {
     if (!textareaRef.current) return
 
-    const textarea = textareaRef.current
-    const startPos = textarea.selectionStart
-    const endPos = textarea.selectionEnd
-    const selectedText = content.substring(startPos, endPos)
-
-    let newContent = content
-    let newCursorPos = endPos
-
-    switch (action) {
-      case "heading":
-        // Insert heading at the beginning of the line
-        const lineStart = content.lastIndexOf("\n", startPos - 1) + 1
-        newContent = content.substring(0, lineStart) + value + content.substring(lineStart)
-        newCursorPos = lineStart + (value?.length || 0)
-        break
-
-      case "bold":
-        newContent = content.substring(0, startPos) + `**${selectedText || "bold text"}**` + content.substring(endPos)
-        newCursorPos = startPos + 2 + (selectedText ? selectedText.length : 9)
-        break
-
-      case "italic":
-        newContent = content.substring(0, startPos) + `*${selectedText || "italic text"}*` + content.substring(endPos)
-        newCursorPos = startPos + 1 + (selectedText ? selectedText.length : 11)
-        break
-
-      case "list":
-        newContent = content.substring(0, startPos) + `- ${selectedText || "List item"}` + content.substring(endPos)
-        newCursorPos = startPos + 2 + (selectedText ? selectedText.length : 9)
-        break
-
-      case "ordered-list":
-        newContent = content.substring(0, startPos) + `1. ${selectedText || "List item"}` + content.substring(endPos)
-        newCursorPos = startPos + 3 + (selectedText ? selectedText.length : 9)
-        break
-
-      case "link":
-        newContent =
-          content.substring(0, startPos) + `[${selectedText || "Link text"}](url)` + content.substring(endPos)
-        newCursorPos = startPos + 1 + (selectedText ? selectedText.length : 9)
-        break
-
-      case "code":
-        newContent =
-          content.substring(0, startPos) + "```\n" + (selectedText || "code") + "\n```" + content.substring(endPos)
-        newCursorPos = startPos + 4 + (selectedText ? selectedText.length : 4)
-        break
-
-      case "quote":
-        // Insert quote at the beginning of the line
-        const quoteLineStart = content.lastIndexOf("\n", startPos - 1) + 1
-        newContent = content.substring(0, quoteLineStart) + "> " + content.substring(quoteLineStart)
-        newCursorPos = quoteLineStart + 2
-        break
-
-      case "undo":
-        textarea.focus()
-        document.execCommand("undo")
-        return
-
-      case "redo":
-        textarea.focus()
-        document.execCommand("redo")
-        return
-    }
-
-    setContent(newContent)
-
-    // Set the new cursor position after state update
-    setTimeout(() => {
-      textarea.focus()
-      textarea.setSelectionRange(newCursorPos, newCursorPos)
-    }, 0)
+    const newContent = handleToolbarAction(action, value, textareaRef, content, cursorPosition, handleContentChange)
 
     // Auto-save the updated content
-    if (!initialLoadRef.current && file) {
+    if (!initialLoadRef.current && file && newContent !== content) {
       debouncedSaveRef.current(file.path, newContent)
     }
   }
@@ -232,51 +169,116 @@ export function Editor({ file, onSave }: EditorProps) {
     }
   }, [])
 
+  // Handle file rename
+  const handleRename = async (newName: string) => {
+    if (!file) return
+
+    try {
+      const response = await fetch("/api/files/operations", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          operation: "rename",
+          sourcePath: file.path,
+          newName,
+          type: "file",
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error("Failed to rename file")
+      }
+
+      // Get the directory path
+      const dirPath = file.path.split("/").slice(0, -1).join("/")
+      const newPath = dirPath ? `${dirPath}/${newName}` : newName
+
+      // Update the file path
+      if (onSave) {
+        onSave(newPath, file.content)
+      }
+
+      setIsRenameDialogOpen(false)
+    } catch (error) {
+      console.error("Failed to rename file:", error)
+    }
+  }
+
+  // Safely get the filename from the path
+  const getFileName = () => {
+    if (!file || !file.path) return "Untitled"
+    const pathParts = file.path.split("/")
+    return pathParts[pathParts.length - 1] || "Untitled"
+  }
+
   return (
     <div className="h-full flex">
       {/* Editor */}
       <div className="flex-1 flex flex-col relative">
-        <div className="border-b p-2 flex items-center justify-between">
+        {/* Header */}
+        <div className="border-b p-2 flex items-center justify-between bg-gradient-secondary">
           <div className="flex-1 truncate">
-            <h2 className="text-sm font-semibold truncate">{file.path.split("/").pop()}</h2>
-            <p className="text-xs text-muted-foreground truncate">{file.path}</p>
+            <h2
+              className="text-sm font-semibold truncate flex items-center cursor-pointer hover:text-primary"
+              onClick={() => setIsRenameDialogOpen(true)}
+            >
+              {getFileName()} <Edit2 className="h-3 w-3 ml-1 opacity-50" />
+            </h2>
+            {fileTitle && <p className="text-xs text-muted-foreground truncate">{fileTitle}</p>}
           </div>
-          <div className="flex items-center text-xs text-muted-foreground">
+          {/* Autosave notice as a link instead of a button */}
+          <span
+            className="autosave-link"
+            onClick={() => {
+              // Toggle to history tab in sidebar
+              setIsSidebarVisible(true)
+              // Add this line to notify the UnifiedSidebar to switch to history tab
+              if (window) window.dispatchEvent(new CustomEvent("switch-to-history-tab"))
+            }}
+          >
             <Clock className="h-3 w-3 mr-1" />
             {lastSaved ? `Auto-saved ${lastSaved.toLocaleTimeString()}` : "Auto-save enabled"}
-          </div>
+          </span>
         </div>
 
         {/* Editor Toolbar */}
         <div className="px-2 pt-2">
-          <EditorToolbar onAction={handleToolbarAction} onImageClick={() => setIsMediaDialogOpen(true)} />
+          <EditorToolbar onAction={handleToolbarActionClick} onImageClick={() => setIsMediaDialogOpen(true)} />
         </div>
 
         {/* Markdown Editor */}
         <div className="flex-1 p-2 m-0">
-          <Textarea
-            ref={textareaRef}
-            value={content}
-            onChange={(e) => handleContentChange(e.target.value)}
-            className="w-full h-full min-h-[calc(100vh-12rem)] font-mono resize-none p-2 text-xs"
-            placeholder="# Start writing your markdown here..."
-            onSelect={() => {
-              if (textareaRef.current) {
-                setCursorPosition({
-                  start: textareaRef.current.selectionStart,
-                  end: textareaRef.current.selectionEnd,
-                })
-              }
-            }}
-          />
+          <EditorContent content={content} onChange={handleContentChange} />
         </div>
       </div>
 
-      {/* Metadata Sidebar - now on the right side */}
-      <MetadataSidebar content={content} isVisible={isSidebarVisible} onToggle={toggleSidebar} />
+      {/* Unified Sidebar - now with tabs for metadata and history */}
+      <UnifiedSidebar
+        content={content}
+        filePath={file?.path || ""}
+        isVisible={isSidebarVisible}
+        onToggle={toggleSidebar}
+        lastSaved={lastSaved}
+      />
 
       {/* Media Dialog for Image Selection */}
       <MediaDialog open={isMediaDialogOpen} onOpenChange={setIsMediaDialogOpen} onSelect={handleMediaSelect} />
+
+      {/* Rename File Dialog */}
+      {file && (
+        <RenameFileDialog
+          open={isRenameDialogOpen}
+          onOpenChange={setIsRenameDialogOpen}
+          item={{
+            key: file.path,
+            type: "file",
+          }}
+          onRename={handleRename}
+          isMarkdownFile={true}
+        />
+      )}
     </div>
   )
 }

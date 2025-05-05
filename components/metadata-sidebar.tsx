@@ -187,7 +187,20 @@ export function MetadataSidebar({ content, isVisible, onToggle }: MetadataSideba
       return <Badge>{value.length} items</Badge>
     }
 
-    if (typeof value === "object") {
+    if (typeof value === "object" && value !== null) {
+      // Try to handle date objects
+      if (value instanceof Date || (value.toISOString && typeof value.toISOString === "function")) {
+        try {
+          return (
+            <div className="flex items-center">
+              <CalendarIcon className="h-3 w-3 mr-1 text-muted-foreground" />
+              <span>{formatDate(value.toISOString())}</span>
+            </div>
+          )
+        } catch (e) {
+          // Fall back to default object handling
+        }
+      }
       return <Badge>Object</Badge>
     }
 
@@ -201,7 +214,7 @@ export function MetadataSidebar({ content, isVisible, onToggle }: MetadataSideba
         variant="ghost"
         size="sm"
         onClick={onToggle}
-        className="absolute right-0 top-1/2 -translate-y-1/2 h-24 w-6 rounded-r-none rounded-l-md border-r-0 bg-background z-10"
+        className="absolute right-0 top-1/2 -translate-y-1/2 h-24 w-6 rounded-r-none rounded-l-md border-r-0 bg-gradient-secondary hover:bg-gradient-primary hover:text-white transition-all z-10"
       >
         <ChevronLeft className="h-4 w-4" />
       </Button>
@@ -210,7 +223,7 @@ export function MetadataSidebar({ content, isVisible, onToggle }: MetadataSideba
 
   return (
     <div className="w-64 border-l relative">
-      <div className="p-3 border-b flex items-center justify-between">
+      <div className="p-3 border-b flex items-center justify-between bg-gradient-secondary">
         <h3 className="text-sm font-medium">Metadata</h3>
         <Button variant="ghost" size="sm" onClick={onToggle} className="h-7 w-7 p-0">
           <ChevronRight className="h-4 w-4" />

@@ -15,6 +15,11 @@ export const mockFileTree = [
         path: "blog/advanced-features.md",
         type: "file",
       },
+      {
+        name: "extremely-long-filename-with-detailed-description-and-keywords-for-seo-purposes.md",
+        path: "blog/extremely-long-filename-with-detailed-description-and-keywords-for-seo-purposes.md",
+        type: "file",
+      },
     ],
   },
   {
@@ -44,10 +49,22 @@ export const mockFileTree = [
     path: "contact.md",
     type: "file",
   },
+  {
+    name: "very-long-folder-name-that-contains-multiple-words-and-should-be-truncated-with-ellipsis",
+    path: "very-long-folder-name-that-contains-multiple-words-and-should-be-truncated-with-ellipsis",
+    type: "directory",
+    children: [
+      {
+        name: "nested-file-with-extremely-long-descriptive-name-that-exceeds-normal-display-width.md",
+        path: "very-long-folder-name-that-contains-multiple-words-and-should-be-truncated-with-ellipsis/nested-file-with-extremely-long-descriptive-name-that-exceeds-normal-display-width.md",
+        type: "file",
+      },
+    ],
+  },
 ]
 
 // Sample file content with front matter
-export const mockFiles = {
+export const mockFilesContent = {
   "about.md": `---
 title: About Our Company
 date: 2023-05-15
@@ -181,6 +198,28 @@ Project 2 builds on the success of Project 1 with new features.
 - React
 - GraphQL
 - PostgreSQL`,
+  "blog/extremely-long-filename-with-detailed-description-and-keywords-for-seo-purposes.md": `---
+title: This is an Extremely Long File Title That Will Test the Truncation Capabilities
+date: 2023-10-20
+isDraft: false
+thumbnail: https://example.com/images/long-filename.jpg
+keywords: very long filename, truncation test, ellipsis display, file explorer ui testing, responsive design
+---
+
+# Testing Long Filenames
+
+This file has an extremely long filename to test the truncation capabilities of the file explorer UI.`,
+
+  "very-long-folder-name-that-contains-multiple-words-and-should-be-truncated-with-ellipsis/nested-file-with-extremely-long-descriptive-name-that-exceeds-normal-display-width.md": `---
+title: Nested File with Extremely Long Name
+date: 2023-11-01
+isDraft: true
+thumbnail: https://example.com/images/nested-long-file.jpg
+---
+
+# Nested File with Long Name
+
+This file is nested inside a folder with a very long name to test both folder and file name truncation in the UI.`,
 }
 
 // Sample S3 media items
@@ -334,7 +373,7 @@ export const mockGitStatus = {
 // Helper function to get a mock file
 export function getMockFile(path: string) {
   return (
-    mockFiles[path] ||
+    mockFilesContent[path] ||
     `---
 title: New File
 date: ${new Date().toISOString().split("T")[0]}
@@ -353,3 +392,99 @@ This is a new file.`
 export function getMockS3Items(path: string) {
   return mockS3Items[path] || []
 }
+
+export const mockFileContentTree = [
+  {
+    name: "content",
+    path: "content",
+    type: "directory",
+    children: [
+      {
+        name: "blog",
+        path: "content/blog",
+        type: "directory",
+        children: [
+          {
+            name: "hello-world.md",
+            path: "content/blog/hello-world.md",
+            type: "file",
+            content:
+              "---\ntitle: Hello World\ndate: 2023-01-01\ndescription: This is my first post\n---\n\n# Hello World\n\nThis is my first post on my new blog!",
+          },
+          {
+            name: "second-post.md",
+            path: "content/blog/second-post.md",
+            type: "file",
+            content:
+              "---\ntitle: Second Post\ndate: 2023-01-02\ndescription: This is my second post\n---\n\n# Second Post\n\nThis is my second post on my new blog!",
+          },
+          {
+            name: "this-is-a-very-long-file-name-that-should-be-truncated-with-ellipsis-to-fit-the-available-space.md",
+            path: "content/blog/this-is-a-very-long-file-name-that-should-be-truncated-with-ellipsis-to-fit-the-available-space.md",
+            type: "file",
+            content:
+              "---\ntitle: Long File Name Test\ndate: 2023-01-03\ndescription: Testing truncation\n---\n\n# Long File Name Test\n\nThis file has a very long name to test truncation.",
+          },
+        ],
+      },
+      {
+        name: "pages",
+        path: "content/pages",
+        type: "directory",
+        children: [
+          {
+            name: "about.md",
+            path: "content/pages/about.md",
+            type: "file",
+            content: "---\ntitle: About\n---\n\n# About\n\nThis is the about page.",
+          },
+          {
+            name: "contact.md",
+            path: "content/pages/contact.md",
+            type: "file",
+            content: "---\ntitle: Contact\n---\n\n# Contact\n\nThis is the contact page.",
+          },
+        ],
+      },
+      {
+        name: "this-is-a-very-long-folder-name-that-should-be-truncated-with-ellipsis-to-fit-the-available-space",
+        path: "content/this-is-a-very-long-folder-name-that-should-be-truncated-with-ellipsis-to-fit-the-available-space",
+        type: "directory",
+        children: [
+          {
+            name: "example.md",
+            path: "content/this-is-a-very-long-folder-name-that-should-be-truncated-with-ellipsis-to-fit-the-available-space/example.md",
+            type: "file",
+            content:
+              "---\ntitle: Example\n---\n\n# Example\n\nThis is an example file in a folder with a very long name.",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    name: "public",
+    path: "public",
+    type: "directory",
+    children: [
+      {
+        name: "images",
+        path: "public/images",
+        type: "directory",
+        children: [
+          {
+            name: "logo.png",
+            path: "public/images/logo.png",
+            type: "file",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    name: "README.md",
+    path: "README.md",
+    type: "file",
+    content: "# My Website\n\nThis is my website built with Next.js and Markdown.",
+  },
+]

@@ -1,0 +1,220 @@
+"use client"
+
+import { useState } from "react"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { ImageIcon, Loader2, ArrowUp, ArrowDown, Trash } from "lucide-react"
+import { toast } from "@/components/ui/use-toast"
+import { getImageField } from "@/utils/media-utils"
+
+interface ImageItemProps {
+  item: any
+  index: number
+  path: string
+  onChange: (path: string, value: any) => void
+  onRemoveItem: (path: string, index: number) => void
+  onMoveUp: (index: number) => void
+  onMoveDown: (index: number) => void
+  openMediaDialog: (index: number) => void
+  isFirst: boolean
+  isLast: boolean
+}
+
+export function ImageItem({
+  item,
+  index,
+  path,
+  onChange,
+  onRemoveItem,
+  onMoveUp,
+  onMoveDown,
+  openMediaDialog,
+  isFirst,
+  isLast,
+}: ImageItemProps) {
+  const [generatingAltText, setGeneratingAltText] = useState(false)
+
+  const imageField = getImageField(item)
+  const imageUrl = item[imageField] || ""
+  const altText = item.alt || ""
+
+  // Function to handle URL change and trigger alt text generation
+  const handleUrlChange = (newUrl: string) => {
+    const newItem = {
+      ...item,
+      [imageField]: newUrl,
+    }
+
+    // If we're using a non-standard field, also set the url field
+    if (imageField !== "url") {
+      newItem.url = newUrl
+    }
+
+    onChange(`${path}[${index}]`, newItem)
+
+    // If the URL is valid and the alt text is empty, generate alt text
+    if (newUrl && (!altText || altText === "")) {
+      generateAltText(newUrl)
+    }
+  }
+
+  // Function to generate alt text using Gemini AI
+  const generateAltText = async (imageUrl: string) => {
+    if (!imageUrl) return
+
+    // Set loading state
+    setGeneratingAltText(true)
+
+    try {
+      const response = await fetch("/api/ai/generate-alt-text", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ imageUrl }),
+      })
+
+      if (!response.ok) {
+        throw new Error("Failed to generate alt text")
+      }
+
+      const data = await response.json()
+
+      if (data.altText) {
+        // Update the alt text for this image
+        const newItem = {
+          ...item,
+          alt: data.altText,
+        }
+        onChange(`${path}[${index}]`, newItem)
+
+        toast({
+          title: "Alt text generated",
+          description: "AI-generated alt text has been added to the image",
+        })
+      }
+    } catch (error) {
+      console.error("Error generating alt text:", error)
+      toast({
+        title: "Error",
+        description: "Failed to generate alt text",
+        variant: "destructive",
+      })
+    } finally {
+      // Clear loading state
+      setGeneratingAltText(false)
+    }
+  }
+
+  return (
+    <Card className="border overflow-hidden">
+      <div className="relative aspect-video bg-muted">
+        {imageUrl ? (
+          <img
+            src={imageUrl || "/placeholder.svg"}
+            alt={altText || `Image ${index + 1}`}
+            className="w-full h-full object-cover"
+            onError={(e) => {
+              // If image fails to load, show placeholder
+              e.currentTarget.src = "/placeholder.svg?height=200&width=300"
+            }}
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center">
+            <ImageIcon className="h-10 w-10 text-muted-foreground" />
+          </div>
+        )}
+        <div className="absolute top-2 right-2 flex gap-1">
+          <Button
+            variant="outline"
+            size="icon"
+            className="h-7 w-7 bg-background/80 hover:bg-background"
+            onClick={() => onRemoveItem(path, index)}
+          >
+            <Trash className="h-3 w-3" />
+          </Button>
+        </div>
+      </div>
+      <CardContent className="p-3 space-y-2">
+        <div className="flex justify-between items-center mb-2">
+          <span className="text-xs font-medium">Image {index + 1}</span>
+          <div className="flex gap-1">
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-6 w-6"
+              onClick={() => onMoveUp(index)}
+              disabled={isFirst}
+            >
+              <ArrowUp className="h-3 w-3" />
+            </Button>
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-6 w-6"
+              onClick={() => onMoveDown(index)}
+              disabled={isLast}
+            >
+              <ArrowDown className="h-3 w-3" />
+            </Button>
+          </div>
+        </div>
+
+        {/* URL Field */}
+        <div className="space-y-1">
+          <Label htmlFor={`${path}-${index}-url`} className="text-xs">
+            URL
+          </Label>
+          <div className="flex gap-1">
+            <Input
+              id={`${path}-${index}-url`}
+              value={imageUrl}
+              onChange={(e) => handleUrlChange(e.target.value)}
+              className="h-8 text-xs"
+            />
+            <Button variant="outline" size="sm" className="h-8 px-2" onClick={() => openMediaDialog(index)}>
+              <ImageIcon className="h-3 w-3" />
+            </Button>
+          </div>
+        </div>
+
+        {/* Alt Text Field */}
+        <div className="space-y-1">
+          <div className="flex items-center justify-between">
+            <Label htmlFor={`${path}-${index}-alt`} className="text-xs">
+              Alt Text
+            </Label>
+            {imageUrl && !generatingAltText && !altText && (
+              <Button variant="ghost" size="sm" className="h-5 px-2 text-xs" onClick={() => generateAltText(imageUrl)}>
+                Generate
+              </Button>
+            )}
+          </div>
+          <div className="relative">
+            <Input
+              id={`${path}-${index}-alt`}
+              value={altText}
+              onChange={(e) => {
+                const newItem = {
+                  ...item,
+                  alt: e.target.value,
+                }
+                onChange(`${path}[${index}]`, newItem)
+              }}
+              className="h-8 text-xs"
+              placeholder={generatingAltText ? "Generating alt text..." : "Describe the image"}
+              disabled={generatingAltText}
+            />
+            {generatingAltText && (
+              <div className="absolute right-2 top-1/2 transform -translate-y-1/2">
+                <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+              </div>
+            )}
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  )
+}

@@ -7,9 +7,9 @@ interface SidebarProps {
 
 export function Sidebar({ children }: SidebarProps) {
   return (
-    <div className="h-full border-r">
-      <div className="p-4">
-        <ScrollArea className="h-[calc(100vh-8rem)]">{children}</ScrollArea>
+    <div className="h-full border-r flex flex-col">
+      <div className="p-4 flex-1 overflow-hidden">
+        <ScrollArea className="h-full">{children}</ScrollArea>
       </div>
     </div>
   )

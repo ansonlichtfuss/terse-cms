@@ -10,10 +10,10 @@ interface GitCommitDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
   onCommit: (message: string) => void
-  modifiedFiles: string[]
+  modifiedFiles?: string[]
 }
 
-export function GitCommitDialog({ open, onOpenChange, onCommit, modifiedFiles }: GitCommitDialogProps) {
+export function GitCommitDialog({ open, onOpenChange, onCommit, modifiedFiles = [] }: GitCommitDialogProps) {
   const [commitMessage, setCommitMessage] = useState(`CMS: Updated files at ${new Date().toLocaleString()}`)
 
   const handleCommit = () => {

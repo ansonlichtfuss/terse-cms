@@ -10,18 +10,37 @@ import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/componen
 import { useMediaQuery } from "@/hooks/use-media-query"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { Button } from "@/components/ui/button"
-import { Menu, Save, ChevronDown, RotateCcw } from "lucide-react"
+import { Menu, Save, ChevronDown, RotateCcw, Moon, Sun } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { GitCommitDialog } from "@/components/git-commit-dialog"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { toast } from "@/components/ui/use-toast"
 import { ConfirmationDialog } from "@/components/confirmation-dialog"
+import { Logo } from "@/components/logo"
+import { useTheme } from "next-themes"
 import packageInfo from "../package.json"
 
 export interface FileData {
   path: string
   content: string
   isModified: boolean
+}
+
+function ThemeToggle() {
+  const { theme, setTheme } = useTheme()
+
+  return (
+    <Button
+      variant="ghost"
+      size="sm"
+      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+      className="h-7 w-7 p-0 mr-2"
+    >
+      <Sun className="h-[1.1rem] w-[1.1rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+      <Moon className="absolute h-[1.1rem] w-[1.1rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+      <span className="sr-only">Toggle theme</span>
+    </Button>
+  )
 }
 
 export function Dashboard() {
@@ -41,6 +60,7 @@ export function Dashboard() {
         setModifiedFiles(data.modifiedFiles || [])
       } catch (error) {
         console.error("Failed to fetch git status:", error)
+        setModifiedFiles([]) // Ensure modifiedFiles is always an array
       }
     }
 
@@ -176,46 +196,56 @@ export function Dashboard() {
   }
 
   const renderSidebarContent = () => (
-    <Tabs defaultValue="files" value={selectedTab} onValueChange={setSelectedTab} className="w-full">
-      <TabsList className="grid w-full grid-cols-2 h-7">
-        <TabsTrigger value="files" className="text-xs">
-          Files
-        </TabsTrigger>
-        <TabsTrigger value="media" className="text-xs">
-          Media
-        </TabsTrigger>
-      </TabsList>
-      <TabsContent value="files" className="mt-2">
-        <FileTree onFileSelect={handleFileSelect} />
-      </TabsContent>
-      <TabsContent value="media" className="mt-2">
-        <MediaManager
-          onSelect={(url) => {
-            if (selectedFile) {
-              // Logic to insert media URL into editor or YAML front matter
-            }
-          }}
-          inSidebar={true}
-        />
-      </TabsContent>
-    </Tabs>
+    <div className="tabs-container">
+      <Tabs
+        defaultValue="files"
+        value={selectedTab}
+        onValueChange={setSelectedTab}
+        className="w-full minimal-tabs compact-tabs"
+      >
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="files" className="text-xs">
+            Files
+          </TabsTrigger>
+          <TabsTrigger value="media" className="text-xs">
+            Media
+          </TabsTrigger>
+        </TabsList>
+        <div className="tabs-content">
+          <TabsContent value="files" className="tab-panel mt-2">
+            <FileTree onFileSelect={handleFileSelect} />
+          </TabsContent>
+          <TabsContent value="media" className="tab-panel mt-2">
+            <MediaManager
+              onSelect={(url) => {
+                if (selectedFile) {
+                  // Logic to insert media URL into editor or YAML front matter
+                }
+              }}
+              inSidebar={true}
+            />
+          </TabsContent>
+        </div>
+      </Tabs>
+    </div>
   )
 
   return (
     <div className="h-screen flex flex-col">
-      <header className="border-b px-3 py-2 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <h1 className="text-sm font-semibold">Markdown CMS</h1>
+      <header className="border-b flex items-center justify-between bg-dot-pattern">
+        <div className="flex items-center gap-2 px-3 py-2">
+          <Logo size="sm" withIcon={false} />
           <span className="text-xs text-muted-foreground">v{packageInfo.version}</span>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 px-3 py-2">
+          <ThemeToggle />
           <div className="flex">
             <Button
               variant="outline"
               size="sm"
               onClick={handleCommit}
               disabled={modifiedFiles.length === 0}
-              className="flex items-center gap-1 rounded-r-none border-r-0 h-7 text-xs"
+              className="flex items-center gap-1 rounded-r-none border-r-0 h-7 text-xs bg-gradient-secondary hover:bg-gradient-primary hover:text-white transition-all"
             >
               <Save className="h-3 w-3 mr-1" />
               Commit
@@ -231,7 +261,7 @@ export function Dashboard() {
                   variant="outline"
                   size="sm"
                   disabled={modifiedFiles.length === 0}
-                  className="px-1 rounded-l-none h-7"
+                  className="px-1 rounded-l-none h-7 bg-gradient-secondary hover:bg-gradient-primary hover:text-white transition-all"
                 >
                   <ChevronDown className="h-3 w-3" />
                 </Button>

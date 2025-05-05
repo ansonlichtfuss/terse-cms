@@ -1,30 +1,21 @@
 "use client"
 
 import { useState } from "react"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
-import { Calendar } from "@/components/ui/calendar"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { format, isValid, parseISO } from "date-fns"
-import { CalendarIcon, Plus, Trash, ChevronDown, ChevronRight, ImageIcon } from "lucide-react"
-import { cn } from "@/lib/utils"
 import { Card, CardContent } from "@/components/ui/card"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
+import { Label } from "@/components/ui/label"
+import { Plus, Trash, ChevronDown, ChevronRight } from "lucide-react"
+import { isImageArray, isImageUrl } from "@/utils/media-utils"
+import { isDateString } from "@/utils/date-utils"
+import { BooleanField } from "@/components/field-renderers/boolean-field"
+import { NumberField } from "@/components/field-renderers/number-field"
+import { DateField } from "@/components/field-renderers/date-field"
+import { ImageField } from "@/components/field-renderers/image-field"
+import { TextField } from "@/components/field-renderers/text-field"
+import { TextareaField } from "@/components/field-renderers/textarea-field"
 import { ImageArrayField } from "@/components/image-array-field"
-import { MediaDialog } from "@/components/media-dialog"
-
-interface DynamicFieldProps {
-  name: string
-  value: any
-  path?: string
-  onChange: (path: string, value: any) => void
-  onAddItem?: (path: string) => void
-  onRemoveItem?: (path: string, index: number) => void
-  level?: number
-}
+import type { DynamicFieldProps } from "@/types"
 
 export function DynamicField({
   name,
@@ -36,7 +27,6 @@ export function DynamicField({
   level = 0,
 }: DynamicFieldProps) {
   const [isOpen, setIsOpen] = useState(level < 1)
-  const [isMediaDialogOpen, setIsMediaDialogOpen] = useState(false)
 
   // Determine the field type
   const getFieldType = (value: any): string => {
@@ -45,17 +35,12 @@ export function DynamicField({
     if (typeof value === "number") return "number"
     if (typeof value === "string") {
       // Check if it's a date string
-      try {
-        const date = parseISO(value)
-        if (isValid(date) && value.includes("T")) {
-          return "date"
-        }
-      } catch (e) {
-        // Not a valid date string
+      if (isDateString(value)) {
+        return "date"
       }
 
       // Check if it's an image URL
-      if (/\.(jpg|jpeg|png|gif|webp|svg)($|\?)/.test(value) || value.includes("media") || value.includes("image")) {
+      if (isImageUrl(value)) {
         return "image"
       }
 
@@ -77,40 +62,6 @@ export function DynamicField({
     return "string" // Default
   }
 
-  // Helper to determine if an array contains image objects
-  const isImageArray = (arr: any[]): boolean => {
-    if (arr.length === 0 || typeof arr[0] !== "object") return false
-
-    // Check if the array name suggests images
-    if (
-      name.toLowerCase().includes("image") ||
-      name.toLowerCase().includes("photo") ||
-      name.toLowerCase().includes("gallery")
-    ) {
-      return true
-    }
-
-    // Check if objects have image-related properties
-    const imageProps = ["image", "url", "src", "source", "thumbnail"]
-    return arr.some((item) => {
-      return Object.keys(item).some(
-        (key) =>
-          imageProps.includes(key.toLowerCase()) ||
-          (typeof item[key] === "string" &&
-            (/\.(jpg|jpeg|png|gif|webp|svg)($|\?)/.test(item[key]) ||
-              item[key].includes("media") ||
-              item[key].includes("image"))),
-      )
-    })
-  }
-
-  const fieldType = getFieldType(value)
-
-  const handleMediaSelect = (url: string) => {
-    onChange(path, url)
-    setIsMediaDialogOpen(false)
-  }
-
   // Custom function to add a new image item with only url and alt fields
   const handleAddImageItem = (path: string) => {
     const newItem = {
@@ -125,129 +76,25 @@ export function DynamicField({
     }
   }
 
+  const fieldType = getFieldType(value)
+
   // Render field based on type
   const renderField = () => {
     switch (fieldType) {
       case "boolean":
-        return (
-          <div className="space-y-1">
-            <div className="flex items-center space-x-2">
-              <Checkbox id={path} checked={value} onCheckedChange={(checked) => onChange(path, checked)} />
-              <Label htmlFor={path} className="capitalize">
-                {name}
-              </Label>
-            </div>
-          </div>
-        )
+        return <BooleanField name={name} value={value} path={path} onChange={onChange} />
 
       case "number":
-        return (
-          <div className="space-y-1">
-            <Label htmlFor={path} className="capitalize text-xs">
-              {name}
-            </Label>
-            <Input
-              id={path}
-              type="number"
-              value={value}
-              onChange={(e) => onChange(path, Number(e.target.value))}
-              className="h-7 text-xs"
-            />
-          </div>
-        )
+        return <NumberField name={name} value={value} path={path} onChange={onChange} />
 
       case "date":
-        return (
-          <div className="space-y-1">
-            <Label htmlFor={path} className="capitalize text-xs">
-              {name}
-            </Label>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  className={cn(
-                    "w-full justify-start text-left font-normal h-7 text-xs",
-                    !value && "text-muted-foreground",
-                  )}
-                >
-                  <CalendarIcon className="mr-2 h-3 w-3" />
-                  {value ? format(new Date(value), "PPP") : "Pick a date"}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0">
-                <Calendar
-                  mode="single"
-                  selected={value ? new Date(value) : undefined}
-                  onSelect={(date) => {
-                    if (date) {
-                      // Preserve time component if it exists
-                      const currentDate = value ? new Date(value) : new Date()
-                      date.setHours(currentDate.getHours())
-                      date.setMinutes(currentDate.getMinutes())
-                      date.setSeconds(currentDate.getSeconds())
-                      onChange(path, date.toISOString())
-                    } else {
-                      onChange(path, null)
-                    }
-                  }}
-                  initialFocus
-                />
-              </PopoverContent>
-            </Popover>
-          </div>
-        )
+        return <DateField name={name} value={value} path={path} onChange={onChange} />
 
       case "image":
-        return (
-          <div className="grid grid-cols-2 gap-2 items-start">
-            <Label htmlFor={path} className="capitalize text-xs pt-2">
-              {name}
-            </Label>
-            <div className="space-y-2">
-              <div className="flex gap-1">
-                <Input
-                  id={path}
-                  value={value}
-                  onChange={(e) => onChange(path, e.target.value)}
-                  className="h-7 text-xs"
-                />
-                <Button variant="outline" size="sm" onClick={() => setIsMediaDialogOpen(true)} className="h-7">
-                  <ImageIcon className="h-3 w-3" />
-                </Button>
-              </div>
-              {value && (
-                <div className="relative aspect-video w-full max-w-md bg-muted rounded-md overflow-hidden">
-                  <img
-                    src={value || "/placeholder.svg"}
-                    alt={name}
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      // If image fails to load, show placeholder
-                      e.currentTarget.src = "/placeholder.svg?height=200&width=300"
-                    }}
-                  />
-                </div>
-              )}
-            </div>
-          </div>
-        )
+        return <ImageField name={name} value={value} path={path} onChange={onChange} />
 
       case "textarea":
-        return (
-          <div className="space-y-1">
-            <Label htmlFor={path} className="capitalize text-xs">
-              {name}
-            </Label>
-            <Textarea
-              id={path}
-              value={value}
-              onChange={(e) => onChange(path, e.target.value)}
-              rows={4}
-              className="text-xs"
-            />
-          </div>
-        )
+        return <TextareaField name={name} value={value} path={path} onChange={onChange} />
 
       case "image-array":
         return (
@@ -310,14 +157,15 @@ export function DynamicField({
                       ))
                     ) : (
                       // If array contains primitive values
-                      <Input
+                      <TextField
+                        name={`Item ${index + 1}`}
                         value={item}
-                        onChange={(e) => {
-                          const newValue = [...value]
-                          newValue[index] = e.target.value
-                          onChange(path, newValue)
+                        path={`${path}[${index}]`}
+                        onChange={(_, newValue) => {
+                          const newArray = [...value]
+                          newArray[index] = newValue
+                          onChange(path, newArray)
                         }}
-                        className="h-7 text-xs"
                       />
                     )}
                   </CardContent>
@@ -354,37 +202,12 @@ export function DynamicField({
         )
 
       case "null":
-        return (
-          <div className="space-y-1">
-            <Label htmlFor={path} className="capitalize text-xs">
-              {name}
-            </Label>
-            <Input
-              id={path}
-              value=""
-              placeholder="Empty value"
-              onChange={(e) => onChange(path, e.target.value)}
-              className="h-7 text-xs"
-            />
-          </div>
-        )
+        return <TextField name={name} value="" path={path} onChange={onChange} />
 
       default:
-        return (
-          <div className="space-y-1">
-            <Label htmlFor={path} className="capitalize text-xs">
-              {name}
-            </Label>
-            <Input id={path} value={value} onChange={(e) => onChange(path, e.target.value)} className="h-7 text-xs" />
-          </div>
-        )
+        return <TextField name={name} value={value} path={path} onChange={onChange} />
     }
   }
 
-  return (
-    <div className="space-y-2">
-      {renderField()}
-      <MediaDialog open={isMediaDialogOpen} onOpenChange={setIsMediaDialogOpen} onSelect={handleMediaSelect} />
-    </div>
-  )
+  return <div className="space-y-2">{renderField()}</div>
 }
