@@ -1,16 +1,7 @@
 import { NextResponse } from "next/server"
 
-// Only import Node.js modules on the server
-let simpleGit
-
 // Check if we're in a browser environment
 const isBrowser = typeof window !== "undefined"
-
-if (!isBrowser) {
-  // Only import these on the server
-  const git = require("simple-git")
-  simpleGit = git.simpleGit
-}
 
 // Get the root directory from environment variable or use a default
 const ROOT_DIR = process.env.MARKDOWN_ROOT_DIR || "/app/content"
@@ -47,6 +38,9 @@ export async function POST(request: Request) {
     if (!message) {
       return NextResponse.json({ error: "Commit message is required" }, { status: 400 })
     }
+
+    // Dynamically import simple-git only on the server
+    const { simpleGit } = await import("simple-git")
 
     const git = simpleGit(ROOT_DIR)
 

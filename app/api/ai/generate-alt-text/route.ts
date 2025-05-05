@@ -1,15 +1,7 @@
 import { NextResponse } from "next/server"
 
-// Only import Google AI SDK on the server
-let GoogleGenerativeAI
-
 // Check if we're in a browser environment
 const isBrowser = typeof window !== "undefined"
-
-if (!isBrowser) {
-  // Only import these on the server
-  GoogleGenerativeAI = require("@google/generative-ai").GoogleGenerativeAI
-}
 
 export async function POST(request: Request) {
   // Always use mock data in browser or if mock mode is enabled
@@ -59,6 +51,9 @@ export async function POST(request: Request) {
     if (!apiKey) {
       return NextResponse.json({ error: "Gemini API key not configured" }, { status: 500 })
     }
+
+    // Dynamically import Google AI SDK only on the server
+    const { GoogleGenerativeAI } = await import("@google/generative-ai")
 
     // Initialize the Gemini API
     const genAI = new GoogleGenerativeAI(apiKey)

@@ -1,21 +1,8 @@
 import { NextResponse } from "next/server"
 import { getMockFile } from "@/lib/mock-data"
 
-// Only import Node.js modules on the server
-let fs, path, matter
-
 // Check if we're in a browser environment
 const isBrowser = typeof window !== "undefined"
-
-if (!isBrowser) {
-  // Only import these on the server
-  fs = require("fs")
-  path = require("path")
-  matter = require("gray-matter")
-}
-
-// Get the root directory from environment variable or use a default
-const ROOT_DIR = process.env.MARKDOWN_ROOT_DIR || "/app/content"
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
@@ -37,6 +24,13 @@ export async function GET(request: Request) {
   }
 
   try {
+    // Dynamically import Node.js modules only on the server
+    const fs = await import("fs")
+    const path = await import("path")
+
+    // Get the root directory from environment variable or use a default
+    const ROOT_DIR = process.env.MARKDOWN_ROOT_DIR || "/app/content"
+
     const fullPath = path.join(ROOT_DIR, filePath)
 
     // Check if file exists
@@ -73,6 +67,13 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: true })
     }
 
+    // Dynamically import Node.js modules only on the server
+    const fs = await import("fs")
+    const path = await import("path")
+
+    // Get the root directory from environment variable or use a default
+    const ROOT_DIR = process.env.MARKDOWN_ROOT_DIR || "/app/content"
+
     const fullPath = path.join(ROOT_DIR, filePath)
 
     // Create directory if it doesn't exist
@@ -106,6 +107,13 @@ export async function DELETE(request: Request) {
       // In mock mode, just return success
       return NextResponse.json({ success: true })
     }
+
+    // Dynamically import Node.js modules only on the server
+    const fs = await import("fs")
+    const path = await import("path")
+
+    // Get the root directory from environment variable or use a default
+    const ROOT_DIR = process.env.MARKDOWN_ROOT_DIR || "/app/content"
 
     const fullPath = path.join(ROOT_DIR, filePath)
 

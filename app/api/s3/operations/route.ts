@@ -1,36 +1,7 @@
 import { NextResponse } from "next/server"
 
-// Only import AWS SDK on the server
-let S3Client, CopyObjectCommand, DeleteObjectCommand
-
 // Check if we're in a browser environment
 const isBrowser = typeof window !== "undefined"
-
-if (!isBrowser) {
-  // Only import these on the server
-  const AWS = require("@aws-sdk/client-s3")
-  S3Client = AWS.S3Client
-  CopyObjectCommand = AWS.CopyObjectCommand
-  DeleteObjectCommand = AWS.DeleteObjectCommand
-}
-
-// Get S3 configuration from environment variables
-const S3_BUCKET = process.env.S3_BUCKET || ""
-const S3_REGION = process.env.S3_REGION || "us-east-1"
-const S3_ACCESS_KEY_ID = process.env.S3_ACCESS_KEY_ID || ""
-const S3_SECRET_ACCESS_KEY = process.env.S3_SECRET_ACCESS_KEY || ""
-
-// Create S3 client only on the server
-let s3Client
-if (!isBrowser) {
-  s3Client = new S3Client({
-    region: S3_REGION,
-    credentials: {
-      accessKeyId: S3_ACCESS_KEY_ID,
-      secretAccessKey: S3_SECRET_ACCESS_KEY,
-    },
-  })
-}
 
 export async function POST(request: Request) {
   // Always use mock data in browser or if mock mode is enabled
@@ -55,6 +26,27 @@ export async function POST(request: Request) {
           message: `File ${operation === "move" ? "moved" : "renamed"} successfully`,
         })
       }
+
+      // Dynamically import AWS SDK only on the server
+      const AWS = await import("@aws-sdk/client-s3")
+      const S3Client = AWS.S3Client
+      const CopyObjectCommand = AWS.CopyObjectCommand
+      const DeleteObjectCommand = AWS.DeleteObjectCommand
+
+      // Get S3 configuration from environment variables
+      const S3_BUCKET = process.env.S3_BUCKET || ""
+      const S3_REGION = process.env.S3_REGION || "us-east-1"
+      const S3_ACCESS_KEY_ID = process.env.S3_ACCESS_KEY_ID || ""
+      const S3_SECRET_ACCESS_KEY = process.env.S3_SECRET_ACCESS_KEY || ""
+
+      // Create S3 client
+      const s3Client = new S3Client({
+        region: S3_REGION,
+        credentials: {
+          accessKeyId: S3_ACCESS_KEY_ID,
+          secretAccessKey: S3_SECRET_ACCESS_KEY,
+        },
+      })
 
       // Copy the object to the new location
       const copyCommand = new CopyObjectCommand({

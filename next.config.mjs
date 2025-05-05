@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   experimental: {
-    serverComponentsExternalPackages: ["simple-git"],
+    serverComponentsExternalPackages: ["simple-git", "@google/generative-ai", "@aws-sdk/client-s3"],
   },
   eslint: {
     ignoreDuringBuilds: true,
@@ -17,6 +17,9 @@ const nextConfig = {
     config.externals.push({
       'utf-8-validate': 'commonjs utf-8-validate',
       'bufferutil': 'commonjs bufferutil',
+      'simple-git': 'commonjs simple-git',
+      '@google/generative-ai': 'commonjs @google/generative-ai',
+      '@aws-sdk/client-s3': 'commonjs @aws-sdk/client-s3'
     })
     return config
   },

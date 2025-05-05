@@ -59,7 +59,12 @@
     "vaul": "^0.9.6",
     "zod": "^3.24.1",
     "gray-matter": "latest",
-    "lodash": "latest"
+    "lodash": "latest",
+    "@aws-sdk/client-s3": "latest",
+    "@google/generative-ai": "latest",
+    "simple-git": "latest",
+    "fs": "latest",
+    "path": "latest"
   },
   "devDependencies": {
     "@types/node": "^22",

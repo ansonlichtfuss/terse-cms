@@ -1,19 +1,7 @@
 import { NextResponse } from "next/server"
 
-// Only import Node.js modules on the server
-let fs, path
-
 // Check if we're in a browser environment
 const isBrowser = typeof window !== "undefined"
-
-if (!isBrowser) {
-  // Only import these on the server
-  fs = require("fs")
-  path = require("path")
-}
-
-// Get the root directory from environment variable or use a default
-const ROOT_DIR = process.env.MARKDOWN_ROOT_DIR || "/app/content"
 
 export async function POST(request: Request) {
   // Always use mock data in browser or if mock mode is enabled
@@ -33,6 +21,13 @@ export async function POST(request: Request) {
         message: `File ${operation === "move" ? "moved" : "renamed"} successfully`,
       })
     }
+
+    // Dynamically import Node.js modules only on the server
+    const fs = await import("fs")
+    const path = await import("path")
+
+    // Get the root directory from environment variable or use a default
+    const ROOT_DIR = process.env.MARKDOWN_ROOT_DIR || "/app/content"
 
     const fullSourcePath = path.join(ROOT_DIR, sourcePath)
 

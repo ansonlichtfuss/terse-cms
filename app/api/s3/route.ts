@@ -1,38 +1,8 @@
 import { NextResponse } from "next/server"
 import { getMockS3Items } from "@/lib/mock-data"
 
-// Only import AWS SDK on the server
-let S3Client, ListObjectsV2Command, DeleteObjectCommand, DeleteObjectsCommand
-
 // Check if we're in a browser environment
 const isBrowser = typeof window !== "undefined"
-
-if (!isBrowser) {
-  // Only import these on the server
-  const AWS = require("@aws-sdk/client-s3")
-  S3Client = AWS.S3Client
-  ListObjectsV2Command = AWS.ListObjectsV2Command
-  DeleteObjectCommand = AWS.DeleteObjectCommand
-  DeleteObjectsCommand = AWS.DeleteObjectsCommand
-}
-
-// Get S3 configuration from environment variables
-const S3_BUCKET = process.env.S3_BUCKET || ""
-const S3_REGION = process.env.S3_REGION || "us-east-1"
-const S3_ACCESS_KEY_ID = process.env.S3_ACCESS_KEY_ID || ""
-const S3_SECRET_ACCESS_KEY = process.env.S3_SECRET_ACCESS_KEY || ""
-
-// Create S3 client only on the server
-let s3Client
-if (!isBrowser) {
-  s3Client = new S3Client({
-    region: S3_REGION,
-    credentials: {
-      accessKeyId: S3_ACCESS_KEY_ID,
-      secretAccessKey: S3_SECRET_ACCESS_KEY,
-    },
-  })
-}
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
@@ -49,6 +19,26 @@ export async function GET(request: Request) {
   }
 
   try {
+    // Dynamically import AWS SDK only on the server
+    const AWS = await import("@aws-sdk/client-s3")
+    const S3Client = AWS.S3Client
+    const ListObjectsV2Command = AWS.ListObjectsV2Command
+
+    // Get S3 configuration from environment variables
+    const S3_BUCKET = process.env.S3_BUCKET || ""
+    const S3_REGION = process.env.S3_REGION || "us-east-1"
+    const S3_ACCESS_KEY_ID = process.env.S3_ACCESS_KEY_ID || ""
+    const S3_SECRET_ACCESS_KEY = process.env.S3_SECRET_ACCESS_KEY || ""
+
+    // Create S3 client
+    const s3Client = new S3Client({
+      region: S3_REGION,
+      credentials: {
+        accessKeyId: S3_ACCESS_KEY_ID,
+        secretAccessKey: S3_SECRET_ACCESS_KEY,
+      },
+    })
+
     // List objects in the bucket
     const command = new ListObjectsV2Command({
       Bucket: S3_BUCKET,
@@ -94,6 +84,28 @@ export async function DELETE(request: Request) {
   }
 
   try {
+    // Dynamically import AWS SDK only on the server
+    const AWS = await import("@aws-sdk/client-s3")
+    const S3Client = AWS.S3Client
+    const DeleteObjectCommand = AWS.DeleteObjectCommand
+    const DeleteObjectsCommand = AWS.DeleteObjectsCommand
+    const ListObjectsV2Command = AWS.ListObjectsV2Command
+
+    // Get S3 configuration from environment variables
+    const S3_BUCKET = process.env.S3_BUCKET || ""
+    const S3_REGION = process.env.S3_REGION || "us-east-1"
+    const S3_ACCESS_KEY_ID = process.env.S3_ACCESS_KEY_ID || ""
+    const S3_SECRET_ACCESS_KEY = process.env.S3_SECRET_ACCESS_KEY || ""
+
+    // Create S3 client
+    const s3Client = new S3Client({
+      region: S3_REGION,
+      credentials: {
+        accessKeyId: S3_ACCESS_KEY_ID,
+        secretAccessKey: S3_SECRET_ACCESS_KEY,
+      },
+    })
+
     const { key, type } = await request.json()
 
     if (type === "file") {
