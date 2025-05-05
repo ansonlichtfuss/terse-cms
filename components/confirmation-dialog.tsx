@@ -1,0 +1,75 @@
+"use client"
+
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
+import { ScrollArea } from "@/components/ui/scroll-area"
+
+interface ConfirmationDialogProps {
+  open: boolean
+  onOpenChange: (open: boolean) => void
+  title: string
+  description: string
+  confirmLabel?: string
+  cancelLabel?: string
+  onConfirm: () => void
+  destructive?: boolean
+  itemsList?: string[]
+}
+
+export function ConfirmationDialog({
+  open,
+  onOpenChange,
+  title,
+  description,
+  confirmLabel = "Confirm",
+  cancelLabel = "Cancel",
+  onConfirm,
+  destructive = false,
+  itemsList,
+}: ConfirmationDialogProps) {
+  return (
+    <AlertDialog open={open} onOpenChange={onOpenChange}>
+      <AlertDialogContent className="max-w-md">
+        <AlertDialogHeader>
+          <AlertDialogTitle className="text-sm">{title}</AlertDialogTitle>
+          <AlertDialogDescription className="text-xs">{description}</AlertDialogDescription>
+        </AlertDialogHeader>
+
+        {itemsList && itemsList.length > 0 && (
+          <div className="my-2">
+            <ScrollArea className="h-[150px] border rounded-md p-2">
+              <ul className="space-y-1">
+                {itemsList.map((item, index) => (
+                  <li key={index} className="text-xs truncate">
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </ScrollArea>
+          </div>
+        )}
+
+        <AlertDialogFooter>
+          <AlertDialogCancel className="h-7 text-xs">{cancelLabel}</AlertDialogCancel>
+          <AlertDialogAction
+            className={`h-7 text-xs ${destructive ? "bg-destructive hover:bg-destructive/90" : ""}`}
+            onClick={(e) => {
+              e.preventDefault()
+              onConfirm()
+            }}
+          >
+            {confirmLabel}
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  )
+}
