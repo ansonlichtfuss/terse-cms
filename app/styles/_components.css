@@ -460,3 +460,9 @@
 .file-explorer * {
   max-width: 100%;
 }
+
+/* Destructive dropdown menu item hover effect */
+.dropdown-menu-item-destructive:hover {
+  background-color: hsl(var(--destructive)) !important;
+  color: hsl(var(--destructive-foreground)) !important;
+}

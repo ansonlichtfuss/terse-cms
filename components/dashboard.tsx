@@ -1,34 +1,43 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState, useEffect } from "react"
-import { Sidebar } from "@/components/sidebar"
-import { FileTree } from "@/components/file-tree"
-import { MediaManager } from "@/components/media-manager"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable"
-import { useMediaQuery } from "@/hooks/use-media-query"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { Button } from "@/components/ui/button"
-import { Menu, Save, ChevronDown, RotateCcw, Moon, Sun } from "lucide-react"
-import { Badge } from "@/components/ui/badge"
-import { GitCommitDialog } from "@/components/git-commit-dialog"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { toast } from "@/components/ui/use-toast"
-import { ConfirmationDialog } from "@/components/confirmation-dialog"
-import { Logo } from "@/components/logo"
-import { useTheme } from "next-themes"
-import packageInfo from "../package.json"
+import { useState, useEffect } from "react";
+import { Sidebar } from "@/components/sidebar";
+import { FileTree } from "@/components/file-tree";
+import { MediaManager } from "@/components/media-manager";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from "@/components/ui/resizable";
+import { useMediaQuery } from "@/hooks/use-media-query";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
+import { Menu, Save, ChevronDown, RotateCcw, Moon, Sun } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { GitCommitDialog } from "@/components/git-commit-dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { toast } from "@/components/ui/use-toast";
+import { ConfirmationDialog } from "@/components/confirmation-dialog";
+import { Logo } from "@/components/logo";
+import { useTheme } from "next-themes";
+import packageInfo from "../package.json";
 
 export interface FileData {
-  path: string
-  content: string
-  isModified: boolean
+  path: string;
+  content: string;
+  isModified: boolean;
 }
 
 function ThemeToggle() {
-  const { theme, setTheme } = useTheme()
+  const { theme, setTheme } = useTheme();
 
   return (
     <Button
@@ -41,31 +50,37 @@ function ThemeToggle() {
       <Moon className="absolute h-[1.1rem] w-[1.1rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
       <span className="sr-only">Toggle theme</span>
     </Button>
-  )
+  );
 }
 
-export function Dashboard({ selectedFilePath, children }: { selectedFilePath?: string; children?: React.ReactNode }) {
-  const [selectedTab, setSelectedTab] = useState("files")
-  const [modifiedFiles, setModifiedFiles] = useState<string[]>([])
-  const [isCommitDialogOpen, setIsCommitDialogOpen] = useState(false)
-  const [isRevertDialogOpen, setIsRevertDialogOpen] = useState(false)
-  const isMobile = useMediaQuery("(max-width: 768px)")
+export function Dashboard({
+  selectedFilePath,
+  children,
+}: {
+  selectedFilePath?: string;
+  children?: React.ReactNode;
+}) {
+  const [selectedTab, setSelectedTab] = useState("files");
+  const [modifiedFiles, setModifiedFiles] = useState<string[]>([]);
+  const [isCommitDialogOpen, setIsCommitDialogOpen] = useState(false);
+  const [isRevertDialogOpen, setIsRevertDialogOpen] = useState(false);
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
   useEffect(() => {
     // Load modified files count from localStorage or API
     const fetchModifiedFiles = async () => {
       try {
-        const response = await fetch("/api/git/status")
-        const data = await response.json()
-        setModifiedFiles(data.modifiedFiles || [])
+        const response = await fetch("/api/git/status");
+        const data = await response.json();
+        setModifiedFiles(data.modifiedFiles || []);
       } catch (error) {
-        console.error("Failed to fetch git status:", error)
-        setModifiedFiles([]) // Ensure modifiedFiles is always an array
+        console.error("Failed to fetch git status:", error);
+        setModifiedFiles([]); // Ensure modifiedFiles is always an array
       }
-    }
+    };
 
-    fetchModifiedFiles()
-  }, [])
+    fetchModifiedFiles();
+  }, []);
 
   const handleFileSave = async (path: string, content: string) => {
     try {
@@ -75,11 +90,11 @@ export function Dashboard({ selectedFilePath, children }: { selectedFilePath?: s
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ path, content }),
-      })
+      });
 
       // Update modified files
       if (!modifiedFiles.includes(path)) {
-        setModifiedFiles([...modifiedFiles, path])
+        setModifiedFiles([...modifiedFiles, path]);
       }
 
       // Update selected file
@@ -91,13 +106,13 @@ export function Dashboard({ selectedFilePath, children }: { selectedFilePath?: s
       //   })
       // }
     } catch (error) {
-      console.error("Failed to save file:", error)
+      console.error("Failed to save file:", error);
     }
-  }
+  };
 
   const handleCommit = async () => {
-    setIsCommitDialogOpen(true)
-  }
+    setIsCommitDialogOpen(true);
+  };
 
   const commitChanges = async (message: string) => {
     try {
@@ -107,10 +122,10 @@ export function Dashboard({ selectedFilePath, children }: { selectedFilePath?: s
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ message }),
-      })
+      });
 
       // Clear modified files after successful commit
-      setModifiedFiles([])
+      setModifiedFiles([]);
 
       // Update selected file if it was modified
       // if (selectedFile && selectedFile.isModified) {
@@ -120,21 +135,21 @@ export function Dashboard({ selectedFilePath, children }: { selectedFilePath?: s
       //   })
       // }
 
-      setIsCommitDialogOpen(false)
+      setIsCommitDialogOpen(false);
 
       toast({
         title: "Success",
         description: "Changes committed successfully",
-      })
+      });
     } catch (error) {
-      console.error("Failed to commit changes:", error)
+      console.error("Failed to commit changes:", error);
       toast({
         title: "Error",
         description: "Failed to commit changes",
         variant: "destructive",
-      })
+      });
     }
-  }
+  };
 
   const handleRevertChanges = async () => {
     try {
@@ -143,14 +158,14 @@ export function Dashboard({ selectedFilePath, children }: { selectedFilePath?: s
         headers: {
           "Content-Type": "application/json",
         },
-      })
+      });
 
       if (!response.ok) {
-        throw new Error("Failed to revert changes")
+        throw new Error("Failed to revert changes");
       }
 
       // Clear modified files
-      setModifiedFiles([])
+      setModifiedFiles([]);
 
       // Update selected file if it was modified
       // if (selectedFile && selectedFile.isModified) {
@@ -165,63 +180,60 @@ export function Dashboard({ selectedFilePath, children }: { selectedFilePath?: s
       //   })
       // }
 
-      setIsRevertDialogOpen(false)
+      setIsRevertDialogOpen(false);
 
       toast({
         title: "Success",
         description: "Changes reverted successfully",
-      })
+      });
     } catch (error) {
-      console.error("Failed to revert changes:", error)
+      console.error("Failed to revert changes:", error);
       toast({
         title: "Error",
         description: "Failed to revert changes",
         variant: "destructive",
-      })
+      });
     }
-  }
+  };
 
   const renderSidebarContent = () => (
-    <div className="tabs-container">
-      <Tabs
-        defaultValue="files"
-        value={selectedTab}
-        onValueChange={setSelectedTab}
-        className="w-full minimal-tabs compact-tabs"
-      >
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="files" className="text-xs">
-            Files
-          </TabsTrigger>
-          <TabsTrigger value="media" className="text-xs">
-            Media
-          </TabsTrigger>
-        </TabsList>
-        <div className="tabs-content">
-          <TabsContent value="files" className="tab-panel mt-2">
-            <FileTree selectedFilePath={selectedFilePath} />
-          </TabsContent>
-          <TabsContent value="media" className="tab-panel mt-2">
-            <MediaManager
-              onSelect={(url) => {
-                // if (selectedFile) {
-                // Logic to insert media URL into editor or YAML front matter
-                // }
-              }}
-              inSidebar={true}
-            />
-          </TabsContent>
-        </div>
-      </Tabs>
-    </div>
-  )
+    <Tabs
+      defaultValue="files"
+      value={selectedTab}
+      onValueChange={setSelectedTab}
+    >
+      <TabsList className="grid w-full grid-cols-2">
+        <TabsTrigger value="files" className="text-sm">
+          Files
+        </TabsTrigger>
+        <TabsTrigger value="media" className="text-sm">
+          Media
+        </TabsTrigger>
+      </TabsList>
+      <TabsContent value="files">
+        <FileTree selectedFilePath={selectedFilePath} />
+      </TabsContent>
+      <TabsContent value="media">
+        <MediaManager
+          onSelect={(url) => {
+            // if (selectedFile) {
+            // Logic to insert media URL into editor or YAML front matter
+            // }
+          }}
+          inSidebar={true}
+        />
+      </TabsContent>
+    </Tabs>
+  );
 
   return (
     <div className="h-screen flex flex-col">
       <header className="border-b flex items-center justify-between bg-dot-pattern">
         <div className="flex items-center gap-2 px-3 py-2">
           <Logo size="sm" withIcon={false} />
-          <span className="text-xs text-muted-foreground">v{packageInfo.version}</span>
+          <span className="text-xs text-muted-foreground">
+            v{packageInfo.version}
+          </span>
         </div>
         <div className="flex items-center gap-2 px-3 py-2">
           <ThemeToggle />
@@ -271,7 +283,11 @@ export function Dashboard({ selectedFilePath, children }: { selectedFilePath?: s
           <div className="p-2">
             <Sheet>
               <SheetTrigger asChild>
-                <Button variant="outline" size="sm" className="mb-2 h-7 text-xs">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="mb-2 h-7 text-xs"
+                >
                   <Menu className="h-3 w-3 mr-1" />
                   {selectedTab === "files" ? "Files" : "Media"}
                 </Button>
@@ -290,14 +306,14 @@ export function Dashboard({ selectedFilePath, children }: { selectedFilePath?: s
           </div>
         </div>
       ) : (
-        <ResizablePanelGroup direction="horizontal" className="flex-1">
+        <ResizablePanelGroup direction="horizontal">
           <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
             <Sidebar>{renderSidebarContent()}</Sidebar>
           </ResizablePanel>
           <ResizableHandle />
           <ResizablePanel defaultSize={80}>
             {children || (
-              <div className="flex items-center justify-center h-full text-xs text-muted-foreground">
+              <div className="flex items-center justify-center h-full text-sm text-muted-foreground">
                 Select a file to edit
               </div>
             )}
@@ -324,5 +340,5 @@ export function Dashboard({ selectedFilePath, children }: { selectedFilePath?: s
         itemsList={modifiedFiles}
       />
     </div>
-  )
+  );
 }
