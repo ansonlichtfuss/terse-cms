@@ -1,49 +1,58 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Button } from "@/components/ui/button"
-import { ChevronRight } from "lucide-react"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import matter from "gray-matter"
-import { MetadataDisplay } from "@/components/metadata-display"
-import { HistoryDisplay } from "@/components/history-display"
+import { useState, useEffect } from "react";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Button } from "@/components/ui/button";
+import { ChevronRight } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import matter from "gray-matter";
+import { MetadataDisplay } from "@/components/metadata-display";
+import { HistoryDisplay } from "@/components/history-display";
 
 interface UnifiedSidebarProps {
-  content: string
-  filePath: string
-  isVisible: boolean
-  onToggle: () => void
-  lastSaved?: Date | null
+  content: string;
+  filePath: string;
+  isVisible: boolean;
+  onToggle: () => void;
+  lastSaved?: Date | null;
 }
 
-export function UnifiedSidebar({ content, filePath, isVisible, onToggle, lastSaved }: UnifiedSidebarProps) {
-  const [activeTab, setActiveTab] = useState<string>("metadata")
-  const [frontMatter, setFrontMatter] = useState<Record<string, any>>({})
+export function UnifiedSidebar({
+  content,
+  filePath,
+  isVisible,
+  onToggle,
+  lastSaved,
+}: UnifiedSidebarProps) {
+  const [activeTab, setActiveTab] = useState<string>("metadata");
+  const [frontMatter, setFrontMatter] = useState<Record<string, any>>({});
 
   // Parse front matter whenever content changes
   useEffect(() => {
     try {
-      const { data } = matter(content || "")
-      setFrontMatter(data || {})
+      const { data } = matter(content || "");
+      setFrontMatter(data || {});
     } catch (error) {
-      console.error("Error parsing front matter:", error)
-      setFrontMatter({})
+      console.error("Error parsing front matter:", error);
+      setFrontMatter({});
     }
-  }, [content])
+  }, [content]);
 
   // Add an event listener to switch to the history tab
   useEffect(() => {
     const handleSwitchToHistoryTab = () => {
-      setActiveTab("history")
-    }
+      setActiveTab("history");
+    };
 
-    window.addEventListener("switch-to-history-tab", handleSwitchToHistoryTab)
+    window.addEventListener("switch-to-history-tab", handleSwitchToHistoryTab);
 
     return () => {
-      window.removeEventListener("switch-to-history-tab", handleSwitchToHistoryTab)
-    }
-  }, [])
+      window.removeEventListener(
+        "switch-to-history-tab",
+        handleSwitchToHistoryTab
+      );
+    };
+  }, []);
 
   // If sidebar is hidden, show the button to restore it
   if (!isVisible) {
@@ -56,7 +65,7 @@ export function UnifiedSidebar({ content, filePath, isVisible, onToggle, lastSav
       >
         <ChevronRight className="h-4 w-4" />
       </Button>
-    )
+    );
   }
 
   return (
@@ -65,7 +74,7 @@ export function UnifiedSidebar({ content, filePath, isVisible, onToggle, lastSav
         defaultValue="metadata"
         value={activeTab}
         onValueChange={(value) => {
-          setActiveTab(value)
+          setActiveTab(value);
         }}
         className="tabs-container h-full minimal-tabs"
       >
@@ -78,7 +87,12 @@ export function UnifiedSidebar({ content, filePath, isVisible, onToggle, lastSav
               History
             </TabsTrigger>
           </TabsList>
-          <Button variant="ghost" size="sm" onClick={onToggle} className="h-7 w-7 p-0 ml-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onToggle}
+            className="h-7 w-7 p-0 ml-2"
+          >
             <ChevronRight className="h-4 w-4" />
           </Button>
         </div>
@@ -102,5 +116,5 @@ export function UnifiedSidebar({ content, filePath, isVisible, onToggle, lastSav
         </div>
       </Tabs>
     </div>
-  )
+  );
 }

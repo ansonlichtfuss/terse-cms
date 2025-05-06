@@ -2,34 +2,27 @@
 
 import type React from "react";
 
-import { useState, useEffect } from "react";
-import { Sidebar } from "@/components/sidebar";
-import { FileTree } from "@/components/file-tree";
-import { MediaManager } from "@/components/media-manager";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useMediaQuery } from "@/hooks/use-media-query";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Button } from "@/components/ui/button";
-import { Menu, Save, ChevronDown, RotateCcw, Moon, Sun } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { ConfirmationDialog } from "@/components/confirmation-dialog";
+import { FileBrowser } from "@/components/file-browser";
 import { GitCommitDialog } from "@/components/git-commit-dialog";
+import { Logo } from "@/components/logo";
+import { MediaManager } from "@/components/media-manager";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "@/components/ui/use-toast";
-import { ConfirmationDialog } from "@/components/confirmation-dialog";
-import { Logo } from "@/components/logo";
+import { useMediaQuery } from "@/hooks/use-media-query";
+import { ChevronDown, Menu, Moon, RotateCcw, Save, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
 import packageInfo from "../package.json";
-
-export interface FileData {
-  path: string;
-  content: string;
-  isModified: boolean;
-}
 
 function ThemeToggle() {
   const { theme, setTheme } = useTheme();
@@ -76,34 +69,6 @@ export function Dashboard({
 
     fetchModifiedFiles();
   }, []);
-
-  const handleFileSave = async (path: string, content: string) => {
-    try {
-      await fetch("/api/files", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ path, content }),
-      });
-
-      // Update modified files
-      if (!modifiedFiles.includes(path)) {
-        setModifiedFiles([...modifiedFiles, path]);
-      }
-
-      // Update selected file
-      // if (selectedFile && selectedFile.path === path) {
-      //   setSelectedFile({
-      //     ...selectedFile,
-      //     content,
-      //     isModified: true,
-      //   })
-      // }
-    } catch (error) {
-      console.error("Failed to save file:", error);
-    }
-  };
 
   const handleCommit = async () => {
     setIsCommitDialogOpen(true);
@@ -197,16 +162,18 @@ export function Dashboard({
       value={selectedTab}
       onValueChange={setSelectedTab}
     >
-      <TabsList className="grid w-full grid-cols-2">
-        <TabsTrigger value="files" className="text-sm">
-          Files
-        </TabsTrigger>
-        <TabsTrigger value="media" className="text-sm">
-          Media
-        </TabsTrigger>
-      </TabsList>
+      <div className=" m-2">
+        <TabsList className="inline-grid w-full grid-cols-2">
+          <TabsTrigger value="files" className="text-sm">
+            Files
+          </TabsTrigger>
+          <TabsTrigger value="media" className="text-sm">
+            Media
+          </TabsTrigger>
+        </TabsList>
+      </div>
       <TabsContent value="files">
-        <FileTree selectedFilePath={selectedFilePath} />
+        <FileBrowser selectedPath={selectedFilePath} type="files" />
       </TabsContent>
       <TabsContent value="media">
         <MediaManager
@@ -302,9 +269,7 @@ export function Dashboard({
         </div>
       ) : (
         <div className="flex h-full">
-          <div className="w-[280px] min-w-[280px] border-r">
-            <Sidebar>{renderSidebarContent()}</Sidebar>
-          </div>
+          <div className="w-[280px] border-r">{renderSidebarContent()}</div>
           <div className="flex-1 overflow-auto">
             {children || (
               <div className="flex items-center justify-center h-full text-sm text-muted-foreground">

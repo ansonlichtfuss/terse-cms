@@ -83,7 +83,7 @@
   /* Patterns - 1px spacing and more subtle */
   --dot-pattern: radial-gradient(
     circle,
-    hsl(var(--color-gray-300) / 0.4) 0.5px,
+    hsl(var(--color-gray-400) / 0.4) 0.5px,
     transparent 0.5px
   );
   --dot-size: 2px;

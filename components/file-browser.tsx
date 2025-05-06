@@ -176,7 +176,7 @@ export function FileBrowser({
   };
 
   return (
-    <div className="h-full flex flex-col relative w-full max-w-full overflow-hidden">
+    <div className="m-4">
       <PathBreadcrumbs
         currentPath={currentPath.replace(/\/$/, "")} // Remove trailing slash for display
         onNavigate={handleBreadcrumbNavigation}
