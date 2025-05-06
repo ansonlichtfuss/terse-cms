@@ -58,7 +58,7 @@ export function FileItemRow({
           return true;
         }}
       >
-        <div className="flex items-center min-w-0 overflow-hidden flex-1 pr-1 max-w-20">
+        <div className="flex items-center min-w-0 overflow-hidden flex-1 pr-1 max-w-[200px]">
           <File className="h-4 w-4 text-muted-foreground mr-1 flex-shrink-0" />
           <span className="text-xs truncate block w-full" title={itemName}>
             {itemName}
@@ -108,7 +108,7 @@ export function FileItemRow({
       )}
       onClick={() => onItemClick(item)}
     >
-      <div className="flex items-center min-w-0 overflow-hidden flex-1 pr-1 max-w-60">
+      <div className="flex items-center min-w-0 overflow-hidden flex-1 pr-1 max-w-[200px]">
         {isFolder ? (
           <Folder className="h-4 w-4 text-muted-foreground mr-1 flex-shrink-0" />
         ) : type === "media" &&

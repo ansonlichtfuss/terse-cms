@@ -69,8 +69,6 @@ export function FileBrowser({
     setIsCreatingFolder,
     newFolderName,
     setNewFolderName,
-    viewMode,
-    setViewMode,
     mounted,
   } = useFileBrowserState({ isMobile, inSidebar, selectedPath });
 
@@ -176,70 +174,100 @@ export function FileBrowser({
   };
 
   return (
-    <div className="m-4">
-      <PathBreadcrumbs
-        currentPath={currentPath.replace(/\/$/, "")} // Remove trailing slash for display
-        onNavigate={handleBreadcrumbNavigation}
-        className="breadcrumbs w-full max-w-full" // Use a common class for both file and media breadcrumbs
-        itemClassName="breadcrumb-item"
-        separatorClassName="breadcrumb-separator"
-        currentClassName="breadcrumb-current"
-        rootIcon={<Home size={12} />}
-        useUrlRouting={useUrlRouting}
-        type={type}
-      />
-
-      {/* Main content area with padding at the bottom to account for the action bar */}
-      <div className="flex-1 overflow-hidden relative h-full w-full max-w-full">
-        <ScrollArea
-          className="h-full w-full max-w-full"
-          style={{ height: "calc(100% - 12px)" }}
-        >
-          <div className="px-0 py-1 pb-16 w-full max-w-full">
-            {isLoading ? (
-              <div className="flex items-center justify-center h-20 text-muted-foreground text-xs">
-                Loading...
-              </div>
-            ) : currentDirContents.length > 0 ? (
-              // Render list view using FileItemRow component
-              <div className="space-y-1 px-0 w-full max-w-full">
-                {currentDirContents.map((item) => (
-                  <FileItemRow
-                    key={getItemPath(item)}
-                    item={item}
-                    isSelected={selectedItem === getItemPath(item)}
-                    type={type}
-                    useUrlRouting={useUrlRouting}
-                    onItemClick={handleItemClick}
-                    onDeleteClick={openDeleteDialog} // Pass local handler to open delete dialog
-                    onRenameClick={openRenameDialog} // Pass local handler to open rename dialog
-                    onMoveClick={openMoveDialog} // Pass local handler to open move dialog
-                  />
-                ))}
-              </div>
-            ) : (
-              <div className="flex items-center justify-center h-20 text-muted-foreground text-xs">
-                No items found
-              </div>
-            )}
-          </div>
-        </ScrollArea>
+    <div>
+      <div className="px-4">
+        <PathBreadcrumbs
+          currentPath={currentPath.replace(/\/$/, "")} // Remove trailing slash for display
+          onNavigate={handleBreadcrumbNavigation}
+          className="breadcrumbs" // Use a common class for both file and media breadcrumbs
+          itemClassName="breadcrumb-item"
+          separatorClassName="breadcrumb-separator"
+          currentClassName="breadcrumb-current"
+          rootIcon={<Home size={12} />}
+          useUrlRouting={useUrlRouting}
+          type={type}
+        />
       </div>
 
+      {/* Main content area with padding at the bottom to account for the action bar */}
+      <ScrollArea className="px-4">
+        {isLoading ? (
+          <div className="flex items-center justify-center h-20 text-muted-foreground text-xs">
+            Loading...
+          </div>
+        ) : currentDirContents.length > 0 ? (
+          // Render list view using FileItemRow component
+          <div className="space-y-1 px-0 max-h-full">
+            {currentDirContents.map((item) => (
+              <FileItemRow
+                key={getItemPath(item)}
+                item={item}
+                isSelected={selectedItem === getItemPath(item)}
+                type={type}
+                useUrlRouting={useUrlRouting}
+                onItemClick={handleItemClick}
+                onDeleteClick={openDeleteDialog} // Pass local handler to open delete dialog
+                onRenameClick={openRenameDialog} // Pass local handler to open rename dialog
+                onMoveClick={openMoveDialog} // Pass local handler to open move dialog
+              />
+            ))}{" "}
+            {currentDirContents.map((item) => (
+              <FileItemRow
+                key={getItemPath(item)}
+                item={item}
+                isSelected={selectedItem === getItemPath(item)}
+                type={type}
+                useUrlRouting={useUrlRouting}
+                onItemClick={handleItemClick}
+                onDeleteClick={openDeleteDialog} // Pass local handler to open delete dialog
+                onRenameClick={openRenameDialog} // Pass local handler to open rename dialog
+                onMoveClick={openMoveDialog} // Pass local handler to open move dialog
+              />
+            ))}{" "}
+            {currentDirContents.map((item) => (
+              <FileItemRow
+                key={getItemPath(item)}
+                item={item}
+                isSelected={selectedItem === getItemPath(item)}
+                type={type}
+                useUrlRouting={useUrlRouting}
+                onItemClick={handleItemClick}
+                onDeleteClick={openDeleteDialog} // Pass local handler to open delete dialog
+                onRenameClick={openRenameDialog} // Pass local handler to open rename dialog
+                onMoveClick={openMoveDialog} // Pass local handler to open move dialog
+              />
+            ))}{" "}
+            {currentDirContents.map((item) => (
+              <FileItemRow
+                key={getItemPath(item)}
+                item={item}
+                isSelected={selectedItem === getItemPath(item)}
+                type={type}
+                useUrlRouting={useUrlRouting}
+                onItemClick={handleItemClick}
+                onDeleteClick={openDeleteDialog} // Pass local handler to open delete dialog
+                onRenameClick={openRenameDialog} // Pass local handler to open rename dialog
+                onMoveClick={openMoveDialog} // Pass local handler to open move dialog
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="flex items-center justify-center h-20 text-muted-foreground text-xs">
+            No items found
+          </div>
+        )}
+      </ScrollArea>
+
       {/* Fixed action buttons at the bottom */}
-      <div className="absolute bottom-0 left-0 right-0 p-2 bg-background/80 backdrop-blur-sm border-t border-border z-10 w-full">
+      <div className="absolute bottom-0 left-0 w-[280px] p-2 bg-background/80 backdrop-blur-sm border-r z-10">
         {/* Use the FileBrowserActions component */}
         <FileBrowserActions
           type={type}
           inSidebar={inSidebar}
-          viewMode={viewMode}
           isUploading={isUploading}
           onRefresh={() => fetchItems(currentPath)} // Call fetchItems from fetching hook
           onNewFolderClick={handleNewFolderButtonClick} // Call local handler
           onUpload={handleUploadInputChange} // Call local handler
-          onViewModeToggle={() =>
-            setViewMode(viewMode === "grid" ? "list" : "grid")
-          } // Call setViewMode from state hook
         />
       </div>
 

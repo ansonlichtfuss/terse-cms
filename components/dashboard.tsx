@@ -173,7 +173,12 @@ export function Dashboard({
         </TabsList>
       </div>
       <TabsContent value="files">
-        <FileBrowser selectedPath={selectedFilePath} type="files" />
+        <FileBrowser
+          selectedPath={selectedFilePath}
+          type="files"
+          inSidebar
+          useUrlRouting
+        />
       </TabsContent>
       <TabsContent value="media">
         <MediaManager
@@ -254,7 +259,7 @@ export function Dashboard({
                   {selectedTab === "files" ? "Files" : "Media"}
                 </Button>
               </SheetTrigger>
-              <SheetContent side="left" className="w-[280px] sm:w-[350px] p-2">
+              <SheetContent side="left" className="w-[280px] sm:w-[350px]">
                 {renderSidebarContent()}
               </SheetContent>
             </Sheet>
@@ -269,7 +274,9 @@ export function Dashboard({
         </div>
       ) : (
         <div className="flex h-full">
-          <div className="w-[280px] border-r">{renderSidebarContent()}</div>
+          <div className="w-[280px] border-r max-h-full">
+            {renderSidebarContent()}
+          </div>
           <div className="flex-1 overflow-auto">
             {children || (
               <div className="flex items-center justify-center h-full text-sm text-muted-foreground">

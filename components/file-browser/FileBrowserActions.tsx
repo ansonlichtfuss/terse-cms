@@ -12,23 +12,19 @@ import {
 interface FileBrowserActionsProps {
   type: "files" | "media";
   inSidebar: boolean;
-  viewMode: "grid" | "list";
   isUploading: boolean;
   onRefresh: () => void;
   onNewFolderClick: () => void;
   onUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onViewModeToggle: () => void;
 }
 
 export function FileBrowserActions({
   type,
   inSidebar,
-  viewMode,
   isUploading,
   onRefresh,
   onNewFolderClick,
   onUpload,
-  onViewModeToggle,
 }: FileBrowserActionsProps) {
   return (
     <TooltipProvider delayDuration={300}>
@@ -90,36 +86,6 @@ export function FileBrowserActions({
             </TooltipTrigger>
             <TooltipContent side="top">
               <p>Upload File</p>
-            </TooltipContent>
-          </Tooltip>
-        )}
-
-        {type === "media" && ( // Assuming view mode toggle is only for media for now based on original code
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="outline"
-                size={inSidebar ? "icon" : "sm"} // Adjust size for sidebar if needed
-                onClick={onViewModeToggle}
-                className="flex-shrink-0 h-7 w-7" // Adjust size for sidebar if needed
-              >
-                {viewMode === "grid" ? (
-                  <>
-                    <List className={inSidebar ? "h-3 w-3" : "h-3 w-3 mr-1"} />
-                    {!inSidebar && "List View"}
-                  </>
-                ) : (
-                  <>
-                    <LayoutGrid
-                      className={inSidebar ? "h-3 w-3" : "h-3 w-3 mr-1"}
-                    />
-                    {!inSidebar && "Grid View"}
-                  </>
-                )}
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent side="top">
-              <p>Change View</p>
             </TooltipContent>
           </Tooltip>
         )}

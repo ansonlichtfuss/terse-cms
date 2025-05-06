@@ -109,7 +109,6 @@
   scrollbar-width: none; /* Hide scrollbar for Firefox */
   -ms-overflow-style: none; /* Hide scrollbar for IE and Edge */
   padding: 2px 6px;
-  margin-bottom: 4px;
   border-bottom: 1px solid hsl(var(--border) / 0.5);
   font-size: 0.7rem;
   width: 100%;
@@ -124,6 +123,7 @@
   display: inline-flex;
   align-items: center;
   font-size: 0.7rem;
+  height: 1.2rem;
   color: hsl(var(--muted-foreground));
   cursor: pointer;
   padding: 1px 3px;
@@ -466,3 +466,5 @@
   background-color: hsl(var(--destructive)) !important;
   color: hsl(var(--destructive-foreground)) !important;
 }
+
+/* Active tab underline gradient */

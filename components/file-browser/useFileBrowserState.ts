@@ -27,8 +27,6 @@ interface UseFileBrowserStateResult {
   setIsCreatingFolder: React.Dispatch<React.SetStateAction<boolean>>;
   newFolderName: string;
   setNewFolderName: React.Dispatch<React.SetStateAction<string>>;
-  viewMode: "grid" | "list";
-  setViewMode: React.Dispatch<React.SetStateAction<"grid" | "list">>;
   mounted: boolean;
 }
 
@@ -49,19 +47,11 @@ export const useFileBrowserState = ({
   const [isUploading, setIsUploading] = useState(isMobile);
   const [isCreatingFolder, setIsCreatingFolder] = useState(false);
   const [newFolderName, setNewFolderName] = useState("");
-  const [viewMode, setViewMode] = useState<"grid" | "list">(
-    isMobile || inSidebar ? "list" : "grid"
-  );
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
-
-  useEffect(() => {
-    // Update view mode based on screen size or sidebar context
-    setViewMode(isMobile || inSidebar ? "list" : "grid");
-  }, [isMobile, inSidebar]);
 
   useEffect(() => {
     if (selectedPath) {
@@ -90,8 +80,6 @@ export const useFileBrowserState = ({
     setIsCreatingFolder,
     newFolderName,
     setNewFolderName,
-    viewMode,
-    setViewMode,
     mounted,
   };
 };
