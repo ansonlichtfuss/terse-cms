@@ -7,11 +7,6 @@ import { Sidebar } from "@/components/sidebar";
 import { FileTree } from "@/components/file-tree";
 import { MediaManager } from "@/components/media-manager";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  ResizableHandle,
-  ResizablePanel,
-  ResizablePanelGroup,
-} from "@/components/ui/resizable";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
@@ -306,19 +301,18 @@ export function Dashboard({
           </div>
         </div>
       ) : (
-        <ResizablePanelGroup direction="horizontal">
-          <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
+        <div className="flex h-full">
+          <div className="w-[280px] min-w-[280px] border-r">
             <Sidebar>{renderSidebarContent()}</Sidebar>
-          </ResizablePanel>
-          <ResizableHandle />
-          <ResizablePanel defaultSize={80}>
+          </div>
+          <div className="flex-1 overflow-auto">
             {children || (
               <div className="flex items-center justify-center h-full text-sm text-muted-foreground">
                 Select a file to edit
               </div>
             )}
-          </ResizablePanel>
-        </ResizablePanelGroup>
+          </div>
+        </div>
       )}
 
       <GitCommitDialog
