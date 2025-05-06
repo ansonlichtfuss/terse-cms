@@ -1,0 +1,152 @@
+:root {
+  /* Color tokens - desaturated dark blue theme */
+  --color-blue-50: 210 50% 98%;
+  --color-blue-100: 210 50% 95%;
+  --color-blue-200: 210 50% 90%;
+  --color-blue-300: 210 50% 80%;
+  --color-blue-400: 210 50% 70%;
+  --color-blue-500: 210 50% 60%;
+  --color-blue-600: 210 50% 50%;
+  --color-blue-700: 210 50% 40%;
+  --color-blue-800: 210 50% 30%;
+  --color-blue-900: 210 50% 20%;
+  --color-blue-950: 210 50% 10%;
+
+  --color-gray-50: 220 20% 98%;
+  --color-gray-100: 220 20% 95%;
+  --color-gray-200: 220 20% 90%;
+  --color-gray-300: 220 20% 80%;
+  --color-gray-400: 220 20% 70%;
+  --color-gray-500: 220 20% 60%;
+  --color-gray-600: 220 20% 50%;
+  --color-gray-700: 220 20% 40%;
+  --color-gray-800: 220 20% 30%;
+  --color-gray-900: 220 20% 20%;
+  --color-gray-950: 220 20% 10%;
+
+  --color-red-500: 0 84% 60%;
+  --color-red-600: 0 84% 50%;
+  --color-red-700: 0 84% 40%;
+
+  --color-green-500: 142 60% 50%;
+  --color-green-600: 142 60% 40%;
+  --color-green-700: 142 60% 30%;
+
+  /* Base colors */
+  --background: var(--color-gray-50);
+  --foreground: var(--color-gray-950);
+
+  --muted: var(--color-gray-100);
+  --muted-foreground: var(--color-gray-600);
+
+  --popover: var(--color-gray-50);
+  --popover-foreground: var(--color-gray-950);
+
+  --card: var(--color-gray-50);
+  --card-foreground: var(--color-gray-950);
+
+  --border: var(--color-gray-200);
+  --input: var(--color-gray-200);
+
+  /* Custom brand colors - desaturated dark blue theme */
+  --primary: var(--color-blue-600);
+  --primary-foreground: var(--color-gray-50);
+
+  --secondary: var(--color-gray-100);
+  --secondary-foreground: var(--color-gray-900);
+
+  --accent: var(--color-blue-700);
+  --accent-foreground: var(--color-gray-50);
+
+  --destructive: var(--color-red-500);
+  --destructive-foreground: var(--color-gray-50);
+
+  --ring: var(--color-blue-400);
+
+  /* Custom gradients - desaturated dark blue theme */
+  --gradient-primary: linear-gradient(
+    135deg,
+    hsl(var(--color-blue-600)),
+    hsl(var(--color-blue-700))
+  );
+  --gradient-secondary: linear-gradient(
+    135deg,
+    hsl(var(--color-blue-50)),
+    hsl(var(--color-gray-100))
+  );
+  --gradient-accent: linear-gradient(
+    135deg,
+    hsl(var(--color-blue-700)),
+    hsl(var(--color-blue-800))
+  );
+
+  /* Patterns - 1px spacing and more subtle */
+  --dot-pattern: radial-gradient(
+    circle,
+    hsl(var(--color-gray-300) / 0.4) 0.5px,
+    transparent 0.5px
+  );
+  --dot-size: 2px;
+  --dot-space: 1px;
+
+  --radius: 0.5rem;
+}
+
+.dark {
+  /* Base colors */
+  --background: var(--color-gray-950);
+  --foreground: var(--color-gray-100);
+
+  --muted: var(--color-gray-900);
+  --muted-foreground: var(--color-gray-400);
+
+  --popover: var(--color-gray-950);
+  --popover-foreground: var(--color-gray-100);
+
+  --card: var(--color-gray-950);
+  --card-foreground: var(--color-gray-100);
+
+  --border: var(--color-gray-800);
+  --input: var(--color-gray-800);
+
+  /* Custom brand colors for dark mode - desaturated dark blue theme */
+  --primary: var(--color-blue-500);
+  --primary-foreground: var(--color-gray-50);
+
+  --secondary: var(--color-gray-900);
+  --secondary-foreground: var(--color-gray-100);
+
+  --accent: var(--color-blue-600);
+  --accent-foreground: var(--color-gray-50);
+
+  --destructive: var(--color-red-600);
+  --destructive-foreground: var(--color-gray-50);
+
+  --ring: var(--color-blue-700);
+
+  /* Custom gradients for dark mode - desaturated dark blue theme */
+  --gradient-primary: linear-gradient(
+    135deg,
+    hsl(var(--color-blue-600)),
+    hsl(var(--color-blue-700))
+  );
+  --gradient-secondary: linear-gradient(
+    135deg,
+    hsl(var(--color-blue-900)),
+    hsl(var(--color-gray-900))
+  );
+  --gradient-accent: linear-gradient(
+    135deg,
+    hsl(var(--color-blue-600)),
+    hsl(var(--color-blue-700))
+  );
+
+  /* Patterns for dark mode - 1px spacing and more subtle */
+  --dot-pattern: radial-gradient(
+    circle,
+    hsl(var(--color-gray-700) / 0.3) 0.5px,
+    transparent 0.5px
+  );
+  --dot-size: 2px;
+  --dot-space: 1px;
+}

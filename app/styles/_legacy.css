@@ -1,0 +1,57 @@
+/* Legacy styles for compatibility */
+.media-breadcrumbs,
+.file-breadcrumbs {
+  display: flex;
+  align-items: center;
+  overflow-x: auto;
+  white-space: nowrap;
+  scrollbar-width: none; /* Hide scrollbar for Firefox */
+  -ms-overflow-style: none; /* Hide scrollbar for IE and Edge */
+  padding: 2px 6px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid hsl(var(--border) / 0.5);
+  font-size: 0.7rem;
+  width: 100%;
+  max-width: 100%;
+}
+
+.media-breadcrumbs::-webkit-scrollbar,
+.file-breadcrumbs::-webkit-scrollbar {
+  display: none; /* Hide scrollbar for Chrome, Safari, and Opera */
+}
+
+.media-breadcrumb-item,
+.file-breadcrumb-item {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.7rem;
+  color: hsl(var(--muted-foreground));
+  cursor: pointer;
+  padding: 1px 3px;
+  border-radius: 2px;
+  max-width: 80px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.media-breadcrumb-item:hover,
+.file-breadcrumb-item:hover {
+  color: hsl(var(--foreground));
+  background: hsl(var(--muted) / 0.5);
+}
+
+.media-breadcrumb-separator,
+.file-breadcrumb-separator {
+  margin: 0 1px;
+  color: hsl(var(--muted-foreground) / 0.6);
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.media-breadcrumb-current,
+.file-breadcrumb-current {
+  font-weight: 500;
+  color: hsl(var(--foreground));
+}
