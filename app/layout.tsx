@@ -7,7 +7,7 @@ import { ThemeProvider } from "@/components/theme-provider"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Markdown CMS",
+  title: "Markdown CMS - File Editor",
   description: "A CMS for managing Markdown files with YAML front matter",
     generator: 'v0.dev'
 }

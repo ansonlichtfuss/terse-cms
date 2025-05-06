@@ -16,6 +16,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { cn } from "@/lib/utils"
 import type { FileNode } from "@/types"
+import Link from "next/link"
 
 export interface FileItem {
   key: string
@@ -30,12 +31,21 @@ export interface FileItem {
 
 interface FileBrowserProps {
   type: "files" | "media"
-  onSelect: (path: string, url?: string) => void
+  onSelect?: (path: string, url?: string) => void
+  selectedPath?: string
   isMobile?: boolean
   inSidebar?: boolean
+  useUrlRouting?: boolean
 }
 
-export function FileBrowser({ type, onSelect, isMobile = false, inSidebar = false }: FileBrowserProps) {
+export function FileBrowser({
+  type,
+  onSelect,
+  selectedPath,
+  isMobile = false,
+  inSidebar = false,
+  useUrlRouting = false,
+}: FileBrowserProps) {
   const [items, setItems] = useState<FileItem[]>([])
   const [selectedItem, setSelectedItem] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(true)
@@ -61,6 +71,12 @@ export function FileBrowser({ type, onSelect, isMobile = false, inSidebar = fals
     // Update view mode based on screen size or sidebar context
     setViewMode(isMobile || inSidebar ? "list" : "grid")
   }, [isMobile, inSidebar])
+
+  useEffect(() => {
+    if (selectedPath) {
+      setSelectedItem(selectedPath)
+    }
+  }, [selectedPath])
 
   const fetchItems = async (path: string) => {
     setIsLoading(true)
@@ -165,12 +181,13 @@ export function FileBrowser({ type, onSelect, isMobile = false, inSidebar = fals
     } else {
       setSelectedItem(itemPath)
       if (type === "files") {
-        // Make sure onSelect is a function before calling it
-        if (typeof onSelect === "function") {
+        // If using URL routing, the Link component will handle navigation
+        // Otherwise, use the callback
+        if (!useUrlRouting && typeof onSelect === "function") {
           onSelect(itemPath)
         }
       } else if (item.url) {
-        // Make sure onSelect is a function before calling it
+        // For media items, always use the callback
         if (typeof onSelect === "function") {
           onSelect(itemPath, item.url)
         }
@@ -536,12 +553,49 @@ export function FileBrowser({ type, onSelect, isMobile = false, inSidebar = fals
         const isFolder = item.type === "folder" || item.type === "directory"
         const isMarkdownFile = type === "files" && !isFolder
 
-        return (
+        return !isFolder && type === "files" && useUrlRouting ? (
+          <Link
+            key={itemPath}
+            href={`/edit/${encodeURIComponent(itemPath)}`}
+            className={cn(
+              "flex items-center justify-between py-1 px-1 rounded-md w-full",
+              selectedPath === itemPath ? "bg-muted" : "hover:bg-muted",
+            )}
+            onClick={(e) => {
+              // Still call handleItemClick to update the selected item
+              e.preventDefault()
+              handleItemClick(item)
+              // Let the Link handle the navigation
+              return true
+            }}
+          >
+            <div className="flex items-center min-w-0 overflow-hidden flex-1 pr-1">
+              <File className="h-4 w-4 text-muted-foreground mr-1 flex-shrink-0" />
+              <span className="text-xs truncate block w-full" title={itemName}>
+                {itemName}
+              </span>
+            </div>
+
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-6 w-6 flex-shrink-0"
+              onClick={(e) => {
+                e.stopPropagation()
+                e.preventDefault()
+                setItemToAction(item)
+                setIsDeleteDialogOpen(true)
+              }}
+            >
+              <MoreHorizontal className="h-3 w-3" />
+            </Button>
+          </Link>
+        ) : (
           <div
             key={itemPath}
             className={cn(
               "flex items-center justify-between py-1 px-1 rounded-md cursor-pointer hover:bg-muted w-full",
-              isSelected && "bg-muted",
+              (selectedItem === itemPath || selectedPath === itemPath) && "bg-muted",
             )}
             onClick={() => handleItemClick(item)}
           >
@@ -591,12 +645,49 @@ export function FileBrowser({ type, onSelect, isMobile = false, inSidebar = fals
         const isFolder = item.type === "folder" || item.type === "directory"
         const isMarkdownFile = type === "files" && !isFolder
 
-        return (
+        return !isFolder && type === "files" && useUrlRouting ? (
+          <Link
+            key={itemPath}
+            href={`/edit/${encodeURIComponent(itemPath)}`}
+            className={cn(
+              "border rounded-md p-2 flex flex-col items-center relative group",
+              selectedPath === itemPath ? "bg-muted" : "hover:bg-muted",
+            )}
+            onClick={(e) => {
+              // Still call handleItemClick to update the selected item
+              e.preventDefault()
+              handleItemClick(item)
+              // Let the Link handle the navigation
+              return true
+            }}
+          >
+            <File className="h-8 w-8 text-muted-foreground mb-2" />
+            <span className="text-xs truncate w-full text-center overflow-hidden" title={itemName}>
+              {itemName}
+            </span>
+
+            <div className={`absolute top-1 right-1 ${isMobile ? "opacity-100" : "opacity-0 group-hover:opacity-100"}`}>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-6 w-6"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  e.preventDefault()
+                  setItemToAction(item)
+                  setIsDeleteDialogOpen(true)
+                }}
+              >
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </div>
+          </Link>
+        ) : (
           <div
             key={itemPath}
             className={cn(
               "border rounded-md p-2 flex flex-col items-center cursor-pointer hover:bg-muted relative group",
-              isSelected && "bg-muted",
+              (selectedItem === itemPath || selectedPath === itemPath) && "bg-muted",
             )}
             onClick={() => handleItemClick(item)}
           >
@@ -648,6 +739,8 @@ export function FileBrowser({ type, onSelect, isMobile = false, inSidebar = fals
         separatorClassName="breadcrumb-separator"
         currentClassName="breadcrumb-current"
         rootIcon={<Home size={12} />}
+        useUrlRouting={useUrlRouting}
+        type={type}
       />
 
       {/* Main content area with padding at the bottom to account for the action bar */}

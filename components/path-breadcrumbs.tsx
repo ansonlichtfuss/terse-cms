@@ -2,6 +2,7 @@
 
 import React from "react"
 import { ChevronRight, Home } from "lucide-react"
+import Link from "next/link"
 
 interface PathBreadcrumbsProps {
   currentPath: string
@@ -11,6 +12,8 @@ interface PathBreadcrumbsProps {
   itemClassName?: string
   separatorClassName?: string
   currentClassName?: string
+  useUrlRouting?: boolean
+  type?: "files" | "media"
 }
 
 export function PathBreadcrumbs({
@@ -21,6 +24,8 @@ export function PathBreadcrumbs({
   itemClassName = "breadcrumb-item",
   separatorClassName = "breadcrumb-separator",
   currentClassName = "breadcrumb-current",
+  useUrlRouting = false,
+  type = "files",
 }: PathBreadcrumbsProps) {
   // Handle root navigation
   const handleRootClick = () => {
@@ -41,6 +46,37 @@ export function PathBreadcrumbs({
       const isLast = index === parts.length - 1
       const currentAccumulatedPath = accumulatedPath // Create a closure for the onClick handler
 
+      if (useUrlRouting && type === "files") {
+        return (
+          <React.Fragment key={part + index}>
+            <span className={separatorClassName}>
+              <ChevronRight size={10} />
+            </span>
+            {isLast ? (
+              <span
+                className={`${itemClassName} ${isLast ? currentClassName : ""} truncate max-w-[80px] inline-block`}
+                title={part}
+              >
+                {part}
+              </span>
+            ) : (
+              <Link
+                href={`/edit/${encodeURIComponent(currentAccumulatedPath)}`}
+                className={`${itemClassName} truncate max-w-[80px] inline-block`}
+                title={part}
+                onClick={(e) => {
+                  e.preventDefault()
+                  onNavigate(currentAccumulatedPath)
+                  return true
+                }}
+              >
+                {part}
+              </Link>
+            )}
+          </React.Fragment>
+        )
+      }
+
       return (
         <React.Fragment key={part + index}>
           <span className={separatorClassName}>
@@ -60,12 +96,26 @@ export function PathBreadcrumbs({
 
   return (
     <div className={`${className} flex items-center overflow-hidden w-full max-w-full`}>
-      <span
-        className={`${itemClassName} ${!currentPath ? currentClassName : ""} flex-shrink-0`}
-        onClick={handleRootClick}
-      >
-        {rootIcon}
-      </span>
+      {useUrlRouting && type === "files" ? (
+        <Link
+          href="/edit"
+          className={`${itemClassName} ${!currentPath ? currentClassName : ""} flex-shrink-0`}
+          onClick={(e) => {
+            e.preventDefault()
+            handleRootClick()
+            return true
+          }}
+        >
+          {rootIcon}
+        </Link>
+      ) : (
+        <span
+          className={`${itemClassName} ${!currentPath ? currentClassName : ""} flex-shrink-0`}
+          onClick={handleRootClick}
+        >
+          {rootIcon}
+        </span>
+      )}
       <div className="flex items-center overflow-hidden flex-1">{renderBreadcrumbItems()}</div>
     </div>
   )

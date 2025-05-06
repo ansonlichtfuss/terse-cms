@@ -1,8 +1,9 @@
 "use client"
 
+import type React from "react"
+
 import { useState, useEffect } from "react"
 import { Sidebar } from "@/components/sidebar"
-import { Editor } from "@/components/editor"
 import { FileTree } from "@/components/file-tree"
 import { MediaManager } from "@/components/media-manager"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -43,8 +44,7 @@ function ThemeToggle() {
   )
 }
 
-export function Dashboard() {
-  const [selectedFile, setSelectedFile] = useState<FileData | null>(null)
+export function Dashboard({ selectedFilePath, children }: { selectedFilePath?: string; children?: React.ReactNode }) {
   const [selectedTab, setSelectedTab] = useState("files")
   const [modifiedFiles, setModifiedFiles] = useState<string[]>([])
   const [isCommitDialogOpen, setIsCommitDialogOpen] = useState(false)
@@ -67,20 +67,6 @@ export function Dashboard() {
     fetchModifiedFiles()
   }, [])
 
-  const handleFileSelect = async (path: string) => {
-    try {
-      const response = await fetch(`/api/files?path=${encodeURIComponent(path)}`)
-      const data = await response.json()
-      setSelectedFile({
-        path,
-        content: data.content,
-        isModified: modifiedFiles.includes(path),
-      })
-    } catch (error) {
-      console.error("Failed to fetch file:", error)
-    }
-  }
-
   const handleFileSave = async (path: string, content: string) => {
     try {
       await fetch("/api/files", {
@@ -97,13 +83,13 @@ export function Dashboard() {
       }
 
       // Update selected file
-      if (selectedFile && selectedFile.path === path) {
-        setSelectedFile({
-          ...selectedFile,
-          content,
-          isModified: true,
-        })
-      }
+      // if (selectedFile && selectedFile.path === path) {
+      //   setSelectedFile({
+      //     ...selectedFile,
+      //     content,
+      //     isModified: true,
+      //   })
+      // }
     } catch (error) {
       console.error("Failed to save file:", error)
     }
@@ -127,12 +113,12 @@ export function Dashboard() {
       setModifiedFiles([])
 
       // Update selected file if it was modified
-      if (selectedFile && selectedFile.isModified) {
-        setSelectedFile({
-          ...selectedFile,
-          isModified: false,
-        })
-      }
+      // if (selectedFile && selectedFile.isModified) {
+      //   setSelectedFile({
+      //     ...selectedFile,
+      //     isModified: false,
+      //   })
+      // }
 
       setIsCommitDialogOpen(false)
 
@@ -167,17 +153,17 @@ export function Dashboard() {
       setModifiedFiles([])
 
       // Update selected file if it was modified
-      if (selectedFile && selectedFile.isModified) {
-        // Reload the file content
-        const fileResponse = await fetch(`/api/files?path=${encodeURIComponent(selectedFile.path)}`)
-        const fileData = await fileResponse.json()
+      // if (selectedFile && selectedFile.isModified) {
+      //   // Reload the file content
+      //   const fileResponse = await fetch(`/api/files?path=${encodeURIComponent(selectedFile.path)}`)
+      //   const fileData = await fileResponse.json()
 
-        setSelectedFile({
-          ...selectedFile,
-          content: fileData.content,
-          isModified: false,
-        })
-      }
+      //   setSelectedFile({
+      //     ...selectedFile,
+      //     content: fileData.content,
+      //     isModified: false,
+      //   })
+      // }
 
       setIsRevertDialogOpen(false)
 
@@ -213,14 +199,14 @@ export function Dashboard() {
         </TabsList>
         <div className="tabs-content">
           <TabsContent value="files" className="tab-panel mt-2">
-            <FileTree onFileSelect={handleFileSelect} />
+            <FileTree selectedFilePath={selectedFilePath} />
           </TabsContent>
           <TabsContent value="media" className="tab-panel mt-2">
             <MediaManager
               onSelect={(url) => {
-                if (selectedFile) {
-                  // Logic to insert media URL into editor or YAML front matter
-                }
+                // if (selectedFile) {
+                // Logic to insert media URL into editor or YAML front matter
+                // }
               }}
               inSidebar={true}
             />
@@ -296,9 +282,7 @@ export function Dashboard() {
             </Sheet>
           </div>
           <div className="flex-1 overflow-auto">
-            {selectedFile ? (
-              <Editor file={selectedFile} onSave={handleFileSave} />
-            ) : (
+            {children || (
               <div className="flex items-center justify-center h-full text-xs text-muted-foreground">
                 Select a file to edit
               </div>
@@ -312,9 +296,7 @@ export function Dashboard() {
           </ResizablePanel>
           <ResizableHandle />
           <ResizablePanel defaultSize={80}>
-            {selectedFile ? (
-              <Editor file={selectedFile} onSave={handleFileSave} />
-            ) : (
+            {children || (
               <div className="flex items-center justify-center h-full text-xs text-muted-foreground">
                 Select a file to edit
               </div>

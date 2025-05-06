@@ -145,7 +145,13 @@ export function MetadataDisplay({ frontMatter }: MetadataDisplayProps) {
         Object.entries(frontMatter).map(([key, value]) => (
           <div key={key} className="space-y-1">
             <div className="flex items-center gap-1">
-              <FileIcon className="h-3 w-3 text-muted-foreground" />
+              {/* Only show icons for special types */}
+              {typeof value === "string" && isDateString(value) && (
+                <CalendarIcon className="h-3 w-3 text-muted-foreground" />
+              )}
+              {typeof value === "string" && isImageUrl(value) && <FileIcon className="h-3 w-3 text-muted-foreground" />}
+              {Array.isArray(value) && isImageArray(value) && <FileIcon className="h-3 w-3 text-muted-foreground" />}
+              {isDateObject(value) && <CalendarIcon className="h-3 w-3 text-muted-foreground" />}
               <span className="text-xs font-medium capitalize">{key}</span>
             </div>
             <div className="text-xs">{renderValue(key, value)}</div>

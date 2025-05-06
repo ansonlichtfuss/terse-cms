@@ -11,6 +11,7 @@ import { getUserPreferences, saveUserPreferences } from "@/lib/user-preferences"
 import { EditorContent, handleToolbarAction, type CursorPosition } from "@/components/editor-content"
 import matter from "gray-matter"
 import { RenameFileDialog } from "@/components/rename-file-dialog"
+import { useRouter } from "next/navigation"
 
 interface EditorProps {
   file: FileData
@@ -169,6 +170,9 @@ export function Editor({ file, onSave }: EditorProps) {
     }
   }, [])
 
+  // Add router to the component
+  const router = useRouter()
+
   // Handle file rename
   const handleRename = async (newName: string) => {
     if (!file) return
@@ -199,6 +203,9 @@ export function Editor({ file, onSave }: EditorProps) {
       if (onSave) {
         onSave(newPath, file.content)
       }
+
+      // Navigate to the new URL
+      router.push(`/edit/${encodeURIComponent(newPath)}`)
 
       setIsRenameDialogOpen(false)
     } catch (error) {
