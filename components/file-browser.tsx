@@ -189,7 +189,7 @@ export function FileBrowser({
       </div>
 
       {/* Main content area with padding at the bottom to account for the action bar */}
-      <div className="px-4 overflow-y-auto max-h-[calc(100vh-150px)]">
+      <div className="px-4 pt-2 pb-8 overflow-y-auto max-h-[calc(100vh-150px)]">
         {isLoading ? (
           <div className="flex items-center justify-center h-20 text-muted-foreground text-xs">
             Loading...
@@ -197,45 +197,6 @@ export function FileBrowser({
         ) : currentDirContents.length > 0 ? (
           // Render list view using FileItemRow component
           <div className="space-y-1 px-0 max-h-full">
-            {currentDirContents.map((item) => (
-              <FileItemRow
-                key={getItemPath(item)}
-                item={item}
-                isSelected={selectedItem === getItemPath(item)}
-                type={type}
-                useUrlRouting={useUrlRouting}
-                onItemClick={handleItemClick}
-                onDeleteClick={openDeleteDialog} // Pass local handler to open delete dialog
-                onRenameClick={openRenameDialog} // Pass local handler to open rename dialog
-                onMoveClick={openMoveDialog} // Pass local handler to open move dialog
-              />
-            ))}{" "}
-            {currentDirContents.map((item) => (
-              <FileItemRow
-                key={getItemPath(item)}
-                item={item}
-                isSelected={selectedItem === getItemPath(item)}
-                type={type}
-                useUrlRouting={useUrlRouting}
-                onItemClick={handleItemClick}
-                onDeleteClick={openDeleteDialog} // Pass local handler to open delete dialog
-                onRenameClick={openRenameDialog} // Pass local handler to open rename dialog
-                onMoveClick={openMoveDialog} // Pass local handler to open move dialog
-              />
-            ))}{" "}
-            {currentDirContents.map((item) => (
-              <FileItemRow
-                key={getItemPath(item)}
-                item={item}
-                isSelected={selectedItem === getItemPath(item)}
-                type={type}
-                useUrlRouting={useUrlRouting}
-                onItemClick={handleItemClick}
-                onDeleteClick={openDeleteDialog} // Pass local handler to open delete dialog
-                onRenameClick={openRenameDialog} // Pass local handler to open rename dialog
-                onMoveClick={openMoveDialog} // Pass local handler to open move dialog
-              />
-            ))}{" "}
             {currentDirContents.map((item) => (
               <FileItemRow
                 key={getItemPath(item)}
