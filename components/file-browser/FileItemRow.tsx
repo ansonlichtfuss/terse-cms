@@ -58,8 +58,18 @@ export function FileItemRow({
         //   return true;
         // }}
       >
-        <div className="flex items-center min-w-0 overflow-hidden flex-1 pr-1 max-w-[200px]">
-          <File className="h-4 w-4 text-muted-foreground mr-1 flex-shrink-0" />
+        <div
+          className={cn(
+            "flex items-center min-w-0 overflow-hidden flex-1 pr-1 max-w-[200px]",
+            (itemName.toLowerCase().endsWith(".md") ||
+              itemName.toLowerCase().endsWith(".txt")) &&
+              "pl-2"
+          )}
+        >
+          {!itemName.toLowerCase().endsWith(".md") &&
+            !itemName.toLowerCase().endsWith(".txt") && (
+              <File className="h-4 w-4 text-muted-foreground mr-1 flex-shrink-0" />
+            )}
           <span className="text-xs truncate block w-full" title={itemName}>
             {itemName}
           </span>
