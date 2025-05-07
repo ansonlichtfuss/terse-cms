@@ -221,45 +221,6 @@ export function FileBrowser({
                 onRenameClick={openRenameDialog} // Pass local handler to open rename dialog
                 onMoveClick={openMoveDialog} // Pass local handler to open move dialog
               />
-            ))}{" "}
-            {currentDirContents.map((item) => (
-              <FileItemRow
-                key={getItemPath(item)}
-                item={item}
-                isSelected={selectedItem === getItemPath(item)}
-                type={type}
-                useUrlRouting={useUrlRouting}
-                onItemClick={handleItemClick}
-                onDeleteClick={openDeleteDialog} // Pass local handler to open delete dialog
-                onRenameClick={openRenameDialog} // Pass local handler to open rename dialog
-                onMoveClick={openMoveDialog} // Pass local handler to open move dialog
-              />
-            ))}{" "}
-            {currentDirContents.map((item) => (
-              <FileItemRow
-                key={getItemPath(item)}
-                item={item}
-                isSelected={selectedItem === getItemPath(item)}
-                type={type}
-                useUrlRouting={useUrlRouting}
-                onItemClick={handleItemClick}
-                onDeleteClick={openDeleteDialog} // Pass local handler to open delete dialog
-                onRenameClick={openRenameDialog} // Pass local handler to open rename dialog
-                onMoveClick={openMoveDialog} // Pass local handler to open move dialog
-              />
-            ))}{" "}
-            {currentDirContents.map((item) => (
-              <FileItemRow
-                key={getItemPath(item)}
-                item={item}
-                isSelected={selectedItem === getItemPath(item)}
-                type={type}
-                useUrlRouting={useUrlRouting}
-                onItemClick={handleItemClick}
-                onDeleteClick={openDeleteDialog} // Pass local handler to open delete dialog
-                onRenameClick={openRenameDialog} // Pass local handler to open rename dialog
-                onMoveClick={openMoveDialog} // Pass local handler to open move dialog
-              />
             ))}
           </div>
         ) : (

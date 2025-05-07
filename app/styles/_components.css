@@ -1,24 +1,4 @@
 /* Fix for tabs to extend background all the way */
-.tabs-container {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-
-.tabs-content {
-  flex: 1;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-}
-
-.tab-panel {
-  height: 100%;
-  overflow: auto;
-  display: flex;
-  flex-direction: column;
-}
-
 /* Autosave link */
 .autosave-link {
   display: flex;
@@ -42,47 +22,6 @@
 }
 
 /* Minimalistic tabs - update this section */
-.minimal-tabs {
-  background: transparent;
-  border: none;
-  padding: 0;
-}
-
-.minimal-tabs [role="tablist"] {
-  background: transparent;
-  border-bottom: 1px solid hsl(var(--border));
-  padding: 0;
-  height: 32px; /* Make tabs more compact */
-}
-
-.minimal-tabs [role="tab"] {
-  background: transparent;
-  border: none;
-  border-bottom: 2px solid transparent;
-  border-radius: 0 !important; /* Explicitly remove border radius */
-  padding: 0.25rem 0.5rem; /* Reduce padding for more compact tabs */
-  font-size: 0.7rem; /* Slightly smaller font */
-  font-weight: 500;
-  color: hsl(var(--muted-foreground));
-  transition: all 0.2s;
-  box-shadow: none !important;
-  height: 32px; /* Fixed height for compact tabs */
-  min-width: 0; /* Allow tabs to be narrower */
-}
-
-.minimal-tabs [role="tab"][data-state="active"] {
-  background: transparent;
-  border-bottom-color: hsl(var(--primary));
-  color: hsl(var(--foreground));
-  box-shadow: none !important;
-}
-
-.minimal-tabs [role="tab"]:hover {
-  background: transparent;
-  color: hsl(var(--foreground));
-  box-shadow: none !important;
-}
-
 /* Common breadcrumb styles for both file browsers */
 .breadcrumbs {
   display: flex;
@@ -300,11 +239,6 @@
   gap: 0.5rem;
   width: 100%;
   max-width: 100%;
-}
-
-/* Fix for history tab spacing */
-.tab-panel {
-  padding: 0 !important;
 }
 
 /* Destructive dropdown menu item hover effect */

@@ -7,20 +7,27 @@ import { cn } from "@/lib/utils";
 
 const Tabs = TabsPrimitive.Root;
 
-const TabsList = React.forwardRef<
-  React.ElementRef<typeof TabsPrimitive.List>,
-  React.ComponentPropsWithoutRef<typeof TabsPrimitive.List>
->(({ className, ...props }, ref) => (
-  <TabsPrimitive.List
-    ref={ref}
-    className={cn(
-      "inline-flex h-10 items-center justify-center p-1 text-muted-foreground",
-      className
-    )}
-    {...props}
-  />
-));
+type TabsListRef = React.ElementRef<typeof TabsPrimitive.List>;
+
+const TabsList = React.forwardRef<TabsListRef, TabsListProps>(
+  ({ className, variant, ...props }, ref) => (
+    <TabsPrimitive.List
+      ref={ref}
+      className={cn(
+        "inline-flex h-10 items-center justify-center p-1 text-muted-foreground",
+        variant === "minimal" && "bg-transparent", // Apply minimal styles
+        className
+      )}
+      {...props}
+    />
+  )
+);
 TabsList.displayName = TabsPrimitive.List.displayName;
+
+export interface TabsListProps
+  extends React.ComponentPropsWithoutRef<typeof TabsPrimitive.List> {
+  variant?: "default" | "minimal";
+}
 
 const TabsTrigger = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.Trigger>,

@@ -3,10 +3,16 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+  TabsListProps,
+} from "@/components/ui/tabs";
 import matter from "gray-matter";
 import { MetadataDisplay } from "@/components/metadata-display";
-import { HistoryDisplay } from "@/components/history-display";
+import { GitHistorySidebar } from "@/components/git-history-sidebar";
 
 interface UnifiedSidebarProps {
   content: string;
@@ -75,10 +81,10 @@ export function UnifiedSidebar({
         onValueChange={(value) => {
           setActiveTab(value);
         }}
-        className="tabs-container h-full minimal-tabs"
+        className="h-full"
       >
         <div className="p-2 flex items-center justify-between">
-          <TabsList className="grid w-full grid-cols-2">
+          <TabsList className="grid w-full grid-cols-2" variant="minimal">
             <TabsTrigger value="metadata" className="text-xs">
               Metadata
             </TabsTrigger>
@@ -96,8 +102,8 @@ export function UnifiedSidebar({
           </Button>
         </div>
 
-        <div className="tabs-content">
-          <TabsContent value="metadata" className="tab-panel m-0 p-0">
+        <div>
+          <TabsContent value="metadata" className="m-0 p-0">
             <div className="h-full overflow-y-auto">
               <div className="px-2 pt-1">
                 <MetadataDisplay frontMatter={frontMatter} />
@@ -105,10 +111,15 @@ export function UnifiedSidebar({
             </div>
           </TabsContent>
 
-          <TabsContent value="history" className="tab-panel m-0 p-0">
+          <TabsContent value="history" className="m-0 p-0">
             <div className="h-full overflow-y-auto">
               <div className="px-2 pt-1">
-                <HistoryDisplay filePath={filePath} lastSaved={lastSaved} />
+                <GitHistorySidebar
+                  filePath={filePath}
+                  isVisible={isVisible}
+                  onClose={onToggle}
+                  lastSaved={lastSaved}
+                />
               </div>
             </div>
           </TabsContent>

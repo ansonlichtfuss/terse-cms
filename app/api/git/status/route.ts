@@ -13,31 +13,11 @@ export async function GET(request: Request) {
     request.headers.get("x-use-mock") === "true" ||
     process.env.USE_MOCK_API === "true";
 
-  if (useMock) {
-    // Dynamically import Node.js modules only on the server
-    const fs = await import("fs");
-
-    const MOCK_GIT_STATUS_FILE = "mock-data/git-status.json";
-
-    try {
-      const gitStatusData = JSON.parse(
-        fs.readFileSync(MOCK_GIT_STATUS_FILE, "utf8")
-      );
-      return NextResponse.json(gitStatusData);
-    } catch (error) {
-      console.error("Error reading mock Git status data:", error);
-      return NextResponse.json(
-        { error: "Failed to read mock Git status data" },
-        { status: 500 }
-      );
-    }
-  }
-
   try {
     // Dynamically import simple-git only on the server
     const { simpleGit } = await import("simple-git");
 
-    const git = simpleGit(ROOT_DIR);
+    const git = simpleGit("./mock-data");
 
     // Check if directory is a git repository
     const isRepo = await git.checkIsRepo();

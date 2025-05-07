@@ -1,8 +1,8 @@
 ---
-title: About Our Company
+title: About Ourddddd dddCompany
 date: 2023-05-15
 isDraft: false
-thumbnail: https://example.com/images/about.jpg
+thumbnail: https://example.com/imamnges/about.jpg
 location: San Francisco, CA
 images:
   - url: https://example.com/images/team.jpg

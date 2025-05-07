@@ -1,5 +1,5 @@
 ---
-title: Contact Information
+title: Contact Informatefewfewfion
 date: 2023-06-20
 isDraft: false
 thumbnail: https://example.com/images/contact.jpg
