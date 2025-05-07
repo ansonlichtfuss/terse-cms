@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 interface UseFileBrowserStateProps {
   isMobile?: boolean;
   inSidebar?: boolean;
-  selectedPath?: string;
+  selectedPath?: string; // Keep selectedPath
 }
 
 interface UseFileBrowserStateResult {
@@ -40,10 +40,37 @@ export const useFileBrowserState = ({
   const [isRenameDialogOpen, setIsRenameDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [itemToAction, setItemToAction] = useState<any | null>(null); // TODO: Define a more specific type
-  const [currentPath, setCurrentPath] = useState<string>("");
-  const [expandedFolders, setExpandedFolders] = useState<Set<string>>(
-    new Set()
-  );
+  const [currentPath, setCurrentPath] = useState<string>(() => {
+    // Initialize currentPath based on selectedPath
+    if (selectedPath) {
+      const parts = selectedPath.split("/");
+      // If it's a file, set currentPath to its directory
+      if (parts.length > 1 && selectedPath.includes(".")) {
+        return parts.slice(0, -1).join("/");
+      }
+      // If it's a folder or root, use the path itself
+      return selectedPath;
+    }
+    return ""; // Default to root
+  });
+  const [expandedFolders, setExpandedFolders] = useState<Set<string>>(() => {
+    // Initialize expandedFolders based on selectedPath
+    const initialExpanded = new Set<string>();
+    if (selectedPath) {
+      const parts = selectedPath.split("/");
+      let current = "";
+      // Add all parent directories to expandedFolders
+      for (
+        let i = 0;
+        i < parts.length - (selectedPath.includes(".") ? 1 : 0);
+        i++
+      ) {
+        current = current ? `${current}/${parts[i]}` : parts[i];
+        initialExpanded.add(current);
+      }
+    }
+    return initialExpanded;
+  });
   const [isUploading, setIsUploading] = useState(isMobile);
   const [isCreatingFolder, setIsCreatingFolder] = useState(false);
   const [newFolderName, setNewFolderName] = useState("");
@@ -58,6 +85,8 @@ export const useFileBrowserState = ({
       setSelectedItem(selectedPath);
     }
   }, [selectedPath]);
+
+  // Removed the useEffect that updates URL query parameters
 
   return {
     selectedItem,

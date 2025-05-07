@@ -48,7 +48,7 @@ export function FileBrowser({
   inSidebar = false,
   useUrlRouting = false,
 }: FileBrowserProps) {
-  // Use the custom state hook
+  // Use the custom state hook, passing selectedPath
   const {
     selectedItem,
     setSelectedItem,

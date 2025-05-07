@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams } from "next/navigation"; // Removed useSearchParams
 import { Dashboard } from "@/components/dashboard";
 import type { FileData } from "@/types";
-import { Editor } from "@/components/editor/editor";
+import { Editor } from "@/components/editor/editor"; // Corrected import path
 
 export default function EditPage() {
   const params = useParams();
@@ -15,6 +15,8 @@ export default function EditPage() {
   const filePath = Array.isArray(params.path)
     ? params.path.join("/")
     : params.path || "";
+
+  // Removed logic for reading sidebar state from URL parameters
 
   useEffect(() => {
     if (filePath) {
@@ -68,7 +70,9 @@ export default function EditPage() {
   };
 
   return (
-    <Dashboard selectedFilePath={filePath}>
+    <Dashboard
+      selectedFilePath={filePath} // Pass selectedFilePath
+    >
       {isLoading ? (
         <div className="flex items-center justify-center h-full text-xs text-muted-foreground">
           Loading file...

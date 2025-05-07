@@ -70,11 +70,8 @@ export function Dashboard({
     fetchModifiedFiles();
   }, []);
 
-  const handleCommit = async () => {
-    setIsCommitDialogOpen(true);
-  };
-
   const commitChanges = async (message: string) => {
+    // Moved commitChanges here
     try {
       await fetch("/api/git/commit", {
         method: "POST",
@@ -208,7 +205,7 @@ export function Dashboard({
             <Button
               variant="outline"
               size="sm"
-              onClick={handleCommit}
+              onClick={() => setIsCommitDialogOpen(true)} // Corrected onClick handler
               disabled={modifiedFiles.length === 0}
               className="flex items-center gap-1 rounded-r-none border-r-0 h-7 text-xs bg-gradient-secondary hover:bg-gradient-primary hover:text-white transition-all"
             >
