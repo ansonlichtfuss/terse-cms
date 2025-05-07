@@ -3,7 +3,9 @@
 import type React from "react";
 
 import { ConfirmationDialog } from "@/components/confirmation-dialog";
-import { FileBrowser } from "@/components/file-browser";
+import { FileBrowser } from "@/components/file-browser/FileBrowser";
+import containerStyles from "./file-browser/FileBrowserContainer.module.css"; // Import the container styles
+import { cn } from "@/lib/utils"; // Import cn utility
 import { GitCommitDialog } from "@/components/git-commit-dialog";
 import { Logo } from "@/components/logo";
 import { MediaManager } from "@/components/media-manager";
@@ -154,40 +156,42 @@ export function Dashboard({
   };
 
   const renderSidebarContent = () => (
-    <Tabs
-      defaultValue="files"
-      value={selectedTab}
-      onValueChange={setSelectedTab}
-    >
-      <div className=" m-2">
-        <TabsList className="inline-grid w-full grid-cols-2">
-          <TabsTrigger value="files" className="text-sm">
-            Files
-          </TabsTrigger>
-          <TabsTrigger value="media" className="text-sm">
-            Media
-          </TabsTrigger>
-        </TabsList>
-      </div>
-      <TabsContent value="files">
-        <FileBrowser
-          selectedPath={selectedFilePath}
-          type="files"
-          inSidebar
-          useUrlRouting
-        />
-      </TabsContent>
-      <TabsContent value="media">
-        <MediaManager
-          onSelect={(url) => {
-            // if (selectedFile) {
-            // Logic to insert media URL into editor or YAML front matter
-            // }
-          }}
-          inSidebar={true}
-        />
-      </TabsContent>
-    </Tabs>
+    <div className={containerStyles["file-browser-container"]}>
+      <Tabs
+        defaultValue="files"
+        value={selectedTab}
+        onValueChange={setSelectedTab}
+      >
+        <div className="m-2">
+          <TabsList className="inline-grid w-full grid-cols-2">
+            <TabsTrigger value="files" className="text-sm">
+              Files
+            </TabsTrigger>
+            <TabsTrigger value="media" className="text-sm">
+              Media
+            </TabsTrigger>
+          </TabsList>
+        </div>
+        <TabsContent value="files">
+          <FileBrowser
+            selectedPath={selectedFilePath}
+            type="files"
+            inSidebar
+            useUrlRouting
+          />
+        </TabsContent>
+        <TabsContent value="media">
+          <MediaManager
+            onSelect={(url) => {
+              // if (selectedFile) {
+              // Logic to insert media URL into editor or YAML front matter
+              // }
+            }}
+            inSidebar={true}
+          />
+        </TabsContent>
+      </Tabs>
+    </div>
   );
 
   return (
@@ -271,7 +275,12 @@ export function Dashboard({
         </div>
       ) : (
         <div className="flex h-full">
-          <div className="w-[280px] border-r max-h-full">
+          <div
+            className={cn(
+              containerStyles["file-browser-container"],
+              "w-[280px] border-r max-h-full"
+            )}
+          >
             {renderSidebarContent()}
           </div>
           <div className="flex-1 overflow-auto">

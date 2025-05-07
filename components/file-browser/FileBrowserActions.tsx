@@ -8,6 +8,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
 
 interface FileBrowserActionsProps {
   type: "files" | "media";
@@ -28,7 +29,9 @@ export function FileBrowserActions({
 }: FileBrowserActionsProps) {
   return (
     <TooltipProvider delayDuration={300}>
-      <div className={`flex ${inSidebar ? "gap-1" : "gap-2"} justify-center`}>
+      <div
+        className={cn("flex", inSidebar ? "gap-1" : "gap-2", "justify-center")}
+      >
         <Tooltip>
           <TooltipTrigger asChild>
             <Button

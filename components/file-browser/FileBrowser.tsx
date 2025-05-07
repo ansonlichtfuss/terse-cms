@@ -3,19 +3,21 @@
 import type React from "react";
 
 import { ConfirmationDialog } from "@/components/confirmation-dialog";
+import styles from "./FileBrowser.module.css";
+import { cn } from "@/lib/utils";
 import { MoveFileDialog } from "@/components/move-file-dialog";
 import { PathBreadcrumbs } from "@/components/path-breadcrumbs";
 import { RenameFileDialog } from "@/components/rename-file-dialog";
 import { Home } from "lucide-react";
 
 // Import the new hooks and components
-import { CreateFolderDialog } from "./file-browser/CreateFolderDialog"; // Assuming dialogs are also moved
-import { FileBrowserActions } from "./file-browser/FileBrowserActions";
-import { FileItemRow } from "./file-browser/FileItemRow";
-import { useFileBrowserState } from "./file-browser/useFileBrowserState";
-import { useFileFetching } from "./file-browser/useFileFetching";
-import { useFileOperations } from "./file-browser/useFileOperations";
-import { getItemName, getItemPath } from "./file-browser/utils"; // Import utility functions
+import { CreateFolderDialog } from "./CreateFolderDialog"; // Assuming dialogs are also moved
+import { FileBrowserActions } from "./FileBrowserActions";
+import { FileItemRow } from "./FileItemRow";
+import { useFileBrowserState } from "./useFileBrowserState";
+import { useFileFetching } from "./useFileFetching";
+import { useFileOperations } from "./useFileOperations";
+import { getItemName, getItemPath } from "./utils"; // Import utility functions
 import { useRouter } from "next/navigation";
 import { Router } from "next/router";
 
@@ -179,7 +181,7 @@ export function FileBrowser({
   };
 
   return (
-    <div>
+    <div className={styles["file-browser"]}>
       <div className="px-4">
         <PathBreadcrumbs
           currentPath={currentPath.replace(/\/$/, "")} // Remove trailing slash for display
@@ -195,7 +197,11 @@ export function FileBrowser({
       </div>
 
       {/* Main content area with padding at the bottom to account for the action bar */}
-      <div className="px-4 pt-2 pb-8 overflow-y-auto max-h-[calc(100vh-150px)]">
+      <div
+        className={cn(
+          "px-4 pt-2 pb-8 overflow-y-auto max-h-[calc(100vh-150px)]"
+        )}
+      >
         {isLoading ? (
           <div className="flex items-center justify-center h-20 text-muted-foreground text-xs">
             Loading...
@@ -203,6 +209,45 @@ export function FileBrowser({
         ) : currentDirContents.length > 0 ? (
           // Render list view using FileItemRow component
           <div className="space-y-1 px-0 max-h-full">
+            {currentDirContents.map((item) => (
+              <FileItemRow
+                key={getItemPath(item)}
+                item={item}
+                isSelected={selectedItem === getItemPath(item)}
+                type={type}
+                useUrlRouting={useUrlRouting}
+                onItemClick={handleItemClick}
+                onDeleteClick={openDeleteDialog} // Pass local handler to open delete dialog
+                onRenameClick={openRenameDialog} // Pass local handler to open rename dialog
+                onMoveClick={openMoveDialog} // Pass local handler to open move dialog
+              />
+            ))}{" "}
+            {currentDirContents.map((item) => (
+              <FileItemRow
+                key={getItemPath(item)}
+                item={item}
+                isSelected={selectedItem === getItemPath(item)}
+                type={type}
+                useUrlRouting={useUrlRouting}
+                onItemClick={handleItemClick}
+                onDeleteClick={openDeleteDialog} // Pass local handler to open delete dialog
+                onRenameClick={openRenameDialog} // Pass local handler to open rename dialog
+                onMoveClick={openMoveDialog} // Pass local handler to open move dialog
+              />
+            ))}{" "}
+            {currentDirContents.map((item) => (
+              <FileItemRow
+                key={getItemPath(item)}
+                item={item}
+                isSelected={selectedItem === getItemPath(item)}
+                type={type}
+                useUrlRouting={useUrlRouting}
+                onItemClick={handleItemClick}
+                onDeleteClick={openDeleteDialog} // Pass local handler to open delete dialog
+                onRenameClick={openRenameDialog} // Pass local handler to open rename dialog
+                onMoveClick={openMoveDialog} // Pass local handler to open move dialog
+              />
+            ))}{" "}
             {currentDirContents.map((item) => (
               <FileItemRow
                 key={getItemPath(item)}
@@ -225,7 +270,11 @@ export function FileBrowser({
       </div>
 
       {/* Fixed action buttons at the bottom */}
-      <div className="absolute bottom-0 left-0 w-[280px] p-2 bg-background/80 backdrop-blur-sm border-r z-10">
+      <div
+        className={cn(
+          "absolute bottom-0 left-0 w-[280px] p-2 bg-background/80 backdrop-blur-sm border-r z-10"
+        )}
+      >
         {/* Use the FileBrowserActions component */}
         <FileBrowserActions
           type={type}

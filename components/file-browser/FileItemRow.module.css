@@ -1,0 +1,59 @@
+.file-row {
+  cursor: pointer;
+  transition: background-color 0.2s;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.file-row:hover {
+  background-color: hsl(var(--muted) / 0.7);
+}
+
+.file-row.selected {
+  background-color: hsl(var(--muted));
+}
+
+.file-item,
+.folder-item {
+  display: flex;
+  align-items: center;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.file-item:hover,
+.folder-item:hover {
+  background-color: hsl(var(--muted));
+}
+
+.file-item.selected,
+.folder-item.selected {
+  background-color: hsl(var(--primary) / 0.1);
+}
+
+.file-item-icon,
+.folder-item-icon {
+  margin-right: 0.5rem;
+  color: hsl(var(--muted-foreground));
+  flex-shrink: 0;
+}
+
+.folder-item-icon {
+  color: hsl(var(--primary));
+}
+
+.file-item-name,
+.folder-item-name {
+  flex: 1;
+  font-size: 0.8rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: calc(100% - 2rem);
+}

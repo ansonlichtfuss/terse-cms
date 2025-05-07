@@ -1,5 +1,5 @@
 import { toast } from "@/components/ui/use-toast";
-import type { FileItem } from "../file-browser"; // Assuming FileItem type remains in the main file for now
+import type { FileItem } from "./FileBrowser"; // Assuming FileItem type remains in the main file for now
 import { getItemPath } from "./utils"; // Import utility function
 
 interface UseFileOperationsProps {

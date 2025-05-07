@@ -1,6 +1,7 @@
 import type React from "react";
 import Link from "next/link";
 import { File, Folder, MoreHorizontal } from "lucide-react";
+import styles from "./FileItemRow.module.css";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -10,7 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import { getItemName, getItemPath } from "./utils"; // Import utility functions
-import type { FileItem } from "../file-browser"; // Assuming FileItem type remains in the main file for now
+import type { FileItem } from "./FileBrowser"; // Assuming FileItem type remains in the main file for now
 
 interface FileItemRowProps {
   item: FileItem;
@@ -45,8 +46,9 @@ export function FileItemRow({
         key={itemPath}
         href={`/edit/${itemPath}`}
         className={cn(
+          styles["file-row"],
           "flex items-center justify-between py-1 px-1 rounded-md w-full",
-          isSelected ? "bg-muted" : "hover:bg-muted"
+          isSelected ? styles.selected : styles["file-row:hover"]
         )}
         // onClick={(e) => {
         //   // Still call onItemClick to update the selected item state in the parent
@@ -60,6 +62,7 @@ export function FileItemRow({
       >
         <div
           className={cn(
+            styles["file-item"],
             "flex items-center min-w-0 overflow-hidden flex-1 pr-1 max-w-[200px]",
             (itemName.toLowerCase().endsWith(".md") ||
               itemName.toLowerCase().endsWith(".txt")) &&
@@ -68,9 +71,20 @@ export function FileItemRow({
         >
           {!itemName.toLowerCase().endsWith(".md") &&
             !itemName.toLowerCase().endsWith(".txt") && (
-              <File className="h-4 w-4 text-muted-foreground mr-1 flex-shrink-0" />
+              <File
+                className={cn(
+                  styles["file-item-icon"],
+                  "h-4 w-4 text-muted-foreground mr-1 flex-shrink-0"
+                )}
+              />
             )}
-          <span className="text-xs truncate block w-full" title={itemName}>
+          <span
+            className={cn(
+              styles["file-item-name"],
+              "text-xs truncate block w-full"
+            )}
+            title={itemName}
+          >
             {itemName}
           </span>
         </div>
@@ -113,14 +127,25 @@ export function FileItemRow({
     <div
       key={itemPath}
       className={cn(
-        "flex items-center justify-between py-1 px-1 rounded-md cursor-pointer hover:bg-muted w-full",
-        isSelected && "bg-muted"
+        styles["file-row"],
+        "flex items-center justify-between py-1 px-1 rounded-md cursor-pointer w-full",
+        isSelected ? styles.selected : styles["file-row:hover"]
       )}
       onClick={() => onItemClick(item)}
     >
-      <div className="flex items-center min-w-0 overflow-hidden flex-1 pr-1 max-w-[200px]">
+      <div
+        className={cn(
+          styles["folder-item"],
+          "flex items-center min-w-0 overflow-hidden flex-1 pr-1 max-w-[200px]"
+        )}
+      >
         {isFolder ? (
-          <Folder className="h-4 w-4 text-muted-foreground mr-1 flex-shrink-0" />
+          <Folder
+            className={cn(
+              styles["folder-item-icon"],
+              "h-4 w-4 text-muted-foreground mr-1 flex-shrink-0"
+            )}
+          />
         ) : type === "media" &&
           item.url &&
           item.key.match(/\.(jpg|jpeg|png|gif|webp)$/i) ? (
@@ -133,10 +158,21 @@ export function FileItemRow({
           </div>
         ) : (
           type === "media" && (
-            <File className="h-4 w-4 text-muted-foreground mr-1 flex-shrink-0" />
+            <File
+              className={cn(
+                styles["file-item-icon"],
+                "h-4 w-4 text-muted-foreground mr-1 flex-shrink-0"
+              )}
+            />
           )
         )}
-        <span className="text-xs truncate block w-full" title={itemName}>
+        <span
+          className={cn(
+            styles["folder-item-name"],
+            "text-xs truncate block w-full"
+          )}
+          title={itemName}
+        >
           {itemName}
         </span>
       </div>
