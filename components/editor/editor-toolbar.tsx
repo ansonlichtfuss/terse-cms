@@ -1,24 +1,31 @@
-"use client"
+"use client";
 
-import { Button } from "@/components/ui/button"
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import { Separator } from "@/components/ui/separator"
-import { getToolbarItems } from "@/components/editor-toolbar-items"
+import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Separator } from "@/components/ui/separator";
+import { getToolbarItems } from "@/components/editor/editor-toolbar-items";
 
 interface EditorToolbarProps {
-  onAction: (action: string, value?: string) => void
-  onImageClick: () => void
+  onAction: (action: string, value?: string) => void;
+  onImageClick: () => void;
 }
 
 export function EditorToolbar({ onAction, onImageClick }: EditorToolbarProps) {
-  const toolbarItems = getToolbarItems(onImageClick)
+  const toolbarItems = getToolbarItems(onImageClick);
 
   return (
     <TooltipProvider delayDuration={300}>
       <div className="flex items-center gap-1 p-1 border rounded-md bg-gradient-secondary">
         {toolbarItems.map((group, groupIndex) => (
           <div key={group.group} className="flex items-center">
-            {groupIndex > 0 && <Separator orientation="vertical" className="mx-1 h-6" />}
+            {groupIndex > 0 && (
+              <Separator orientation="vertical" className="mx-1 h-6" />
+            )}
             <div className="flex items-center gap-1">
               {group.items.map((item) => (
                 <Tooltip key={item.tooltip}>
@@ -29,9 +36,9 @@ export function EditorToolbar({ onAction, onImageClick }: EditorToolbarProps) {
                       className="h-7 w-7 p-0 hover:bg-white/20 hover:text-primary transition-colors"
                       onClick={() => {
                         if (item.onClick) {
-                          item.onClick()
+                          item.onClick();
                         } else {
-                          onAction(item.action, item.value)
+                          onAction(item.action, item.value);
                         }
                       }}
                     >
@@ -48,5 +55,5 @@ export function EditorToolbar({ onAction, onImageClick }: EditorToolbarProps) {
         ))}
       </div>
     </TooltipProvider>
-  )
+  );
 }
