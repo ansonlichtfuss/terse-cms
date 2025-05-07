@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import {
   AlertDialog,
@@ -9,19 +9,18 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
-import { ScrollArea } from "@/components/ui/scroll-area"
+} from "@/components/ui/alert-dialog";
 
 interface ConfirmationDialogProps {
-  open: boolean
-  onOpenChange: (open: boolean) => void
-  title: string
-  description: string
-  confirmLabel?: string
-  cancelLabel?: string
-  onConfirm: () => void
-  destructive?: boolean
-  itemsList?: string[]
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  title: string;
+  description: string;
+  confirmLabel?: string;
+  cancelLabel?: string;
+  onConfirm: () => void;
+  destructive?: boolean;
+  itemsList?: string[];
 }
 
 export function ConfirmationDialog({
@@ -40,12 +39,14 @@ export function ConfirmationDialog({
       <AlertDialogContent className="max-w-md">
         <AlertDialogHeader>
           <AlertDialogTitle className="text-sm">{title}</AlertDialogTitle>
-          <AlertDialogDescription className="text-xs">{description}</AlertDialogDescription>
+          <AlertDialogDescription className="text-xs">
+            {description}
+          </AlertDialogDescription>
         </AlertDialogHeader>
 
         {itemsList && itemsList.length > 0 && (
           <div className="my-2">
-            <ScrollArea className="h-[150px] border rounded-md p-2">
+            <div className="h-[150px] border rounded-md p-2 overflow-y-auto">
               <ul className="space-y-1">
                 {itemsList.map((item, index) => (
                   <li key={index} className="text-xs truncate">
@@ -53,17 +54,21 @@ export function ConfirmationDialog({
                   </li>
                 ))}
               </ul>
-            </ScrollArea>
+            </div>
           </div>
         )}
 
         <AlertDialogFooter>
-          <AlertDialogCancel className="h-7 text-xs">{cancelLabel}</AlertDialogCancel>
+          <AlertDialogCancel className="h-7 text-xs">
+            {cancelLabel}
+          </AlertDialogCancel>
           <AlertDialogAction
-            className={`h-7 text-xs ${destructive ? "bg-destructive hover:bg-destructive/90" : ""}`}
+            className={`h-7 text-xs ${
+              destructive ? "bg-destructive hover:bg-destructive/90" : ""
+            }`}
             onClick={(e) => {
-              e.preventDefault()
-              onConfirm()
+              e.preventDefault();
+              onConfirm();
             }}
           >
             {confirmLabel}
@@ -71,5 +76,5 @@ export function ConfirmationDialog({
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-  )
+  );
 }

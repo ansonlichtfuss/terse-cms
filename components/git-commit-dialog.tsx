@@ -1,24 +1,36 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { ScrollArea } from "@/components/ui/scroll-area"
+import { useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 interface GitCommitDialogProps {
-  open: boolean
-  onOpenChange: (open: boolean) => void
-  onCommit: (message: string) => void
-  modifiedFiles?: string[]
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onCommit: (message: string) => void;
+  modifiedFiles?: string[];
 }
 
-export function GitCommitDialog({ open, onOpenChange, onCommit, modifiedFiles = [] }: GitCommitDialogProps) {
-  const [commitMessage, setCommitMessage] = useState(`CMS: Updated files at ${new Date().toLocaleString()}`)
+export function GitCommitDialog({
+  open,
+  onOpenChange,
+  onCommit,
+  modifiedFiles = [],
+}: GitCommitDialogProps) {
+  const [commitMessage, setCommitMessage] = useState(
+    `CMS: Updated files at ${new Date().toLocaleString()}`
+  );
 
   const handleCommit = () => {
-    onCommit(commitMessage)
-  }
+    onCommit(commitMessage);
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -37,8 +49,10 @@ export function GitCommitDialog({ open, onOpenChange, onCommit, modifiedFiles = 
           </div>
 
           <div>
-            <label className="text-xs font-medium">Modified Files ({modifiedFiles.length})</label>
-            <ScrollArea className="h-[150px] mt-1 border rounded-md p-2">
+            <label className="text-xs font-medium">
+              Modified Files ({modifiedFiles.length})
+            </label>
+            <div className="h-[150px] mt-1 border rounded-md p-2 overflow-y-auto">
               <ul className="space-y-1">
                 {modifiedFiles.map((file, index) => (
                   <li key={index} className="text-xs truncate">
@@ -46,11 +60,16 @@ export function GitCommitDialog({ open, onOpenChange, onCommit, modifiedFiles = 
                   </li>
                 ))}
               </ul>
-            </ScrollArea>
+            </div>
           </div>
         </div>
         <DialogFooter>
-          <Button variant="outline" size="sm" onClick={() => onOpenChange(false)} className="h-7 text-xs">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => onOpenChange(false)}
+            className="h-7 text-xs"
+          >
             Cancel
           </Button>
           <Button onClick={handleCommit} size="sm" className="h-7 text-xs">
@@ -59,5 +78,5 @@ export function GitCommitDialog({ open, onOpenChange, onCommit, modifiedFiles = 
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

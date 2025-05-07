@@ -1,38 +1,41 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Button } from "@/components/ui/button"
-import { GitCommit, Clock, User, FileText, X } from "lucide-react"
-import { format } from "date-fns"
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { GitCommit, Clock, User, FileText, X } from "lucide-react";
+import { format } from "date-fns";
 
 interface Commit {
-  hash: string
-  message: string
-  author: string
-  date: string
+  hash: string;
+  message: string;
+  author: string;
+  date: string;
   changes: {
-    files: string[]
-    insertions: number
-    deletions: number
-  }
+    files: string[];
+    insertions: number;
+    deletions: number;
+  };
 }
 
 interface GitHistorySidebarProps {
-  filePath: string
-  isVisible: boolean
-  onClose: () => void
+  filePath: string;
+  isVisible: boolean;
+  onClose: () => void;
 }
 
-export function GitHistorySidebar({ filePath, isVisible, onClose }: GitHistorySidebarProps) {
-  const [commits, setCommits] = useState<Commit[]>([])
-  const [isLoading, setIsLoading] = useState(true)
+export function GitHistorySidebar({
+  filePath,
+  isVisible,
+  onClose,
+}: GitHistorySidebarProps) {
+  const [commits, setCommits] = useState<Commit[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (isVisible) {
       // In a real implementation, fetch the git history for the file
       // For now, we'll use mock data
-      setIsLoading(true)
+      setIsLoading(true);
       setTimeout(() => {
         const mockCommits: Commit[] = [
           {
@@ -79,37 +82,37 @@ export function GitHistorySidebar({ filePath, isVisible, onClose }: GitHistorySi
               deletions: 0,
             },
           },
-        ]
-        setCommits(mockCommits)
-        setIsLoading(false)
-      }, 800)
+        ];
+        setCommits(mockCommits);
+        setIsLoading(false);
+      }, 800);
     }
-  }, [isVisible, filePath])
+  }, [isVisible, filePath]);
 
-  if (!isVisible) return null
+  if (!isVisible) return null;
 
   const formatDate = (dateString: string) => {
     try {
-      const date = new Date(dateString)
-      const now = new Date()
-      const diffMs = now.getTime() - date.getTime()
-      const diffMins = Math.round(diffMs / (1000 * 60))
-      const diffHours = Math.round(diffMs / (1000 * 60 * 60))
-      const diffDays = Math.round(diffMs / (1000 * 60 * 60 * 24))
+      const date = new Date(dateString);
+      const now = new Date();
+      const diffMs = now.getTime() - date.getTime();
+      const diffMins = Math.round(diffMs / (1000 * 60));
+      const diffHours = Math.round(diffMs / (1000 * 60 * 60));
+      const diffDays = Math.round(diffMs / (1000 * 60 * 60 * 24));
 
       if (diffMins < 60) {
-        return `${diffMins} minute${diffMins !== 1 ? "s" : ""} ago`
+        return `${diffMins} minute${diffMins !== 1 ? "s" : ""} ago`;
       } else if (diffHours < 24) {
-        return `${diffHours} hour${diffHours !== 1 ? "s" : ""} ago`
+        return `${diffHours} hour${diffHours !== 1 ? "s" : ""} ago`;
       } else if (diffDays < 7) {
-        return `${diffDays} day${diffDays !== 1 ? "s" : ""} ago`
+        return `${diffDays} day${diffDays !== 1 ? "s" : ""} ago`;
       } else {
-        return format(date, "MMM d, yyyy")
+        return format(date, "MMM d, yyyy");
       }
     } catch (e) {
-      return dateString
+      return dateString;
     }
-  }
+  };
 
   return (
     <div className="w-72 border-l relative animate-slide-in">
@@ -118,11 +121,16 @@ export function GitHistorySidebar({ filePath, isVisible, onClose }: GitHistorySi
           <GitCommit className="h-4 w-4 text-primary" />
           <h3 className="text-sm font-medium">File History</h3>
         </div>
-        <Button variant="ghost" size="sm" onClick={onClose} className="h-7 w-7 p-0">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={onClose}
+          className="h-7 w-7 p-0"
+        >
           <X className="h-4 w-4" />
         </Button>
       </div>
-      <ScrollArea className="h-[calc(100vh-10rem)]">
+      <div className="h-[calc(100vh-10rem)] overflow-y-auto">
         <div className="p-3">
           {isLoading ? (
             <div className="flex flex-col items-center justify-center py-8 text-muted-foreground">
@@ -142,7 +150,9 @@ export function GitHistorySidebar({ filePath, isVisible, onClose }: GitHistorySi
                     <div className="space-y-1">
                       <h4 className="text-sm font-medium">{commit.message}</h4>
                       <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                        <span className="font-mono">{commit.hash.substring(0, 7)}</span>
+                        <span className="font-mono">
+                          {commit.hash.substring(0, 7)}
+                        </span>
                         <span className="flex items-center gap-1">
                           <User className="h-3 w-3" />
                           {commit.author}
@@ -155,10 +165,15 @@ export function GitHistorySidebar({ filePath, isVisible, onClose }: GitHistorySi
                     </div>
                   </div>
                   <div className="flex items-center gap-2 text-xs">
-                    <span className="text-green-600">+{commit.changes.insertions}</span>
-                    <span className="text-red-600">-{commit.changes.deletions}</span>
+                    <span className="text-green-600">
+                      +{commit.changes.insertions}
+                    </span>
+                    <span className="text-red-600">
+                      -{commit.changes.deletions}
+                    </span>
                     <span className="text-muted-foreground ml-1">
-                      {commit.changes.files.length} file{commit.changes.files.length !== 1 ? "s" : ""}
+                      {commit.changes.files.length} file
+                      {commit.changes.files.length !== 1 ? "s" : ""}
                     </span>
                   </div>
                   {commit.changes.files.length > 1 && (
@@ -176,7 +191,7 @@ export function GitHistorySidebar({ filePath, isVisible, onClose }: GitHistorySi
             </div>
           )}
         </div>
-      </ScrollArea>
+      </div>
     </div>
-  )
+  );
 }

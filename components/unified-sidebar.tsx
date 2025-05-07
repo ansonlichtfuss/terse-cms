@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -99,19 +98,19 @@ export function UnifiedSidebar({
 
         <div className="tabs-content">
           <TabsContent value="metadata" className="tab-panel m-0 p-0">
-            <ScrollArea className="h-full">
+            <div className="h-full overflow-y-auto">
               <div className="px-2 pt-1">
                 <MetadataDisplay frontMatter={frontMatter} />
               </div>
-            </ScrollArea>
+            </div>
           </TabsContent>
 
           <TabsContent value="history" className="tab-panel m-0 p-0">
-            <ScrollArea className="h-full">
+            <div className="h-full overflow-y-auto">
               <div className="px-2 pt-1">
                 <HistoryDisplay filePath={filePath} lastSaved={lastSaved} />
               </div>
-            </ScrollArea>
+            </div>
           </TabsContent>
         </div>
       </Tabs>

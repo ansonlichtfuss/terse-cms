@@ -6,7 +6,6 @@ import { ConfirmationDialog } from "@/components/confirmation-dialog";
 import { MoveFileDialog } from "@/components/move-file-dialog";
 import { PathBreadcrumbs } from "@/components/path-breadcrumbs";
 import { RenameFileDialog } from "@/components/rename-file-dialog";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Home } from "lucide-react";
 
 // Import the new hooks and components
@@ -190,7 +189,7 @@ export function FileBrowser({
       </div>
 
       {/* Main content area with padding at the bottom to account for the action bar */}
-      <ScrollArea className="px-4">
+      <div className="px-4 overflow-y-auto max-h-[calc(100vh-150px)]">
         {isLoading ? (
           <div className="flex items-center justify-center h-20 text-muted-foreground text-xs">
             Loading...
@@ -256,7 +255,7 @@ export function FileBrowser({
             No items found
           </div>
         )}
-      </ScrollArea>
+      </div>
 
       {/* Fixed action buttons at the bottom */}
       <div className="absolute bottom-0 left-0 w-[280px] p-2 bg-background/80 backdrop-blur-sm border-r z-10">
