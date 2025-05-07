@@ -1,44 +1,48 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import { useParams } from "next/navigation"
-import { Editor } from "@/components/editor"
-import { Dashboard } from "@/components/dashboard"
-import type { FileData } from "@/types"
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
+import { Dashboard } from "@/components/dashboard";
+import type { FileData } from "@/types";
+import { Editor } from "@/components/editor/editor";
 
 export default function EditPage() {
-  const params = useParams()
-  const [file, setFile] = useState<FileData | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
+  const params = useParams();
+  const [file, setFile] = useState<FileData | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Extract the file path from the URL parameters
-  const filePath = Array.isArray(params.path) ? params.path.join("/") : params.path || ""
+  const filePath = Array.isArray(params.path)
+    ? params.path.join("/")
+    : params.path || "";
 
   useEffect(() => {
     if (filePath) {
-      fetchFile(filePath)
+      fetchFile(filePath);
     } else {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }, [filePath])
+  }, [filePath]);
 
   const fetchFile = async (path: string) => {
-    setIsLoading(true)
+    setIsLoading(true);
     try {
-      const response = await fetch(`/api/files?path=${encodeURIComponent(path)}`)
-      const data = await response.json()
+      const response = await fetch(
+        `/api/files?path=${encodeURIComponent(path)}`
+      );
+      const data = await response.json();
 
       setFile({
         path,
         content: data.content,
         isModified: false,
-      })
+      });
     } catch (error) {
-      console.error("Failed to fetch file:", error)
+      console.error("Failed to fetch file:", error);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const handleFileSave = async (path: string, content: string) => {
     try {
@@ -48,7 +52,7 @@ export default function EditPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ path, content }),
-      })
+      });
 
       // Update file state
       if (file && file.path === path) {
@@ -56,17 +60,19 @@ export default function EditPage() {
           ...file,
           content,
           isModified: true,
-        })
+        });
       }
     } catch (error) {
-      console.error("Failed to save file:", error)
+      console.error("Failed to save file:", error);
     }
-  }
+  };
 
   return (
     <Dashboard selectedFilePath={filePath}>
       {isLoading ? (
-        <div className="flex items-center justify-center h-full text-xs text-muted-foreground">Loading file...</div>
+        <div className="flex items-center justify-center h-full text-xs text-muted-foreground">
+          Loading file...
+        </div>
       ) : file ? (
         <Editor file={file} onSave={handleFileSave} />
       ) : (
@@ -75,5 +81,5 @@ export default function EditPage() {
         </div>
       )}
     </Dashboard>
-  )
+  );
 }

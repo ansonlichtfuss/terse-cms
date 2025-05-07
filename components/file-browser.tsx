@@ -16,6 +16,8 @@ import { useFileBrowserState } from "./file-browser/useFileBrowserState";
 import { useFileFetching } from "./file-browser/useFileFetching";
 import { useFileOperations } from "./file-browser/useFileOperations";
 import { getItemName, getItemPath } from "./file-browser/utils"; // Import utility functions
+import { useRouter } from "next/navigation";
+import { Router } from "next/router";
 
 // FileItem type definition remains here for now, as it's used by multiple components/hooks
 export interface FileItem {
@@ -71,6 +73,8 @@ export function FileBrowser({
     mounted,
   } = useFileBrowserState({ isMobile, inSidebar, selectedPath });
 
+  const router = useRouter();
+
   // Use the custom fetching hook
   const { currentDirContents, isLoading, fetchItems } = useFileFetching({
     currentPath,
@@ -109,10 +113,12 @@ export function FileBrowser({
         if (!useUrlRouting && typeof onSelect === "function") {
           onSelect(itemPath);
         }
-      } else if (item.url) {
+      } else {
+        alert(JSON.stringify(item));
+        router.push(`/edit/${item.path}`);
         // For media items, always use the callback
         if (typeof onSelect === "function") {
-          onSelect(itemPath, item.url);
+          onSelect(itemPath, item.path);
         }
       }
     }

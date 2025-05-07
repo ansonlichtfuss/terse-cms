@@ -15,6 +15,7 @@
   background-image: var(--dot-pattern);
   background-size: calc(var(--dot-size) + var(--dot-space))
     calc(var(--dot-size) + var(--dot-space));
+  background-position: bottom center;
 }
 
 /* Gradient underline for headings instead of text color */

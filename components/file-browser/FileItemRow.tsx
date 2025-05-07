@@ -43,20 +43,20 @@ export function FileItemRow({
     return (
       <Link
         key={itemPath}
-        href={`/edit/${encodeURIComponent(itemPath)}`}
+        href={`/edit/${itemPath}`}
         className={cn(
           "flex items-center justify-between py-1 px-1 rounded-md w-full",
           isSelected ? "bg-muted" : "hover:bg-muted"
         )}
-        onClick={(e) => {
-          // Still call onItemClick to update the selected item state in the parent
-          e.preventDefault();
-          onItemClick(item);
-          // Let the Link component handle the navigation
-          // Returning true here allows the default link behavior
-          // If you want to prevent default navigation and handle it manually, return false or remove this line
-          return true;
-        }}
+        // onClick={(e) => {
+        //   // Still call onItemClick to update the selected item state in the parent
+        //   e.preventDefault();
+        //   onItemClick(item);
+        //   // Let the Link component handle the navigation
+        //   // Returning true here allows the default link behavior
+        //   // If you want to prevent default navigation and handle it manually, return false or remove this line
+        //   return true;
+        // }}
       >
         <div className="flex items-center min-w-0 overflow-hidden flex-1 pr-1 max-w-[200px]">
           <File className="h-4 w-4 text-muted-foreground mr-1 flex-shrink-0" />
