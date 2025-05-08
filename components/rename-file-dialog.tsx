@@ -1,25 +1,33 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 interface S3Item {
-  key: string
-  type: "file" | "folder"
-  size?: number
-  lastModified?: string
-  url?: string
+  key: string;
+  type: "file" | "folder";
+  size?: number;
+  lastModified?: string;
+  url?: string;
 }
 
 interface RenameFileDialogProps {
-  open: boolean
-  onOpenChange: (open: boolean) => void
-  item: S3Item
-  onRename: (newName: string) => void
-  isMarkdownFile?: boolean
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  item: S3Item;
+  onRename: (newName: string) => void;
+  isMarkdownFile?: boolean;
+  isFileOpen?: boolean;
 }
 
 export function RenameFileDialog({
@@ -28,42 +36,53 @@ export function RenameFileDialog({
   item,
   onRename,
   isMarkdownFile = false,
+  isFileOpen = false,
 }: RenameFileDialogProps) {
-  const [newName, setNewName] = useState("")
+  const router = useRouter();
+  const [newName, setNewName] = useState("");
 
   useEffect(() => {
     if (open && item) {
       // Extract the current name from the key
-      const name = getItemName(item.key)
-      setNewName(name)
+      const name = getItemName(item.key);
+      setNewName(name);
     }
-  }, [open, item])
+  }, [open, item]);
 
   const getItemName = (key: string): string => {
     if (isMarkdownFile) {
       // For markdown files, the key is the full path
-      const parts = key.split("/")
-      return parts[parts.length - 1] || "Root"
+      const parts = key.split("/");
+      return parts[parts.length - 1] || "Root";
     } else {
       // For S3 items, remove trailing slash for folders
-      const cleanKey = key.endsWith("/") ? key.slice(0, -1) : key
+      const cleanKey = key.endsWith("/") ? key.slice(0, -1) : key;
       // Get the last part of the path
-      const parts = cleanKey.split("/")
-      return parts[parts.length - 1] || "Root"
+      const parts = cleanKey.split("/");
+      return parts[parts.length - 1] || "Root";
     }
-  }
+  };
 
   const handleRename = () => {
     if (newName.trim()) {
-      onRename(newName.trim())
+      onRename(newName.trim());
+      if (isFileOpen) {
+        const oldPathParts = item.key.split("/");
+        oldPathParts[oldPathParts.length - 1] = newName.trim();
+        const newPath = oldPathParts.join("/");
+        router.push(`/edit/${newPath}`);
+      }
+      onOpenChange(false);
     }
-  }
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Rename {item.type === "folder" ? "Folder" : "File"}</DialogTitle>
+          <DialogTitle>
+            Rename {item.type === "folder" ? "Folder" : "File"}
+          </DialogTitle>
         </DialogHeader>
         <div className="py-4">
           <div className="space-y-2">
@@ -80,15 +99,29 @@ export function RenameFileDialog({
             />
           </div>
         </div>
+        {isFileOpen && (
+          <div className="text-sm text-red-500 mb-4">
+            Warning: Renaming this file will close the current editor tab and
+            any unsaved changes will be lost.
+          </div>
+        )}
         <DialogFooter>
-          <Button variant="outline" size="sm" onClick={() => onOpenChange(false)}>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => onOpenChange(false)}
+          >
             Cancel
           </Button>
-          <Button size="sm" onClick={handleRename} disabled={!newName.trim() || newName === getItemName(item.key)}>
+          <Button
+            size="sm"
+            onClick={handleRename}
+            disabled={!newName.trim() || newName === getItemName(item.key)}
+          >
             Rename
           </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

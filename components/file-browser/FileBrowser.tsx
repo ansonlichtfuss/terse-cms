@@ -6,7 +6,7 @@ import { ConfirmationDialog } from "@/components/confirmation-dialog";
 import styles from "./FileBrowser.module.css";
 import { cn } from "@/lib/utils";
 import { MoveFileDialog } from "@/components/move-file-dialog";
-import { PathBreadcrumbs } from "@/components/path-breadcrumbs";
+import { PathBreadcrumbs } from "@/components/breadcrumbs/Breadcrumbs";
 import { RenameFileDialog } from "@/components/rename-file-dialog";
 import { Home } from "lucide-react";
 
@@ -39,7 +39,6 @@ interface FileBrowserProps {
   selectedPath?: string;
   isMobile?: boolean;
   inSidebar?: boolean;
-  useUrlRouting?: boolean;
 }
 
 export function FileBrowser({
@@ -48,7 +47,6 @@ export function FileBrowser({
   selectedPath,
   isMobile = false,
   inSidebar = false,
-  useUrlRouting = false,
 }: FileBrowserProps) {
   // Use the custom state hook, passing selectedPath
   const {
@@ -112,7 +110,7 @@ export function FileBrowser({
       if (type === "files") {
         // If using URL routing, the Link component in FileItemRow will handle navigation
         // Otherwise, use the callback
-        if (!useUrlRouting && typeof onSelect === "function") {
+        if (typeof onSelect === "function") {
           onSelect(itemPath);
         }
       } else {
@@ -186,12 +184,7 @@ export function FileBrowser({
         <PathBreadcrumbs
           currentPath={currentPath.replace(/\/$/, "")} // Remove trailing slash for display
           onNavigate={handleBreadcrumbNavigation}
-          className="breadcrumbs" // Use a common class for both file and media breadcrumbs
-          itemClassName="breadcrumb-item"
-          separatorClassName="breadcrumb-separator"
-          currentClassName="breadcrumb-current"
           rootIcon={<Home size={12} />}
-          useUrlRouting={useUrlRouting}
           type={type}
         />
       </div>
@@ -215,7 +208,6 @@ export function FileBrowser({
                 item={item}
                 isSelected={selectedItem === getItemPath(item)}
                 type={type}
-                useUrlRouting={useUrlRouting}
                 onItemClick={handleItemClick}
                 onDeleteClick={openDeleteDialog} // Pass local handler to open delete dialog
                 onRenameClick={openRenameDialog} // Pass local handler to open rename dialog

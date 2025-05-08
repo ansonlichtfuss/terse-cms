@@ -17,7 +17,6 @@ interface FileItemRowProps {
   item: FileItem;
   isSelected: boolean;
   type: "files" | "media";
-  useUrlRouting: boolean;
   onItemClick: (item: FileItem) => void;
   onDeleteClick: (item: FileItem) => void;
   onRenameClick: (item: FileItem) => void; // Add rename handler
@@ -28,7 +27,6 @@ export function FileItemRow({
   item,
   isSelected,
   type,
-  useUrlRouting,
   onItemClick,
   onDeleteClick,
   onRenameClick, // Destructure new handlers
@@ -40,7 +38,7 @@ export function FileItemRow({
   const isMarkdownFile = type === "files" && !isFolder;
 
   // Render Link for files when using URL routing
-  if (!isFolder && type === "files" && useUrlRouting) {
+  if (!isFolder && type === "files") {
     return (
       <Link
         key={itemPath}
