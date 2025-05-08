@@ -74,10 +74,36 @@
     hsl(var(--color-blue-50)),
     hsl(var(--color-gray-100))
   );
+  --gradient-primary-darker: linear-gradient(
+    135deg,
+    hsl(var(--color-blue-700)),
+    hsl(var(--color-blue-800))
+  );
+  --gradient-secondary-darker: linear-gradient(
+    135deg,
+    hsl(var(--color-gray-200)),
+    hsl(var(--color-gray-300))
+  );
+  --gradient-destructive: linear-gradient(
+    135deg,
+    hsl(var(--color-red-500)),
+    hsl(var(--color-red-600))
+  );
+  --gradient-destructive-darker: linear-gradient(
+    135deg,
+    hsl(var(--color-red-600)),
+    hsl(var(--color-red-700))
+  );
   --gradient-accent: linear-gradient(
     135deg,
     hsl(var(--color-blue-700)),
     hsl(var(--color-blue-800))
+  );
+
+  --gradient-destructive: linear-gradient(
+    135deg,
+    hsl(var(--color-red-500)),
+    hsl(var(--color-red-600))
   );
 
   /* Patterns - 1px spacing and more subtle */
@@ -135,10 +161,36 @@
     hsl(var(--color-blue-900)),
     hsl(var(--color-gray-900))
   );
+  --gradient-primary-darker: linear-gradient(
+    135deg,
+    hsl(var(--color-blue-700)),
+    hsl(var(--color-blue-800))
+  );
+  --gradient-secondary-darker: linear-gradient(
+    135deg,
+    hsl(var(--color-gray-800)),
+    hsl(var(--color-gray-700))
+  );
+  --gradient-destructive: linear-gradient(
+    135deg,
+    hsl(var(--color-red-600)),
+    hsl(var(--color-red-700))
+  );
+  --gradient-destructive-darker: linear-gradient(
+    135deg,
+    hsl(var(--color-red-700)),
+    hsl(var(--color-red-700) / 0.8)
+  );
   --gradient-accent: linear-gradient(
     135deg,
     hsl(var(--color-blue-600)),
     hsl(var(--color-blue-700))
+  );
+
+  --gradient-destructive: linear-gradient(
+    135deg,
+    hsl(var(--color-red-600)),
+    hsl(var(--color-red-700))
   );
 
   /* Patterns for dark mode - 1px spacing and more subtle */

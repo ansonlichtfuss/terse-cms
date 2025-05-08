@@ -6,7 +6,6 @@ import { ConfirmationDialog } from "@/components/confirmation-dialog";
 import { FileBrowser } from "@/components/file-browser/FileBrowser";
 import containerStyles from "./file-browser/FileBrowserContainer.module.css"; // Import the container styles
 import { cn } from "@/lib/utils"; // Import cn utility
-import { GitCommitDialog } from "@/components/git-commit-dialog/GitCommitDialog";
 import { Logo } from "@/components/logo";
 import { MediaManager } from "@/components/media-manager";
 import { Badge } from "@/components/ui/badge";
@@ -25,6 +24,8 @@ import { ChevronDown, Menu, Moon, RotateCcw, Save, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import packageInfo from "../package.json";
+import { GitCommitDialog } from "./gitDialogs/GitCommitDialog";
+import { ReverseChangesDialog } from "./gitDialogs/ReverseChangesDialog";
 
 function ThemeToggle() {
   const { theme, setTheme } = useTheme();
@@ -206,7 +207,7 @@ export function Dashboard({
               size="sm"
               onClick={() => setIsCommitDialogOpen(true)} // Corrected onClick handler
               disabled={modifiedFiles.length === 0}
-              className="flex items-center gap-1 rounded-r-none border-r-0 h-7 text-xs bg-gradient-secondary hover:bg-gradient-primary hover:text-white transition-all"
+              className="flex items-center gap-1 rounded-r-none border-r-0 h-7 text-xs bg-gradient-secondary hover:bg-gradient-primary transition-all"
             >
               <Save className="h-3 w-3 mr-1" />
               Commit
@@ -295,16 +296,12 @@ export function Dashboard({
         modifiedFiles={modifiedFiles}
       />
 
-      {/* Revert Changes Confirmation Dialog */}
-      <ConfirmationDialog
+      {/* Revert Changes Dialog */}
+      <ReverseChangesDialog
         open={isRevertDialogOpen}
         onOpenChange={setIsRevertDialogOpen}
-        title="Revert Changes"
-        description="Are you sure you want to revert all changes? This action cannot be undone."
-        confirmLabel="Revert"
-        onConfirm={handleRevertChanges}
-        destructive={true}
-        itemsList={modifiedFiles}
+        onRevert={handleRevertChanges}
+        files={modifiedFiles}
       />
     </div>
   );

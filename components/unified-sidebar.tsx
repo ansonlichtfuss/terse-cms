@@ -66,7 +66,7 @@ export function UnifiedSidebar({
         variant="ghost"
         size="sm"
         onClick={onToggle}
-        className="absolute right-0 top-1/2 -translate-y-1/2 h-24 w-6 rounded-r-none rounded-l-md border-r-0 bg-gradient-secondary hover:bg-gradient-primary hover:text-white transition-all z-10"
+        className="absolute right-0 top-1/2 -translate-y-1/2 h-24 w-6 rounded-r-none rounded-l-md border-r-0 bg-gradient-secondary hover:bg-gradient-primary transition-all z-10"
       >
         <ChevronRight className="h-4 w-4" />
       </Button>

@@ -1,13 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@/components/ui/dialog";
+import {} from "@/components/ui/dialog";
+import { FileTreeDialog } from "./FileTreeDialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ModifiedFilesTree } from "./ModifiedFilesTree";
@@ -35,31 +30,13 @@ export function GitCommitDialog({
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className={styles.dialogContent}>
-        <DialogHeader>
-          <DialogTitle className={styles.dialogTitle}>
-            Commit Changes
-          </DialogTitle>
-        </DialogHeader>
-        <div className={styles.contentArea}>
-          <div>
-            <label className={styles.labelText}>Commit Message</label>
-            <Input
-              value={commitMessage}
-              onChange={(e) => setCommitMessage(e.target.value)}
-              className={styles.commitMessageInput}
-            />
-          </div>
-
-          <div>
-            <label className={styles.labelText}>
-              Modified Files ({modifiedFiles.length})
-            </label>
-            <ModifiedFilesTree modifiedFiles={modifiedFiles} />
-          </div>
-        </div>
-        <DialogFooter>
+    <FileTreeDialog
+      open={open}
+      onOpenChange={onOpenChange}
+      title="Commit Changes"
+      files={modifiedFiles}
+      footerActions={
+        <>
           <Button
             variant="outline"
             size="sm"
@@ -75,8 +52,17 @@ export function GitCommitDialog({
           >
             Commit Changes
           </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        </>
+      }
+    >
+      <div>
+        <label className={styles.labelText}>Commit Message</label>
+        <Input
+          value={commitMessage}
+          onChange={(e) => setCommitMessage(e.target.value)}
+          className={styles.commitMessageInput}
+        />
+      </div>
+    </FileTreeDialog>
   );
 }

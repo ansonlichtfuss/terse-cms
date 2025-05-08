@@ -7,6 +7,22 @@
   background: var(--gradient-secondary);
 }
 
+.bg-gradient-destructive {
+  background: var(--gradient-destructive);
+}
+
+.bg-gradient-primary-darker {
+  background: var(--gradient-primary-darker);
+}
+
+.bg-gradient-secondary-darker {
+  background: var(--gradient-secondary-darker);
+}
+
+.bg-gradient-destructive-darker {
+  background: var(--gradient-destructive-darker);
+}
+
 .bg-gradient-accent {
   background: var(--gradient-accent);
 }
