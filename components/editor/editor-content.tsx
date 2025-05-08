@@ -106,7 +106,7 @@ export function insertAtCursor(
 export function handleToolbarAction(
   action: string,
   value: string | undefined,
-  textareaRef: React.RefObject<HTMLTextAreaElement>,
+  textareaRef: React.RefObject<HTMLTextAreaElement | null>,
   content: string,
   cursorPosition: CursorPosition,
   onChange: (content: string) => void

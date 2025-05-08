@@ -159,7 +159,10 @@ export function Editor({ file, onSave }: EditorProps) {
 
   // Handle toolbar actions
   const handleToolbarActionClick = (action: string, value?: string) => {
-    if (!textareaRef.current) return;
+    if (!textareaRef.current) {
+      console.error("Textarea ref is null");
+      return;
+    }
 
     const newContent = handleToolbarAction(
       action,
@@ -260,16 +263,7 @@ export function Editor({ file, onSave }: EditorProps) {
             )}
           </div>
           {/* Autosave notice as a link instead of a button */}
-          <span
-            className="autosave-link"
-            onClick={() => {
-              // Toggle to history tab in sidebar
-              setIsSidebarVisible(true);
-              // Add this line to notify the UnifiedSidebar to switch to history tab
-              if (window)
-                window.dispatchEvent(new CustomEvent("switch-to-history-tab"));
-            }}
-          >
+          <span className="flex items-center text-xs text-muted-foreground">
             <Clock className="h-3 w-3 mr-1" />
             {lastSaved
               ? `Auto-saved ${lastSaved.toLocaleTimeString()}`

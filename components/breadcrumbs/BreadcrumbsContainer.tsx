@@ -1,5 +1,6 @@
 import React, { useRef, useLayoutEffect } from "react";
 import styles from "./breadcrumbs.module.css";
+import { cn } from "@/lib/utils";
 
 interface BreadcrumbsContainerProps {
   children: React.ReactNode;
@@ -39,14 +40,29 @@ export function BreadcrumbsContainer({
 
   return (
     <div
-      className={`${styles.breadcrumbs} flex items-center w-full max-w-full relative`}
+      className={cn(
+        styles.breadcrumbsContainer,
+        "flex",
+        "items-center",
+        "w-full",
+        "max-w-full",
+        "relative"
+      )}
     >
       {/* Left Gradient */}
       <div
-        className="absolute top-0 left-0 bottom-0 w-8 pointer-events-none z-10"
+        className={cn(
+          "absolute",
+          "top-0",
+          "left-0",
+          "bottom-0",
+          "w-8",
+          "pointer-events-none",
+          "z-10"
+        )}
         style={{
           background:
-            "linear-gradient(to right, rgba(255,255,255,1), rgba(255,255,255,0))",
+            "linear-gradient(to right, hsl(var(--background)), hsl(var(--background) / 0))",
           opacity: showLeftGradient ? 1 : 0,
           transition: "opacity 0.3s ease-in-out",
         }}
@@ -54,10 +70,18 @@ export function BreadcrumbsContainer({
 
       {/* Right Gradient */}
       <div
-        className="absolute top-0 right-0 bottom-0 w-8 pointer-events-none z-10"
+        className={cn(
+          "absolute",
+          "top-0",
+          "right-0",
+          "bottom-0",
+          "w-8",
+          "pointer-events-none",
+          "z-10"
+        )}
         style={{
           background:
-            "linear-gradient(to left, rgba(255,255,255,1), rgba(255,255,255,0))",
+            "linear-gradient(to left, hsl(var(--background)), hsl(var(--background) / 0))",
           opacity: showRightGradient ? 1 : 0,
           transition: "opacity 0.3s ease-in-out",
         }}
@@ -65,8 +89,12 @@ export function BreadcrumbsContainer({
 
       <div
         ref={scrollContainerRef}
-        className={`flex items-center flex-1 ${styles.scrollbarHidden}`}
-        style={{ overflowX: "auto" }}
+        className={cn(
+          "flex",
+          "items-center",
+          "flex-1",
+          styles.breadcrumbsScrollable
+        )}
       >
         {children}
       </div>

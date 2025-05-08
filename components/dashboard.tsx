@@ -6,7 +6,7 @@ import { ConfirmationDialog } from "@/components/confirmation-dialog";
 import { FileBrowser } from "@/components/file-browser/FileBrowser";
 import containerStyles from "./file-browser/FileBrowserContainer.module.css"; // Import the container styles
 import { cn } from "@/lib/utils"; // Import cn utility
-import { GitCommitDialog } from "@/components/git-commit-dialog";
+import { GitCommitDialog } from "@/components/git-commit-dialog/GitCommitDialog";
 import { Logo } from "@/components/logo";
 import { MediaManager } from "@/components/media-manager";
 import { Badge } from "@/components/ui/badge";
@@ -173,12 +173,7 @@ export function Dashboard({
           </TabsList>
         </div>
         <TabsContent value="files">
-          <FileBrowser
-            selectedPath={selectedFilePath}
-            type="files"
-            inSidebar
-            useUrlRouting
-          />
+          <FileBrowser selectedPath={selectedFilePath} type="files" inSidebar />
         </TabsContent>
         <TabsContent value="media">
           <MediaManager

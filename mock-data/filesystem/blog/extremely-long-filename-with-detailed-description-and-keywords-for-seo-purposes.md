@@ -1,5 +1,5 @@
 ---
-title: This is an Extremely Long File Title That Will Test the Truncation Capabilities
+title: This is an Extremely Long File Title That Will Test the Truncation Capabilitdies
 date: 2023-10-20
 isDraft: false
 thumbnail: https://example.com/images/long-filename.jpg

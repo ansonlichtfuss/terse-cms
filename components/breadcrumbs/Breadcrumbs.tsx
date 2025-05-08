@@ -7,6 +7,7 @@ import React, { useRef, useLayoutEffect } from "react";
 import { ChevronRight, Home } from "lucide-react";
 import Link from "next/link";
 import styles from "./breadcrumbs.module.css";
+import { cn } from "@/lib/utils";
 
 interface PathBreadcrumbsProps {
   currentPath: string;
@@ -64,9 +65,12 @@ export function PathBreadcrumbs({
     <BreadcrumbsContainer currentPath={currentPath}>
       <Link
         href="/edit"
-        className={`${styles.breadcrumbItem} ${
-          !currentPath ? styles.breadcrumbCurrent : ""
-        } flex-shrink-0 truncate`}
+        className={cn(
+          "inline-flex",
+          styles.breadcrumbItem,
+          "flex-shrink-0",
+          "truncate"
+        )}
         onClick={(e) => {
           e.preventDefault();
           handleRootClick();

@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import styles from "./breadcrumbs.module.css";
+import { cn } from "@/lib/utils";
 
 interface BreadcrumbItemProps {
   part: string;
@@ -20,9 +21,10 @@ export function BreadcrumbItem({
   if (type === "files") {
     return isLast ? (
       <span
-        className={`${styles.breadcrumbItem} ${
-          isLast ? styles.breadcrumbCurrent : ""
-        } truncate`}
+        className={cn(
+          styles.breadcrumbItem,
+          isLast && styles.breadcrumbCurrent
+        )}
         title={part}
         style={{ minWidth: "30px" }}
       >
@@ -31,7 +33,7 @@ export function BreadcrumbItem({
     ) : (
       <Link
         href={`/edit/${encodeURIComponent(currentAccumulatedPath)}`}
-        className={`${styles.breadcrumbItem} truncate`}
+        className={cn(styles.breadcrumbItem, "truncate")}
         title={part}
         onClick={(e) => {
           e.preventDefault();
@@ -47,9 +49,11 @@ export function BreadcrumbItem({
 
   return (
     <span
-      className={`${styles.breadcrumbItem} ${
-        isLast ? styles.breadcrumbCurrent : ""
-      } truncate`}
+      className={cn(
+        styles.breadcrumbItem,
+        isLast && styles.breadcrumbCurrent,
+        "truncate"
+      )}
       onClick={() => onNavigate(currentAccumulatedPath)}
       title={part}
       style={{ minWidth: "30px" }}

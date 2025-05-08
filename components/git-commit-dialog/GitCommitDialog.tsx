@@ -10,6 +10,8 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { ModifiedFilesTree } from "./ModifiedFilesTree";
+import styles from "./gitCommitDialog.module.css";
 
 interface GitCommitDialogProps {
   open: boolean;
@@ -34,33 +36,27 @@ export function GitCommitDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md">
+      <DialogContent className={styles.dialogContent}>
         <DialogHeader>
-          <DialogTitle className="text-sm">Commit Changes</DialogTitle>
+          <DialogTitle className={styles.dialogTitle}>
+            Commit Changes
+          </DialogTitle>
         </DialogHeader>
-        <div className="py-3 space-y-3">
+        <div className={styles.contentArea}>
           <div>
-            <label className="text-xs font-medium">Commit Message</label>
+            <label className={styles.labelText}>Commit Message</label>
             <Input
               value={commitMessage}
               onChange={(e) => setCommitMessage(e.target.value)}
-              className="mt-1 h-7 text-xs"
+              className={styles.commitMessageInput}
             />
           </div>
 
           <div>
-            <label className="text-xs font-medium">
+            <label className={styles.labelText}>
               Modified Files ({modifiedFiles.length})
             </label>
-            <div className="h-[150px] mt-1 border rounded-md p-2 overflow-y-auto">
-              <ul className="space-y-1">
-                {modifiedFiles.map((file, index) => (
-                  <li key={index} className="text-xs truncate">
-                    {file}
-                  </li>
-                ))}
-              </ul>
-            </div>
+            <ModifiedFilesTree modifiedFiles={modifiedFiles} />
           </div>
         </div>
         <DialogFooter>
@@ -68,11 +64,15 @@ export function GitCommitDialog({
             variant="outline"
             size="sm"
             onClick={() => onOpenChange(false)}
-            className="h-7 text-xs"
+            className={styles.dialogButton}
           >
             Cancel
           </Button>
-          <Button onClick={handleCommit} size="sm" className="h-7 text-xs">
+          <Button
+            onClick={handleCommit}
+            size="sm"
+            className={styles.dialogButton}
+          >
             Commit Changes
           </Button>
         </DialogFooter>
