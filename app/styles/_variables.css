@@ -113,7 +113,7 @@
     transparent 0.5px
   );
   --dot-size: 2px;
-  --dot-space: 1px;
+  --dot-space: 2px;
 
   --radius: 0.5rem;
 }

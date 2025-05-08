@@ -231,7 +231,7 @@ export function Dashboard({
               <DropdownMenuContent align="end">
                 <DropdownMenuItem
                   onClick={() => setIsRevertDialogOpen(true)}
-                  className="text-destructive focus:text-destructive"
+                  className="dropdown-menu-item-destructive"
                 >
                   <RotateCcw className="h-3 w-3 mr-2" />
                   <span className="text-xs">Revert Changes</span>
