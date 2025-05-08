@@ -35,12 +35,3 @@
   font-size: 0.75rem; /* text-xs */
   white-space: pre-wrap;
 }
-
-.fileTreeItem {
-  /* color and padding-left will be applied inline as they depend on data */
-}
-
-.dialogButton {
-  height: 1.75rem; /* h-7 */
-  font-size: 0.75rem; /* text-xs */
-}

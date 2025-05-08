@@ -37,21 +37,10 @@ export function GitCommitDialog({
       files={modifiedFiles}
       footerActions={
         <>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => onOpenChange(false)}
-            className={styles.dialogButton}
-          >
+          <Button variant="outline" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
-          <Button
-            onClick={handleCommit}
-            size="sm"
-            className={styles.dialogButton}
-          >
-            Commit Changes
-          </Button>
+          <Button onClick={handleCommit}>Commit Changes</Button>
         </>
       }
     >

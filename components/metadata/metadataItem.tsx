@@ -155,7 +155,7 @@ export function MetadataItem({ keyName, value }: MetadataItemProps) {
         {isDateObject(value) && (
           <CalendarIcon className="h-3 w-3 text-muted-foreground" />
         )}
-        <span className="text-xs font-medium capitalize">{keyName}</span>
+        <span className="text-xs font-bold capitalize">{keyName}</span>
       </div>
       <div className="text-xs">{renderValue(keyName, value)}</div>
     </div>

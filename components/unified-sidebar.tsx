@@ -101,7 +101,7 @@ export function UnifiedSidebar({
         <div>
           <TabsContent value="metadata" className="m-0 p-0">
             <div className="h-full overflow-y-auto">
-              <div className="px-2 pt-1">
+              <div className="px-4 pt-1">
                 <MetadataDisplay frontMatter={frontMatter} />
               </div>
             </div>
@@ -109,7 +109,7 @@ export function UnifiedSidebar({
 
           <TabsContent value="history" className="m-0 p-0">
             <div className="h-full overflow-y-auto">
-              <div className="px-2 pt-1">
+              <div className="px-4 pt-1">
                 <GitHistorySidebar
                   filePath={filePath}
                   isVisible={isVisible}

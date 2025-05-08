@@ -1,17 +1,11 @@
 import type React from "react";
 import Link from "next/link";
-import { File, Folder, MoreHorizontal } from "lucide-react";
+import { File, Folder } from "lucide-react";
 import styles from "./FileItemRow.module.css";
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import { getItemName, getItemPath } from "./utils"; // Import utility functions
 import type { FileItem } from "./FileBrowser"; // Assuming FileItem type remains in the main file for now
+import { FileItemDropdown } from "./FileItemDropdown";
 
 interface FileItemRowProps {
   item: FileItem;
@@ -87,35 +81,12 @@ export function FileItemRow({
           </span>
         </div>
 
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-6 w-6 flex-shrink-0"
-              onClick={(e) => {
-                e.stopPropagation(); // Prevent item click when clicking the button
-                e.preventDefault(); // Prevent default link behavior if inside Link
-              }}
-            >
-              <MoreHorizontal className="h-3 w-3" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={() => onMoveClick(item)}>
-              Move
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => onRenameClick(item)}>
-              Rename
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() => onDeleteClick(item)}
-              className="dropdown-menu-item-destructive"
-            >
-              Delete
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <FileItemDropdown
+          item={item}
+          onMoveClick={onMoveClick}
+          onRenameClick={onRenameClick}
+          onDeleteClick={onDeleteClick}
+        />
       </Link>
     );
   }
@@ -175,34 +146,12 @@ export function FileItemRow({
         </span>
       </div>
 
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-6 w-6 flex-shrink-0"
-            onClick={(e) => {
-              e.stopPropagation(); // Prevent item click when clicking the button
-            }}
-          >
-            <MoreHorizontal className="h-3 w-3" />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuItem onClick={() => onMoveClick(item)}>
-            Move
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => onRenameClick(item)}>
-            Rename
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => onDeleteClick(item)}
-            className="dropdown-menu-item-destructive"
-          >
-            Delete
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <FileItemDropdown
+        item={item}
+        onMoveClick={onMoveClick}
+        onRenameClick={onRenameClick}
+        onDeleteClick={onDeleteClick}
+      />
     </div>
   );
 }

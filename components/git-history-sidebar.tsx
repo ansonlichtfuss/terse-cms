@@ -104,7 +104,7 @@ export function GitHistorySidebar({
             commits.map((commit) => (
               <div
                 key={commit.hash}
-                className="space-y-2 p-3 rounded-md border bg-card hover:bg-muted/50 transition-colors"
+                className="space-y-2 p-3 rounded-md border bg-card transition-colors"
               >
                 <div className="flex items-start justify-between">
                   <div className="space-y-1">

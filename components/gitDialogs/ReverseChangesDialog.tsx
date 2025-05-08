@@ -28,16 +28,10 @@ export function ReverseChangesDialog({
       files={files}
       footerActions={
         <>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => onOpenChange(false)}
-          >
+          <Button variant="outline" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
-          <Button onClick={handleRevert} size="sm">
-            Revert Changes
-          </Button>
+          <Button onClick={handleRevert}>Revert Changes</Button>
         </>
       }
     >
