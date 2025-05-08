@@ -207,12 +207,15 @@ export function Dashboard({
               size="sm"
               onClick={() => setIsCommitDialogOpen(true)} // Corrected onClick handler
               disabled={modifiedFiles.length === 0}
-              className="flex items-center gap-1 rounded-r-none border-r-0 h-7 text-xs bg-gradient-secondary hover:bg-gradient-primary transition-all"
+              className="flex items-center rounded-r-none  gap-1 h-7 text-xs bg-gradient-secondary transition-all"
             >
               <Save className="h-3 w-3 mr-1" />
               Commit
               {modifiedFiles.length > 0 && (
-                <Badge variant="secondary" className="ml-1 h-4 text-[10px]">
+                <Badge
+                  variant="secondary"
+                  className="ml-1 h-4 text-[10px] bg-white pointer-events-none"
+                >
                   {modifiedFiles.length}
                 </Badge>
               )}
@@ -223,7 +226,7 @@ export function Dashboard({
                   variant="outline"
                   size="sm"
                   disabled={modifiedFiles.length === 0}
-                  className="px-1 rounded-l-none h-7 bg-gradient-secondary hover:bg-gradient-primary hover:text-white transition-all"
+                  className="px-1 border-l-1 border-l-gray-5`0 rounded-l-none h-7 bg-gradient-secondary transition-all"
                 >
                   <ChevronDown className="h-3 w-3" />
                 </Button>

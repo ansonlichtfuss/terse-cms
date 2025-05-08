@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import {
   Tabs,
   TabsContent,
@@ -11,7 +11,7 @@ import {
   TabsListProps,
 } from "@/components/ui/tabs";
 import matter from "gray-matter";
-import { MetadataDisplay } from "@/components/metadata-display";
+import { MetadataDisplay } from "@/components/metadata/metadataDisplay";
 import { GitHistorySidebar } from "@/components/git-history-sidebar";
 
 interface UnifiedSidebarProps {
@@ -63,12 +63,12 @@ export function UnifiedSidebar({
   if (!isVisible) {
     return (
       <Button
-        variant="ghost"
+        variant="outline"
         size="sm"
         onClick={onToggle}
-        className="absolute right-0 top-1/2 -translate-y-1/2 h-24 w-6 rounded-r-none rounded-l-md border-r-0 bg-gradient-secondary hover:bg-gradient-primary transition-all z-10"
+        className="absolute right-0 top-1/2 -translate-y-1/2 h-24 w-6 rounded-r-none rounded-l-md border-r-0 bg-gradient-secondary transition-all z-10"
       >
-        <ChevronRight className="h-4 w-4" />
+        <ChevronLeft className="h-4 w-4" />
       </Button>
     );
   }
@@ -85,18 +85,14 @@ export function UnifiedSidebar({
       >
         <div className="p-2 flex items-center justify-between">
           <TabsList className="grid w-full grid-cols-2" variant="minimal">
-            <TabsTrigger value="metadata" className="text-xs">
-              Metadata
-            </TabsTrigger>
-            <TabsTrigger value="history" className="text-xs">
-              History
-            </TabsTrigger>
+            <TabsTrigger value="metadata">Metadata</TabsTrigger>
+            <TabsTrigger value="history">History</TabsTrigger>
           </TabsList>
           <Button
             variant="ghost"
             size="sm"
             onClick={onToggle}
-            className="h-7 w-7 p-0 ml-2"
+            className="h-7 w-7 p-0 ml-0"
           >
             <ChevronRight className="h-4 w-4" />
           </Button>

@@ -126,48 +126,6 @@
   max-width: 100%;
 }
 
-/* Sidebar styles */
-.sidebar {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  background-color: hsl(var(--background));
-  border-right: 1px solid hsl(var(--border));
-  width: 100%;
-  max-width: 100%;
-  overflow: hidden;
-}
-
-.sidebar-header {
-  display: flex;
-  align-items: center;
-  padding: 0.5rem;
-  border-bottom: 1px solid hsl(var(--border));
-  background-color: hsl(var(--muted));
-  width: 100%;
-  max-width: 100%;
-}
-
-.sidebar-content {
-  flex: 1;
-  overflow-y: auto;
-  padding: 0.5rem;
-  width: 100%;
-  max-width: 100%;
-}
-
-.sidebar-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.5rem;
-  border-top: 1px solid hsl(var(--border));
-  background-color: hsl(var(--muted));
-  font-size: 0.7rem;
-  width: 100%;
-  max-width: 100%;
-}
-
 /* Unified sidebar styles */
 .unified-sidebar [role="tab"],
 .unified-sidebar [role="tablist"] {
