@@ -2,14 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
+/* @layer base {
   * {
-    /* @apply border-border; */
+    @apply border-border;
   }
   body {
     @apply bg-background text-foreground;
   }
-}
+} */
 
 @import "./styles/_variables.css";
 @import "./styles/_base.css";
