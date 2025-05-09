@@ -41,7 +41,7 @@
   color: hsl(var(--muted-foreground) / 0.6);
   display: flex;
   align-items: center;
-  flex-shrink: 0;
+  shrink: 0;
 }
 
 .breadcrumbCurrent {

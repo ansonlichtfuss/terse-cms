@@ -236,7 +236,7 @@ export function MoveFileDialog({
           ) : (
             <div className="w-5 mr-1" />
           )}
-          <Folder className="h-4 w-4 mr-2 text-muted-foreground flex-shrink-0" />
+          <Folder className="h-4 w-4 mr-2 text-muted-foreground shrink-0" />
           <span className={`text-xs ${styles.folderName}`}>{node.name}</span>
         </div>
 

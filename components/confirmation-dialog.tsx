@@ -38,7 +38,7 @@ export function ConfirmationDialog({
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent className="max-w-md">
         <AlertDialogHeader>
-          <AlertDialogTitle className="text-sm">{title}</AlertDialogTitle>
+          <AlertDialogTitle>{title}</AlertDialogTitle>
           <AlertDialogDescription className="text-xs">
             {description}
           </AlertDialogDescription>

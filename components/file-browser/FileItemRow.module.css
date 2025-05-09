@@ -41,7 +41,7 @@
 .folder-item-icon {
   margin-right: 0.5rem;
   color: hsl(var(--muted-foreground));
-  flex-shrink: 0;
+  shrink: 0;
 }
 
 .folder-item-icon {

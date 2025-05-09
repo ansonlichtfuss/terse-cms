@@ -66,7 +66,7 @@ export function FileItemRow({
               <File
                 className={cn(
                   styles["file-item-icon"],
-                  "h-4 w-4 text-muted-foreground mr-1 flex-shrink-0"
+                  "h-4 w-4 text-muted-foreground mr-1 shrink-0"
                 )}
               />
             )}
@@ -112,13 +112,13 @@ export function FileItemRow({
           <Folder
             className={cn(
               styles["folder-item-icon"],
-              "h-4 w-4 text-muted-foreground mr-1 flex-shrink-0"
+              "h-4 w-4 text-muted-foreground mr-1 shrink-0"
             )}
           />
         ) : type === "media" &&
           item.url &&
           item.key.match(/\.(jpg|jpeg|png|gif|webp)$/i) ? (
-          <div className="h-6 w-6 mr-1 flex-shrink-0">
+          <div className="h-6 w-6 mr-1 shrink-0">
             <img
               src={item.url || "/placeholder.svg"}
               alt={itemName}
@@ -130,7 +130,7 @@ export function FileItemRow({
             <File
               className={cn(
                 styles["file-item-icon"],
-                "h-4 w-4 text-muted-foreground mr-1 flex-shrink-0"
+                "h-4 w-4 text-muted-foreground mr-1 shrink-0"
               )}
             />
           )

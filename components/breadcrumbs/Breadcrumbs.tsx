@@ -68,7 +68,7 @@ export function PathBreadcrumbs({
         className={cn(
           "inline-flex",
           styles.breadcrumbItem,
-          "flex-shrink-0",
+          "shrink-0",
           "truncate"
         )}
         onClick={(e) => {

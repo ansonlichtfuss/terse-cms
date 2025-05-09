@@ -29,7 +29,7 @@ export function FileItemDropdown({
         <Button
           variant="ghost"
           size="icon"
-          className="h-6 w-6 flex-shrink-0"
+          className="h-6 w-6 shrink-0"
           onClick={(e) => {
             e.stopPropagation(); // Prevent item click when clicking the button
             e.preventDefault(); // Prevent default link behavior if inside Link

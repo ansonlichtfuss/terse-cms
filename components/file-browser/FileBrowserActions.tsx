@@ -38,7 +38,7 @@ export function FileBrowserActions({
               variant="outline"
               size={inSidebar ? "icon" : "sm"}
               onClick={onRefresh}
-              className="flex-shrink-0 h-7 w-7"
+              className="shrink-0 h-7 w-7"
             >
               <RefreshCw className={inSidebar ? "h-3 w-3" : "h-3 w-3 mr-1"} />
               {!inSidebar && "Refresh"}
@@ -55,7 +55,7 @@ export function FileBrowserActions({
               variant="outline"
               size={inSidebar ? "icon" : "sm"}
               onClick={onNewFolderClick}
-              className="flex-shrink-0 h-7 w-7"
+              className="shrink-0 h-7 w-7"
             >
               <FolderPlus className={inSidebar ? "h-3 w-3" : "h-3 w-3 mr-1"} />
               {!inSidebar && "New Folder"}
@@ -69,7 +69,7 @@ export function FileBrowserActions({
         {type === "media" && (
           <Tooltip>
             <TooltipTrigger asChild>
-              <div className="relative flex-shrink-0">
+              <div className="relative shrink-0">
                 <Input
                   type="file"
                   className="absolute inset-0 opacity-0 cursor-pointer"

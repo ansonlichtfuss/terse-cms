@@ -225,7 +225,7 @@ export function FileBrowser({
       {/* Fixed action buttons at the bottom */}
       <div
         className={cn(
-          "absolute bottom-0 left-0 w-[280px] p-2 bg-background/80 backdrop-blur-sm border-r z-10"
+          "absolute bottom-0 left-0 w-[280px] p-2 bg-background/80 backdrop-blur-xs border-r z-10"
         )}
       >
         {/* Use the FileBrowserActions component */}
