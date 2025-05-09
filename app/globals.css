@@ -2,15 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* @layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
-} */
-
 @import "./styles/_variables.css";
 @import "./styles/_base.css";
 @import "./styles/_utilities.css";
