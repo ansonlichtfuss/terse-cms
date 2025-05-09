@@ -4,7 +4,7 @@
 }
 
 .bg-gradient-secondary {
-  background: var(--gradient-secondary);
+  background: var(--gradient-secondary) !important;
 }
 
 .bg-gradient-destructive {

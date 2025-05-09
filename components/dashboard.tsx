@@ -174,7 +174,7 @@ export function Dashboard({
           </TabsList>
         </div>
         <TabsContent value="files">
-          <FileBrowser selectedPath={selectedFilePath} type="files" inSidebar />
+          <FileBrowser selectedPath={selectedFilePath} type="files" />
         </TabsContent>
         <TabsContent value="media">
           <MediaManager
@@ -183,7 +183,6 @@ export function Dashboard({
               // Logic to insert media URL into editor or YAML front matter
               // }
             }}
-            inSidebar={true}
           />
         </TabsContent>
       </Tabs>

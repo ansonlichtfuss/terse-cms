@@ -1,16 +1,16 @@
 :root {
   /* Color tokens - desaturated dark blue theme */
-  --color-blue-50: 210 50% 98%;
-  --color-blue-100: 210 50% 95%;
-  --color-blue-200: 210 50% 90%;
-  --color-blue-300: 210 50% 80%;
-  --color-blue-400: 210 50% 70%;
-  --color-blue-500: 210 50% 60%;
-  --color-blue-600: 210 50% 50%;
-  --color-blue-700: 210 50% 40%;
-  --color-blue-800: 210 50% 30%;
-  --color-blue-900: 210 50% 20%;
-  --color-blue-950: 210 50% 10%;
+  --color-blue-50: 230 80% 98%;
+  --color-blue-100: 230 80% 95%;
+  --color-blue-200: 230 80% 90%;
+  --color-blue-300: 230 80% 80%;
+  --color-blue-400: 230 80% 70%;
+  --color-blue-500: 230 80% 60%;
+  --color-blue-600: 230 80% 50%;
+  --color-blue-700: 230 80% 40%;
+  --color-blue-800: 230 80% 30%;
+  --color-blue-900: 230 80% 20%;
+  --color-blue-950: 230 80% 10%;
 
   --color-gray-50: 220 20% 98%;
   --color-gray-100: 220 20% 95%;
@@ -66,13 +66,13 @@
   /* Custom gradients - desaturated dark blue theme */
   --gradient-primary: linear-gradient(
     135deg,
-    hsl(var(--color-blue-600)),
-    hsl(var(--color-blue-700))
+    hsl(var(--color-blue-300)),
+    hsl(var(--color-blue-600))
   );
   --gradient-secondary: linear-gradient(
     135deg,
-    hsl(var(--color-blue-50)),
-    hsl(var(--color-gray-100))
+    hsl(var(--color-gray-50)),
+    hsl(var(--color-blue-100))
   );
   --gradient-primary-darker: linear-gradient(
     135deg,

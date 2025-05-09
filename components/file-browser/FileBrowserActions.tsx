@@ -12,7 +12,6 @@ import { cn } from "@/lib/utils";
 
 interface FileBrowserActionsProps {
   type: "files" | "media";
-  inSidebar: boolean;
   isUploading: boolean;
   onRefresh: () => void;
   onNewFolderClick: () => void;
@@ -21,7 +20,6 @@ interface FileBrowserActionsProps {
 
 export function FileBrowserActions({
   type,
-  inSidebar,
   isUploading,
   onRefresh,
   onNewFolderClick,
@@ -30,18 +28,23 @@ export function FileBrowserActions({
   return (
     <TooltipProvider delayDuration={300}>
       <div
-        className={cn("flex", inSidebar ? "gap-1" : "gap-2", "justify-center")}
+        className={cn(
+          "flex",
+          "gap-1",
+          "mb-2 mx-3",
+          "justify-center",
+          "p-1 border rounded-md bg-gradient-secondary"
+        )}
       >
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
-              variant="outline"
-              size={inSidebar ? "icon" : "sm"}
+              variant="ghost"
+              size="icon"
               onClick={onRefresh}
               className="shrink-0 h-7 w-7"
             >
-              <RefreshCw className={inSidebar ? "h-3 w-3" : "h-3 w-3 mr-1"} />
-              {!inSidebar && "Refresh"}
+              <RefreshCw className="h-3 w-3" />
             </Button>
           </TooltipTrigger>
           <TooltipContent side="top">
@@ -52,13 +55,12 @@ export function FileBrowserActions({
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
-              variant="outline"
-              size={inSidebar ? "icon" : "sm"}
+              variant="ghost"
+              size="icon"
               onClick={onNewFolderClick}
               className="shrink-0 h-7 w-7"
             >
-              <FolderPlus className={inSidebar ? "h-3 w-3" : "h-3 w-3 mr-1"} />
-              {!inSidebar && "New Folder"}
+              <FolderPlus className="h-3 w-3" />
             </Button>
           </TooltipTrigger>
           <TooltipContent side="top">
@@ -78,12 +80,11 @@ export function FileBrowserActions({
                 />
                 <Button
                   variant="outline"
-                  size={inSidebar ? "icon" : "sm"}
+                  size="icon"
                   disabled={isUploading}
                   className="h-7 w-7"
                 >
-                  <Upload className={inSidebar ? "h-3 w-3" : "h-3 w-3 mr-1"} />
-                  {!inSidebar && "Upload"}
+                  <Upload className="h-3 w-3" />
                 </Button>
               </div>
             </TooltipTrigger>

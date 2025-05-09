@@ -38,7 +38,6 @@ interface FileBrowserProps {
   onSelect?: (path: string, url?: string) => void;
   selectedPath?: string;
   isMobile?: boolean;
-  inSidebar?: boolean;
 }
 
 export function FileBrowser({
@@ -46,7 +45,6 @@ export function FileBrowser({
   onSelect,
   selectedPath,
   isMobile = false,
-  inSidebar = false,
 }: FileBrowserProps) {
   // Use the custom state hook, passing selectedPath
   const {
@@ -71,7 +69,7 @@ export function FileBrowser({
     newFolderName,
     setNewFolderName,
     mounted,
-  } = useFileBrowserState({ isMobile, inSidebar, selectedPath });
+  } = useFileBrowserState({ isMobile, selectedPath });
 
   const router = useRouter();
 
@@ -180,6 +178,14 @@ export function FileBrowser({
 
   return (
     <div className={styles["file-browser"]}>
+      {/* Use the FileBrowserActions component */}
+      <FileBrowserActions
+        type={type}
+        isUploading={isUploading}
+        onRefresh={() => fetchItems(currentPath)} // Call fetchItems from fetching hook
+        onNewFolderClick={handleNewFolderButtonClick} // Call local handler
+        onUpload={handleUploadInputChange} // Call local handler
+      />
       <div className="px-4">
         <PathBreadcrumbs
           currentPath={currentPath.replace(/\/$/, "")} // Remove trailing slash for display
@@ -192,7 +198,7 @@ export function FileBrowser({
       {/* Main content area with padding at the bottom to account for the action bar */}
       <div
         className={cn(
-          "px-4 pt-2 pb-8 overflow-y-auto max-h-[calc(100vh-150px)]"
+          "px-4 pt-2 pb-8 overflow-y-auto max-h-[calc(100vh-180px)]"
         )}
       >
         {isLoading ? (
@@ -213,6 +219,78 @@ export function FileBrowser({
                 onRenameClick={openRenameDialog} // Pass local handler to open rename dialog
                 onMoveClick={openMoveDialog} // Pass local handler to open move dialog
               />
+            ))}{" "}
+            {currentDirContents.map((item) => (
+              <FileItemRow
+                key={getItemPath(item)}
+                item={item}
+                isSelected={selectedItem === getItemPath(item)}
+                type={type}
+                onItemClick={handleItemClick}
+                onDeleteClick={openDeleteDialog} // Pass local handler to open delete dialog
+                onRenameClick={openRenameDialog} // Pass local handler to open rename dialog
+                onMoveClick={openMoveDialog} // Pass local handler to open move dialog
+              />
+            ))}{" "}
+            {currentDirContents.map((item) => (
+              <FileItemRow
+                key={getItemPath(item)}
+                item={item}
+                isSelected={selectedItem === getItemPath(item)}
+                type={type}
+                onItemClick={handleItemClick}
+                onDeleteClick={openDeleteDialog} // Pass local handler to open delete dialog
+                onRenameClick={openRenameDialog} // Pass local handler to open rename dialog
+                onMoveClick={openMoveDialog} // Pass local handler to open move dialog
+              />
+            ))}{" "}
+            {currentDirContents.map((item) => (
+              <FileItemRow
+                key={getItemPath(item)}
+                item={item}
+                isSelected={selectedItem === getItemPath(item)}
+                type={type}
+                onItemClick={handleItemClick}
+                onDeleteClick={openDeleteDialog} // Pass local handler to open delete dialog
+                onRenameClick={openRenameDialog} // Pass local handler to open rename dialog
+                onMoveClick={openMoveDialog} // Pass local handler to open move dialog
+              />
+            ))}{" "}
+            {currentDirContents.map((item) => (
+              <FileItemRow
+                key={getItemPath(item)}
+                item={item}
+                isSelected={selectedItem === getItemPath(item)}
+                type={type}
+                onItemClick={handleItemClick}
+                onDeleteClick={openDeleteDialog} // Pass local handler to open delete dialog
+                onRenameClick={openRenameDialog} // Pass local handler to open rename dialog
+                onMoveClick={openMoveDialog} // Pass local handler to open move dialog
+              />
+            ))}{" "}
+            {currentDirContents.map((item) => (
+              <FileItemRow
+                key={getItemPath(item)}
+                item={item}
+                isSelected={selectedItem === getItemPath(item)}
+                type={type}
+                onItemClick={handleItemClick}
+                onDeleteClick={openDeleteDialog} // Pass local handler to open delete dialog
+                onRenameClick={openRenameDialog} // Pass local handler to open rename dialog
+                onMoveClick={openMoveDialog} // Pass local handler to open move dialog
+              />
+            ))}{" "}
+            {currentDirContents.map((item) => (
+              <FileItemRow
+                key={getItemPath(item)}
+                item={item}
+                isSelected={selectedItem === getItemPath(item)}
+                type={type}
+                onItemClick={handleItemClick}
+                onDeleteClick={openDeleteDialog} // Pass local handler to open delete dialog
+                onRenameClick={openRenameDialog} // Pass local handler to open rename dialog
+                onMoveClick={openMoveDialog} // Pass local handler to open move dialog
+              />
             ))}
           </div>
         ) : (
@@ -220,23 +298,6 @@ export function FileBrowser({
             No items found
           </div>
         )}
-      </div>
-
-      {/* Fixed action buttons at the bottom */}
-      <div
-        className={cn(
-          "absolute bottom-0 left-0 w-[280px] p-2 bg-background/80 backdrop-blur-xs border-r z-10"
-        )}
-      >
-        {/* Use the FileBrowserActions component */}
-        <FileBrowserActions
-          type={type}
-          inSidebar={inSidebar}
-          isUploading={isUploading}
-          onRefresh={() => fetchItems(currentPath)} // Call fetchItems from fetching hook
-          onNewFolderClick={handleNewFolderButtonClick} // Call local handler
-          onUpload={handleUploadInputChange} // Call local handler
-        />
       </div>
 
       {/* Create Folder Dialog */}

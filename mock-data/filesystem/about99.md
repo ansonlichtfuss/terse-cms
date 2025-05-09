@@ -9,7 +9,7 @@ images:
     alt: Our team
     date: 2023-04-10
   - url: https://example.com/images/office.jpg
-    alt: Our office
+    alt: Our officed
     date: 2023-03-22
     location: San Francisco, CA
 ---
