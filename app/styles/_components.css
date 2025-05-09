@@ -4,14 +4,14 @@
   display: flex;
   align-items: center;
   font-size: 0.75rem;
-  color: hsl(var(--muted-foreground));
+  color: var(--muted-foreground);
   cursor: pointer;
   transition: color 0.2s;
   padding: 0.25rem 0.5rem;
 }
 
 .autosave-link:hover {
-  color: hsl(var(--primary));
+  color: var(--primary);
   text-decoration: underline;
 }
 
@@ -29,8 +29,8 @@
   padding: 0.5rem;
   margin-bottom: 0.5rem;
   border-radius: 0.25rem;
-  border: 1px solid hsl(var(--border));
-  background: hsl(var(--card));
+  border: 1px solid var(--border);
+  background: var(--card);
 }
 
 .compact-history-item h4 {
@@ -42,7 +42,7 @@
   display: flex;
   justify-content: space-between;
   font-size: 0.65rem;
-  color: hsl(var(--muted-foreground));
+  color: var(--muted-foreground);
 }
 
 .compact-history-item .changes {
@@ -87,8 +87,8 @@
   aspect-ratio: 1;
   border-radius: 0.25rem;
   overflow: hidden;
-  border: 1px solid hsl(var(--border));
-  background-color: hsl(var(--muted));
+  border: 1px solid var(--border);
+  background-color: var(--muted);
   cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;
   width: 100%;
@@ -102,7 +102,7 @@
 }
 
 .media-item.selected {
-  border: 2px solid hsl(var(--primary));
+  border: 2px solid var(--primary);
 }
 
 .media-item-image {
@@ -118,7 +118,7 @@
   right: 0;
   padding: 0.25rem;
   font-size: 0.7rem;
-  background-color: hsl(var(--background) / 0.8);
+  background-color: var(--background);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -139,8 +139,8 @@
   left: 0;
   right: 0;
   padding: 0.5rem;
-  background-color: hsl(var(--background));
-  border-top: 1px solid hsl(var(--border));
+  background-color: var(--background);
+  border-top: 1px solid var(--border);
   z-index: 10;
   display: flex;
   justify-content: center;
@@ -151,8 +151,8 @@
 
 /* Destructive dropdown menu item hover effect */
 .dropdown-menu-item-destructive:hover {
-  background-color: hsl(var(--destructive)) !important;
-  color: hsl(var(--destructive-foreground)) !important;
+  background-color: var(--destructive) !important;
+  color: var(--destructive-foreground) !important;
 }
 
 /* Active tab underline gradient */

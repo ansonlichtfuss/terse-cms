@@ -62,7 +62,7 @@ export function BreadcrumbsContainer({
         )}
         style={{
           background:
-            "linear-gradient(to right, hsl(var(--background)), hsl(var(--background) / 0))",
+            "linear-gradient(to right, var(--background), transparent)",
           opacity: showLeftGradient ? 1 : 0,
           transition: "opacity 0.3s ease-in-out",
         }}
@@ -81,7 +81,7 @@ export function BreadcrumbsContainer({
         )}
         style={{
           background:
-            "linear-gradient(to left, hsl(var(--background)), hsl(var(--background) / 0))",
+            "linear-gradient(to left, var(--background), transparent)",
           opacity: showRightGradient ? 1 : 0,
           transition: "opacity 0.3s ease-in-out",
         }}

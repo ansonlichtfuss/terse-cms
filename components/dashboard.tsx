@@ -213,7 +213,7 @@ export function Dashboard({
               {modifiedFiles.length > 0 && (
                 <Badge
                   variant="secondary"
-                  className="ml-1 h-4 text-[10px] bg-white pointer-events-none"
+                  className="ml-1 h-4 text-[10px] bg-background pointer-events-none"
                 >
                   {modifiedFiles.length}
                 </Badge>

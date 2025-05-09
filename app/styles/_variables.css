@@ -1,39 +1,39 @@
 :root {
   /* Color tokens - desaturated dark blue theme */
-  --color-blue-50: 230 80% 98%;
-  --color-blue-100: 230 80% 95%;
-  --color-blue-200: 230 80% 90%;
-  --color-blue-300: 230 80% 80%;
-  --color-blue-400: 230 80% 70%;
-  --color-blue-500: 230 80% 60%;
-  --color-blue-600: 230 80% 50%;
-  --color-blue-700: 230 80% 40%;
-  --color-blue-800: 230 80% 30%;
-  --color-blue-900: 230 80% 20%;
-  --color-blue-950: 230 80% 10%;
+  --color-blue-50: #f7f9ff;
+  --color-blue-100: #edf2ff;
+  --color-blue-200: #d6e0ff;
+  --color-blue-300: #afc2ff;
+  --color-blue-400: #88a3ff;
+  --color-blue-500: #6185ff;
+  --color-blue-600: #3a67ff;
+  --color-blue-700: #2e53cc;
+  --color-blue-800: #234099;
+  --color-blue-900: #172c66;
+  --color-blue-950: #0c1933;
 
-  --color-gray-50: 220 20% 98%;
-  --color-gray-100: 220 20% 95%;
-  --color-gray-200: 220 20% 90%;
-  --color-gray-300: 220 20% 80%;
-  --color-gray-400: 220 20% 70%;
-  --color-gray-500: 220 20% 60%;
-  --color-gray-600: 220 20% 50%;
-  --color-gray-700: 220 20% 40%;
-  --color-gray-800: 220 20% 30%;
-  --color-gray-900: 220 20% 20%;
-  --color-gray-950: 220 20% 10%;
+  --color-gray-50: #fbfbfc;
+  --color-gray-100: #f2f3f5;
+  --color-gray-200: #e0e2e6;
+  --color-gray-300: #c2c5cc;
+  --color-gray-400: #a3a7b3;
+  --color-gray-500: #858a99;
+  --color-gray-600: #666e80;
+  --color-gray-700: #4d5460;
+  --color-gray-800: #333740;
+  --color-gray-900: #1a1b20;
+  --color-gray-950: #0d0e10;
 
-  --color-red-500: 0 84% 60%;
-  --color-red-600: 0 84% 50%;
-  --color-red-700: 0 84% 40%;
+  --color-red-500: #ff3b3b;
+  --color-red-600: #cc2f2f;
+  --color-red-700: #992323;
 
-  --color-green-500: 142 60% 50%;
-  --color-green-600: 142 60% 40%;
-  --color-green-700: 142 60% 30%;
+  --color-green-500: #33cc66;
+  --color-green-600: #29a352;
+  --color-green-700: #1f7a3d;
 
   /* Base colors */
-  --background: var(--color-gray-50);
+  --background: var(--color-white);
   --foreground: var(--color-gray-950);
 
   --muted: var(--color-gray-100);
@@ -66,50 +66,50 @@
   /* Custom gradients - desaturated dark blue theme */
   --gradient-primary: linear-gradient(
     135deg,
-    hsl(var(--color-blue-300)),
-    hsl(var(--color-blue-600))
+    var(--color-blue-300),
+    var(--color-blue-600)
   );
   --gradient-secondary: linear-gradient(
     135deg,
-    hsl(var(--color-gray-50)),
-    hsl(var(--color-blue-100))
+    var(--color-gray-50),
+    var(--color-blue-100)
   );
   --gradient-primary-darker: linear-gradient(
     135deg,
-    hsl(var(--color-blue-700)),
-    hsl(var(--color-blue-800))
+    var(--color-blue-700),
+    var(--color-blue-800)
   );
   --gradient-secondary-darker: linear-gradient(
     135deg,
-    hsl(var(--color-gray-200)),
-    hsl(var(--color-gray-300))
+    var(--color-gray-200),
+    var(--color-gray-300)
   );
   --gradient-destructive: linear-gradient(
     135deg,
-    hsl(var(--color-red-500)),
-    hsl(var(--color-red-600))
+    var(--color-red-500),
+    var(--color-red-600)
   );
   --gradient-destructive-darker: linear-gradient(
     135deg,
-    hsl(var(--color-red-600)),
-    hsl(var(--color-red-700))
+    var(--color-red-600),
+    var(--color-red-700)
   );
   --gradient-accent: linear-gradient(
     135deg,
-    hsl(var(--color-blue-700)),
-    hsl(var(--color-blue-800))
+    var(--color-blue-700),
+    var(--color-blue-800)
   );
 
   --gradient-destructive: linear-gradient(
     135deg,
-    hsl(var(--color-red-500)),
-    hsl(var(--color-red-600))
+    var(--color-red-500),
+    var(--color-red-600)
   );
 
   /* Patterns - 1px spacing and more subtle */
   --dot-pattern: radial-gradient(
     circle,
-    hsl(var(--color-gray-400) / 0.4) 0.5px,
+    var(--color-gray-400) 0.5px,
     transparent 0.5px
   );
   --dot-size: 2px;
@@ -120,7 +120,7 @@
 
 .dark {
   /* Base colors */
-  --background: var(--color-gray-950);
+  --background: var(--color-gray-900);
   --foreground: var(--color-gray-100);
 
   --muted: var(--color-gray-900);
@@ -153,52 +153,50 @@
   /* Custom gradients for dark mode - desaturated dark blue theme */
   --gradient-primary: linear-gradient(
     135deg,
-    hsl(var(--color-blue-600)),
-    hsl(var(--color-blue-700))
+    var(--color-blue-600),
+    var(--color-blue-700)
   );
   --gradient-secondary: linear-gradient(
     135deg,
-    hsl(var(--color-blue-900)),
-    hsl(var(--color-gray-900))
+    var(--color-blue-900),
+    var(--color-gray-900)
   );
   --gradient-primary-darker: linear-gradient(
     135deg,
-    hsl(var(--color-blue-700)),
-    hsl(var(--color-blue-800))
+    var(--color-blue-700),
+    var(--color-blue-800)
   );
   --gradient-secondary-darker: linear-gradient(
     135deg,
-    hsl(var(--color-gray-800)),
-    hsl(var(--color-gray-700))
+    var(--color-gray-800),
+    var(--color-gray-700)
   );
   --gradient-destructive: linear-gradient(
     135deg,
-    hsl(var(--color-red-600)),
-    hsl(var(--color-red-700))
+    var(--color-red-600),
+    var(--color-red-700)
   );
   --gradient-destructive-darker: linear-gradient(
     135deg,
-    hsl(var(--color-red-700)),
-    hsl(var(--color-red-700) / 0.8)
+    var(--color-red-700),
+    var(--color-red-700)
   );
   --gradient-accent: linear-gradient(
     135deg,
-    hsl(var(--color-blue-600)),
-    hsl(var(--color-blue-700))
+    var(--color-blue-600),
+    var(--color-blue-700)
   );
 
   --gradient-destructive: linear-gradient(
     135deg,
-    hsl(var(--color-red-600)),
-    hsl(var(--color-red-700))
+    var(--color-red-600),
+    var(--color-red-700)
   );
 
   /* Patterns for dark mode - 1px spacing and more subtle */
   --dot-pattern: radial-gradient(
     circle,
-    hsl(var(--color-gray-700) / 0.3) 0.5px,
+    var(--color-gray-700) 0.5px,
     transparent 0.5px
   );
-  --dot-size: 2px;
-  --dot-space: 1px;
 }

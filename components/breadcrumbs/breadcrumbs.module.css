@@ -2,7 +2,7 @@
   display: flex;
   align-items: center;
   padding: 2px 6px;
-  border-bottom: 1px solid hsl(var(--border) / 0.5);
+  border-bottom: 1px solid var(--border);
   font-size: 0.7rem;
   width: 100%;
   max-width: 100%;
@@ -23,7 +23,7 @@
   align-items: center;
   font-size: 0.7rem;
   height: 1.2rem;
-  color: hsl(var(--muted-foreground));
+  color: var(--muted-foreground);
   cursor: pointer;
   padding: 1px 3px;
   border-radius: 2px;
@@ -32,20 +32,20 @@
 }
 
 .breadcrumbItem:hover {
-  color: hsl(var(--foreground));
-  background: hsl(var(--muted) / 0.5);
+  color: var(--foreground);
+  background: var(--muted);
 }
 
 .breadcrumbSeparator {
   margin: 0 1px;
-  color: hsl(var(--muted-foreground) / 0.6);
+  color: var(--muted-foreground);
   display: flex;
   align-items: center;
-  shrink: 0;
+  flex-shrink: 0;
 }
 
 .breadcrumbCurrent {
   display: block;
   font-weight: 500;
-  color: hsl(var(--foreground));
+  color: var(--foreground);
 }

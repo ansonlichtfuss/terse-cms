@@ -7,11 +7,11 @@
 }
 
 .file-row:hover {
-  background-color: hsl(var(--muted) / 0.7);
+  background-color: var(--muted);
 }
 
 .file-row.selected {
-  background-color: hsl(var(--muted));
+  background-color: var(--muted);
 }
 
 .file-item,
@@ -29,23 +29,23 @@
 
 .file-item:hover,
 .folder-item:hover {
-  background-color: hsl(var(--muted));
+  background-color: var(--muted);
 }
 
 .file-item.selected,
 .folder-item.selected {
-  background-color: hsl(var(--primary) / 0.1);
+  background-color: var(--primary);
 }
 
 .file-item-icon,
 .folder-item-icon {
   margin-right: 0.5rem;
-  color: hsl(var(--muted-foreground));
+  color: var(--muted-foreground);
   shrink: 0;
 }
 
 .folder-item-icon {
-  color: hsl(var(--primary));
+  color: var(--primary);
 }
 
 .file-item-name,
