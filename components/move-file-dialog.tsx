@@ -182,16 +182,19 @@ export function MoveFileDialog({
   };
 
   const isItemInFolder = (itemKey: string, folderKey: string): boolean => {
+    const itemName = getItemName(itemKey);
     if (isMarkdownFile) {
       // For markdown files
       if (folderKey === "") {
         // Can't move to root if already in root
         return itemKey.indexOf("/") === -1;
       }
-      return itemKey.startsWith(folderKey) && itemKey !== folderKey;
+      // Check if the itemKey is directly within the folderKey
+      return itemKey === `${folderKey}/${itemName}`;
     } else {
       // For S3 items
-      return itemKey.startsWith(folderKey) && itemKey !== folderKey;
+      // Check if the itemKey is directly within the folderKey
+      return itemKey === `${folderKey}${itemName}`;
     }
   };
 

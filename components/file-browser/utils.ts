@@ -12,7 +12,8 @@ export const fileNodeToFileItem = (node: FileNode): FileItem => {
   };
 };
 
-export const getItemName = (item: FileItem): string => {
+export const getItemName = (item?: FileItem): string => {
+  if (!item) return "";
   if (item.name) return item.name;
 
   // For S3 items that don't have a name property
