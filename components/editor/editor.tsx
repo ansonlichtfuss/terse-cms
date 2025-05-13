@@ -205,6 +205,8 @@ export function Editor({ file, onSave }: EditorProps) {
     fetchItems: async () => {
       // No need to fetch items in editor, provide a dummy function
     },
+    setIsDeleteDialogOpen: () => {}, // Dummy function
+    setItemToAction: () => {}, // Dummy function
   });
 
   // Safely get the filename from the path

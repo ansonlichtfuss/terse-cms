@@ -90,6 +90,8 @@ export function FileBrowser({
     type,
     currentPath,
     fetchItems, // Pass fetchItems for refreshing after operations
+    setIsDeleteDialogOpen, // Pass the state setter for the delete dialog
+    setItemToAction, // Pass the state setter for the item in action
   });
 
   // Local handler for item clicks

@@ -7,6 +7,8 @@ interface UseFileOperationsProps {
   type: "files" | "media";
   currentPath: string; // Needed for refreshing after operations
   fetchItems: (path: string) => Promise<void>; // Function to refresh the file list
+  setIsDeleteDialogOpen: (isOpen: boolean) => void; // Function to close the delete dialog
+  setItemToAction: (item: FileItem | null) => void; // Function to clear the item in action
 }
 
 interface UseFileOperationsResult {
@@ -15,12 +17,15 @@ interface UseFileOperationsResult {
   handleDelete: (item: FileItem) => Promise<void>;
   handleRename: (item: FileItem, newName: string) => Promise<void>;
   handleMove: (item: FileItem, destinationPath: string) => Promise<void>;
+  handleCreateFile: (filePath: string, content?: string) => Promise<void>; // Add handleCreateFile here
 }
 
 export const useFileOperations = ({
   type,
   currentPath,
   fetchItems,
+  setIsDeleteDialogOpen,
+  setItemToAction,
 }: UseFileOperationsProps): UseFileOperationsResult => {
   const router = useRouter(); // Initialize useRouter
 
@@ -144,9 +149,9 @@ export const useFileOperations = ({
       // Refresh the list
       await fetchItems(currentPath);
 
-      // Assuming state updates for dialog closing are handled elsewhere
-      // setIsDeleteDialogOpen(false);
-      // setItemToAction(null);
+      // Close the dialog and clear the item in action
+      setIsDeleteDialogOpen(false);
+      setItemToAction(null);
     } catch (error) {
       console.error("Failed to delete item:", error);
       toast({
@@ -266,11 +271,38 @@ export const useFileOperations = ({
     }
   };
 
+  const handleCreateFile = async (filePath: string, content: string = "") => {
+    try {
+      const response = await fetch("/api/files", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ path: filePath, content }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to create file");
+      }
+
+      // Refresh the list
+      await fetchItems(currentPath);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to create file",
+        variant: "destructive",
+      });
+      throw error; // Re-throw to allow calling component to handle errors
+    }
+  };
+
   return {
     handleUpload,
     handleCreateFolder,
     handleDelete,
     handleRename,
     handleMove,
+    handleCreateFile, // Add the new function here
   };
 };

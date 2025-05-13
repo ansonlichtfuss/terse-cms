@@ -10,6 +10,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation"; // Import useRouter
+import { useFileFetching } from "./useFileFetching"; // Import useFileFetching
+import { useFileOperations } from "./useFileOperations"; // Import useFileOperations
 import {
   Tooltip,
   TooltipContent,
@@ -36,12 +38,42 @@ export function FileBrowserActions({
   currentPath, // Destructure currentPath
 }: FileBrowserActionsProps) {
   const router = useRouter(); // Initialize useRouter
+  const { currentDirContents, fetchItems } = useFileFetching({
+    currentPath,
+    type,
+  }); // Get current directory contents and fetchItems
+  const { handleCreateFile } = useFileOperations({
+    currentPath,
+    type,
+    fetchItems,
+    setIsDeleteDialogOpen: () => {}, // Dummy function
+    setItemToAction: () => {}, // Dummy function
+  }); // Get handleCreateFile from useFileOperations
 
-  const handleNewFileClick = () => {
-    const newFilePath = `/edit/${
-      currentPath ? `${currentPath}/` : ""
-    }untitled.md`;
-    router.push(newFilePath);
+  const handleNewFileClick = async () => {
+    // Make the function async
+    let baseFileName = "untitled.md";
+    let newFileName = baseFileName;
+    let counter = 1;
+
+    // Check if a file with the base name already exists
+    const existingFileNames = currentDirContents.map((item) => item.name);
+
+    while (existingFileNames.includes(newFileName)) {
+      newFileName = `untitled-${counter}.md`;
+      counter++;
+    }
+
+    const newFilePath = `${currentPath ? `${currentPath}/` : ""}${newFileName}`;
+
+    try {
+      await handleCreateFile(newFilePath, ""); // Create the file and await completion
+      router.push(`/edit/${newFilePath}`); // Redirect after file creation and refresh
+    } catch (error) {
+      console.error("Failed to create new file:", error);
+      // The handleCreateFile function already shows a toast on error,
+      // so no need to show another one here.
+    }
   };
 
   return (

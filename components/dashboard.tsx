@@ -20,7 +20,15 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "@/components/ui/use-toast";
 import { useMediaQuery } from "@/hooks/use-media-query";
-import { ChevronDown, Menu, Moon, RotateCcw, Save, Sun } from "lucide-react";
+import {
+  ChevronDown,
+  Menu,
+  Moon,
+  RotateCcw,
+  Save,
+  Sun,
+  GitCommit,
+} from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import packageInfo from "../package.json";
@@ -208,7 +216,7 @@ export function Dashboard({
               disabled={modifiedFiles.length === 0}
               className="flex items-center rounded-r-none  gap-1 h-7 text-xs bg-gradient-secondary transition-all"
             >
-              <Save className="h-3 w-3 mr-1" />
+              <GitCommit className="h-3 w-3 mr-1" />
               Commit
               {modifiedFiles.length > 0 && (
                 <Badge
