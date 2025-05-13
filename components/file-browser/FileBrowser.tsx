@@ -202,11 +202,12 @@ export function FileBrowser({
           "px-4 pt-2 pb-8 overflow-y-auto max-h-[calc(100vh-180px)]"
         )}
       >
-        {isLoading ? (
+        {!currentDirContents && isLoading && (
           <div className="flex items-center justify-center h-20 text-muted-foreground text-xs">
             Loading...
           </div>
-        ) : currentDirContents.length > 0 ? (
+        )}
+        {currentDirContents.length > 0 && (
           // Render list view using FileItemRow component
           <div className="space-y-1 px-0 max-h-full">
             {currentDirContents.map((item) => (
@@ -222,7 +223,8 @@ export function FileBrowser({
               />
             ))}
           </div>
-        ) : (
+        )}
+        {!currentDirContents && !isLoading && (
           <div className="flex items-center justify-center h-20 text-muted-foreground text-xs">
             No items found
           </div>
