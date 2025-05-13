@@ -1,6 +1,7 @@
 import { toast } from "@/components/ui/use-toast";
 import type { FileItem } from "./FileBrowser"; // Assuming FileItem type remains in the main file for now
 import { getItemPath } from "./utils"; // Import utility function
+import { useRouter } from "next/navigation"; // Import useRouter
 
 interface UseFileOperationsProps {
   type: "files" | "media";
@@ -21,6 +22,8 @@ export const useFileOperations = ({
   currentPath,
   fetchItems,
 }: UseFileOperationsProps): UseFileOperationsResult => {
+  const router = useRouter(); // Initialize useRouter
+
   const handleUpload = async (files: FileList | null) => {
     if (!files || files.length === 0) return;
 
@@ -140,14 +143,6 @@ export const useFileOperations = ({
 
       // Refresh the list
       await fetchItems(currentPath);
-      toast({
-        title: "Success",
-        description: `${
-          item.type === "directory" || item.type === "folder"
-            ? "Folder"
-            : "File"
-        } deleted successfully`,
-      });
 
       // Assuming state updates for dialog closing are handled elsewhere
       // setIsDeleteDialogOpen(false);
@@ -164,7 +159,6 @@ export const useFileOperations = ({
 
   const handleRename = async (item: FileItem, newName: string) => {
     if (!newName.trim()) return;
-
     try {
       if (type === "files") {
         const response = await fetch("/api/files/operations", {
@@ -181,6 +175,11 @@ export const useFileOperations = ({
         });
 
         if (!response.ok) {
+          toast({
+            title: "Error",
+            description: `Failed to rename item.`,
+            variant: "destructive",
+          });
           throw new Error("Failed to rename file");
         }
       } else {
@@ -193,24 +192,21 @@ export const useFileOperations = ({
         return; // Exit if not implemented
       }
 
-      // Refresh the list
-      await fetchItems(currentPath);
-      toast({
-        title: "Success",
-        description: `${
-          item.type === "directory" || item.type === "folder"
-            ? "Folder"
-            : "File"
-        } renamed successfully`,
-      });
-      // Assuming state updates for dialog closing are handled elsewhere
-      // setIsRenameDialogOpen(false);
-      // setItemToAction(null);
+      // Construct the new path
+      const sourcePath = getItemPath(item);
+      const sourceParts = sourcePath.split("/");
+      sourceParts[sourceParts.length - 1] = newName;
+      const newPath = sourceParts.join("/");
+
+      // Navigate to the new URL
+      router.push(`/edit/${newPath}`);
     } catch (error) {
       console.error("Failed to rename item:", error);
       toast({
         title: "Error",
-        description: "Failed to rename item",
+        description: `Failed to rename item: ${
+          error instanceof Error ? error.message : String(error)
+        }`,
         variant: "destructive",
       });
     }

@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import {
   Dialog,
   DialogContent,
@@ -38,7 +37,6 @@ export function RenameFileDialog({
   isMarkdownFile = false,
   isFileOpen = false,
 }: RenameFileDialogProps) {
-  const router = useRouter();
   const [newName, setNewName] = useState("");
 
   useEffect(() => {
@@ -66,12 +64,6 @@ export function RenameFileDialog({
   const handleRename = () => {
     if (newName.trim()) {
       onRename(newName.trim());
-      if (isFileOpen) {
-        const oldPathParts = item.key.split("/");
-        oldPathParts[oldPathParts.length - 1] = newName.trim();
-        const newPath = oldPathParts.join("/");
-        router.push(`/edit/${newPath}`);
-      }
       onOpenChange(false);
     }
   };

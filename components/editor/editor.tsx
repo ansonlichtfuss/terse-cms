@@ -18,7 +18,8 @@ import {
 } from "@/components/editor/editor-content";
 import matter from "gray-matter";
 import { RenameFileDialog } from "@/components/rename-file-dialog";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/navigation"; // Keep useRouter for other purposes if needed
+import { useFileOperations } from "../file-browser/useFileOperations";
 
 interface EditorProps {
   file: FileData;
@@ -194,47 +195,17 @@ export function Editor({ file, onSave }: EditorProps) {
   }, []);
 
   // Add router to the component
+  // Add router to the component
   const router = useRouter();
 
-  // Handle file rename
-  const handleRename = async (newName: string) => {
-    if (!file) return;
-
-    try {
-      const response = await fetch("/api/files/operations", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          operation: "rename",
-          sourcePath: file.path,
-          newName,
-          type: "file",
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to rename file");
-      }
-
-      // Get the directory path
-      const dirPath = file.path.split("/").slice(0, -1).join("/");
-      const newPath = dirPath ? `${dirPath}/${newName}` : newName;
-
-      // Update the file path
-      if (onSave) {
-        onSave(newPath, file.content);
-      }
-
-      // Navigate to the new URL
-      router.push(`/edit/${encodeURIComponent(newPath)}`);
-
-      setIsRenameDialogOpen(false);
-    } catch (error) {
-      console.error("Failed to rename file:", error);
-    }
-  };
+  // Use the file operations hook
+  const { handleRename } = useFileOperations({
+    type: "files", // Assuming editor only deals with 'files' type
+    currentPath: file?.path || "", // Pass the current file path
+    fetchItems: async () => {
+      // No need to fetch items in editor, provide a dummy function
+    },
+  });
 
   // Safely get the filename from the path
   const getFileName = () => {
@@ -310,7 +281,9 @@ export function Editor({ file, onSave }: EditorProps) {
             key: file.path,
             type: "file",
           }}
-          onRename={handleRename}
+          onRename={(newName) =>
+            handleRename({ key: file.path, type: "file" }, newName)
+          }
           isMarkdownFile={true}
         />
       )}
