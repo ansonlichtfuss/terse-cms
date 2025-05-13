@@ -1,6 +1,7 @@
 "use client";
 
 import type React from "react";
+import { useState } from "react"; // Import useState
 
 import { ConfirmationDialog } from "@/components/confirmation-dialog";
 import styles from "./FileBrowser.module.css";
@@ -20,6 +21,7 @@ import { useFileOperations } from "./useFileOperations";
 import { getItemName, getItemPath } from "./utils"; // Import utility functions
 import { useRouter } from "next/navigation";
 import { Router } from "next/router";
+import UploadDialog from "./UploadDialog"; // Import UploadDialog from the same directory
 
 // FileItem type definition remains here for now, as it's used by multiple components/hooks
 export interface FileItem {
@@ -72,6 +74,9 @@ export function FileBrowser({
   } = useFileBrowserState({ isMobile, selectedPath });
 
   const router = useRouter();
+
+  // Add state for the upload dialog
+  const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
 
   // Use the custom fetching hook
   const { currentDirContents, isLoading, fetchItems } = useFileFetching({
@@ -168,12 +173,15 @@ export function FileBrowser({
     setIsCreatingFolder(true);
   };
 
-  // Local handler for upload input change
-  const handleUploadInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setIsUploading(true);
-    handleUpload(e.target.files).finally(() => {
-      setIsUploading(false);
-    });
+  // Local handler to open the upload dialog
+  const handleOpenUploadDialog = () => {
+    setIsUploadDialogOpen(true);
+  };
+
+  // Local handler to close the upload dialog
+  const handleCloseUploadDialog = () => {
+    setIsUploadDialogOpen(false);
+    // TODO: Refresh file list after upload dialog is closed
   };
 
   return (
@@ -184,7 +192,7 @@ export function FileBrowser({
         isUploading={isUploading}
         onRefresh={() => fetchItems(currentPath)} // Call fetchItems from fetching hook
         onNewFolderClick={handleNewFolderButtonClick} // Call local handler
-        onUpload={handleUploadInputChange} // Call local handler
+        onOpenUploadDialog={handleOpenUploadDialog} // Pass the handler to open the dialog
         currentPath={currentPath} // Pass the currentPath prop
       />
       <div className="px-4">
@@ -301,6 +309,13 @@ export function FileBrowser({
           destructive={true}
         />
       )}
+
+      {/* Upload Dialog */}
+      <UploadDialog
+        isOpen={isUploadDialogOpen}
+        onClose={handleCloseUploadDialog}
+        uploadPath={currentPath} // Pass the currentPath to the UploadDialog
+      />
     </div>
   );
 }

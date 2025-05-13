@@ -25,7 +25,7 @@ interface FileBrowserActionsProps {
   isUploading: boolean;
   onRefresh: () => void;
   onNewFolderClick: () => void;
-  onUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onOpenUploadDialog: () => void; // New prop to open the upload dialog
   currentPath: string; // Add currentPath prop
 }
 
@@ -34,7 +34,7 @@ export function FileBrowserActions({
   isUploading,
   onRefresh,
   onNewFolderClick,
-  onUpload,
+  onOpenUploadDialog, // Destructure the new prop
   currentPath, // Destructure currentPath
 }: FileBrowserActionsProps) {
   const router = useRouter(); // Initialize useRouter
@@ -123,15 +123,10 @@ export function FileBrowserActions({
             <Tooltip>
               <TooltipTrigger asChild>
                 <div className="relative shrink-0">
-                  <Input
-                    type="file"
-                    className="absolute inset-0 opacity-0 cursor-pointer"
-                    onChange={onUpload}
-                    disabled={isUploading}
-                  />
                   <Button
                     variant="outline"
                     size="icon"
+                    onClick={onOpenUploadDialog} // Call the new prop to open the dialog
                     disabled={isUploading}
                     className="h-7 w-7"
                   >
