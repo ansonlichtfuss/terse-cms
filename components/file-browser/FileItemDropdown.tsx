@@ -39,14 +39,16 @@ export function FileItemDropdown({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem
-          onClick={(e) => {
-            e.preventDefault();
-            onMoveClick(item);
-          }}
-        >
-          Move
-        </DropdownMenuItem>
+        {item.type !== "folder" && item.type !== "directory" && (
+          <DropdownMenuItem
+            onClick={(e) => {
+              e.preventDefault();
+              onMoveClick(item);
+            }}
+          >
+            Move
+          </DropdownMenuItem>
+        )}
         {item.type === "file" && (
           <DropdownMenuItem
             onClick={(e) => {
