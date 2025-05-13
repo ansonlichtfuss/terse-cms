@@ -185,6 +185,7 @@ export function FileBrowser({
         onRefresh={() => fetchItems(currentPath)} // Call fetchItems from fetching hook
         onNewFolderClick={handleNewFolderButtonClick} // Call local handler
         onUpload={handleUploadInputChange} // Call local handler
+        currentPath={currentPath} // Pass the currentPath prop
       />
       <div className="px-4">
         <PathBreadcrumbs

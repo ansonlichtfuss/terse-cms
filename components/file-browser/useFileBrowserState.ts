@@ -44,8 +44,13 @@ export const useFileBrowserState = ({
     // Initialize currentPath based on selectedPath
     if (selectedPath) {
       const parts = selectedPath.split("/");
-      // If it's a file, set currentPath to its directory
-      if (parts.length > 1 && selectedPath.includes(".")) {
+      // If it's a file (contains a dot)
+      if (selectedPath.includes(".")) {
+        // If it's a file at the root, set currentPath to ""
+        if (parts.length === 1) {
+          return "";
+        }
+        // If it's a file in a subdirectory, set currentPath to its directory
         return parts.slice(0, -1).join("/");
       }
       // If it's a folder or root, use the path itself
