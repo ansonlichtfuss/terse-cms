@@ -52,6 +52,10 @@ export function FileItemRow({
           "flex items-center justify-between py-1 px-1 rounded-md w-full",
           isSelected ? styles.selected : styles["file-row:hover"]
         )}
+        draggable={!isFolder}
+        onDragStart={(event) => {
+          event.dataTransfer.setData("text/plain", item.url || itemPath);
+        }}
       >
         <div
           className={cn(
@@ -99,6 +103,10 @@ export function FileItemRow({
         isSelected ? styles.selected : styles["file-row:hover"]
       )}
       onClick={isFolder ? () => onItemClick(item) : undefined}
+      draggable={!isFolder}
+      onDragStart={(event) => {
+        event.dataTransfer.setData("text/plain", item.url || itemPath);
+      }}
     >
       <div
         className={cn(

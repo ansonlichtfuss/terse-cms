@@ -239,7 +239,10 @@ export function Editor({ file, onSave }: EditorProps) {
           <span className="flex items-center text-xs text-muted-foreground">
             <Clock className="h-3 w-3 mr-1" />
             {lastSaved
-              ? `Auto-saved ${lastSaved.toLocaleTimeString()}`
+              ? `Auto-saved ${lastSaved.toLocaleTimeString([], {
+                  hour: "numeric",
+                  minute: "2-digit",
+                })}`
               : "Auto-save enabled"}
           </span>
         </div>
