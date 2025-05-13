@@ -114,7 +114,6 @@ export function FileBrowser({
           onSelect(itemPath);
         }
       } else {
-        alert(JSON.stringify(item));
         router.push(`/edit/${item.path}`);
         // For media items, always use the callback
         if (typeof onSelect === "function") {
@@ -146,7 +145,6 @@ export function FileBrowser({
       });
     }
   };
-
   // Local handler to open delete dialog
   const openDeleteDialog = (item: FileItem) => {
     setItemToAction(item);

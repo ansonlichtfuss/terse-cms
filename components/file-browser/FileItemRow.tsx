@@ -6,6 +6,11 @@ import { cn } from "@/lib/utils";
 import { getItemName, getItemPath } from "./utils"; // Import utility functions
 import type { FileItem } from "./FileBrowser"; // Assuming FileItem type remains in the main file for now
 import { FileItemDropdown } from "./FileItemDropdown";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 
 interface FileItemRowProps {
   item: FileItem;
@@ -32,7 +37,12 @@ export function FileItemRow({
   const isMarkdownFile = type === "files" && !isFolder;
 
   // Render Link for files when using URL routing
-  if (!isFolder && type === "files") {
+  const isTextFile =
+    itemName.toLowerCase().endsWith(".md") ||
+    itemName.toLowerCase().endsWith(".txt");
+
+  // Render Link for files when using URL routing and it's a text file
+  if (!isFolder && type === "files" && isTextFile) {
     return (
       <Link
         key={itemPath}
@@ -42,34 +52,22 @@ export function FileItemRow({
           "flex items-center justify-between py-1 px-1 rounded-md w-full",
           isSelected ? styles.selected : styles["file-row:hover"]
         )}
-        // onClick={(e) => {
-        //   // Still call onItemClick to update the selected item state in the parent
-        //   e.preventDefault();
-        //   onItemClick(item);
-        //   // Let the Link component handle the navigation
-        //   // Returning true here allows the default link behavior
-        //   // If you want to prevent default navigation and handle it manually, return false or remove this line
-        //   return true;
-        // }}
       >
         <div
           className={cn(
             styles["file-item"],
             "flex items-center min-w-0 overflow-hidden flex-1 pr-1 max-w-[200px]",
-            (itemName.toLowerCase().endsWith(".md") ||
-              itemName.toLowerCase().endsWith(".txt")) &&
-              "pl-2"
+            isTextFile && "pl-2"
           )}
         >
-          {!itemName.toLowerCase().endsWith(".md") &&
-            !itemName.toLowerCase().endsWith(".txt") && (
-              <File
-                className={cn(
-                  styles["file-item-icon"],
-                  "h-4 w-4 text-muted-foreground mr-1 shrink-0"
-                )}
-              />
-            )}
+          {!isTextFile && (
+            <File
+              className={cn(
+                styles["file-item-icon"],
+                "h-4 w-4 text-muted-foreground mr-1 shrink-0"
+              )}
+            />
+          )}
           <span
             className={cn(
               styles["file-item-name"],
@@ -91,7 +89,7 @@ export function FileItemRow({
     );
   }
 
-  // Render div for folders or when not using URL routing
+  // Render div for folders, non-text files, or when not using URL routing
   return (
     <div
       key={itemPath}
@@ -100,7 +98,7 @@ export function FileItemRow({
         "flex items-center justify-between py-1 px-1 rounded-md cursor-pointer w-full",
         isSelected ? styles.selected : styles["file-row:hover"]
       )}
-      onClick={() => onItemClick(item)}
+      onClick={isFolder ? () => onItemClick(item) : undefined}
     >
       <div
         className={cn(
@@ -118,22 +116,31 @@ export function FileItemRow({
         ) : type === "media" &&
           item.url &&
           item.key.match(/\.(jpg|jpeg|png|gif|webp)$/i) ? (
-          <div className="h-6 w-6 mr-1 shrink-0">
-            <img
-              src={item.url || "/placeholder.svg"}
-              alt={itemName}
-              className="h-full w-full object-cover rounded-md"
-            />
-          </div>
+          <HoverCard openDelay={100} closeDelay={100}>
+            <HoverCardTrigger asChild>
+              <div className="h-6 w-6 mr-1 shrink-0">
+                <img
+                  src={item.url || "/placeholder.svg"}
+                  alt={itemName}
+                  className="h-full w-full object-cover rounded-md"
+                />
+              </div>
+            </HoverCardTrigger>
+            <HoverCardContent className="w-auto p-0">
+              <img
+                src={item.url || "/placeholder.svg"}
+                alt={itemName}
+                style={{ maxWidth: "300px", maxHeight: "300px" }}
+              />
+            </HoverCardContent>
+          </HoverCard>
         ) : (
-          type === "media" && (
-            <File
-              className={cn(
-                styles["file-item-icon"],
-                "h-4 w-4 text-muted-foreground mr-1 shrink-0"
-              )}
-            />
-          )
+          <File
+            className={cn(
+              styles["file-item-icon"],
+              "h-4 w-4 text-muted-foreground mr-1 shrink-0"
+            )}
+          />
         )}
         <span
           className={cn(
@@ -154,4 +161,15 @@ export function FileItemRow({
       />
     </div>
   );
+}
+
+// Helper function to trigger file download
+function downloadFile(item: FileItem) {
+  console.log("Attempting to download item:", item); // Log the item object
+  const link = document.createElement("a");
+  link.href = item.url || getItemPath(item); // Use item.url if available, otherwise use itemPath
+  link.download = getItemName(item);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
 }

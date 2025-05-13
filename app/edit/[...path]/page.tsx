@@ -1,13 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation"; // Removed useSearchParams
+import { useParams, useRouter } from "next/navigation"; // Removed useSearchParams
 import { Dashboard } from "@/components/dashboard";
 import type { FileData } from "@/types";
 import { Editor } from "@/components/editor/editor"; // Corrected import path
 
 export default function EditPage() {
   const params = useParams();
+  const router = useRouter();
   const [file, setFile] = useState<FileData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -32,6 +33,10 @@ export default function EditPage() {
       const response = await fetch(
         `/api/files?path=${encodeURIComponent(path)}`
       );
+      if (response.status === 404) {
+        router.push("/");
+        return;
+      }
       const data = await response.json();
 
       setFile({
