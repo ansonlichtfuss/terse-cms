@@ -20,6 +20,7 @@ import matter from "gray-matter";
 import { RenameFileDialog } from "@/components/rename-file-dialog";
 import { useRouter } from "next/navigation"; // Keep useRouter for other purposes if needed
 import { useFileOperations } from "../file-browser/useFileOperations";
+import { useGitStatus } from "@/context/GitStatusContext";
 
 interface EditorProps {
   file: FileData;
@@ -51,14 +52,19 @@ export function Editor({ file, onSave }: EditorProps) {
   // Create a stable debounced save function
   const debouncedSaveRef = useRef<any>(null);
   if (!debouncedSaveRef.current) {
-    debouncedSaveRef.current = debounce((path: string, content: string) => {
-      isSavingRef.current = true;
-      onSave(path, content);
-      setLastSaved(new Date());
-      setTimeout(() => {
-        isSavingRef.current = false;
-      }, 100);
-    }, 1000);
+    debouncedSaveRef.current = debounce(
+      async (path: string, content: string) => {
+        isSavingRef.current = true;
+        await onSave(path, content); // Assuming onSave is async and awaits the save operation
+        setLastSaved(new Date());
+        // Update git status after saving
+        updateGitStatus();
+        setTimeout(() => {
+          isSavingRef.current = false;
+        }, 100);
+      },
+      1000
+    );
   }
 
   // Load user preferences on mount
@@ -197,6 +203,9 @@ export function Editor({ file, onSave }: EditorProps) {
   // Add router to the component
   // Add router to the component
   const router = useRouter();
+
+  // Use the git status context
+  const { updateGitStatus } = useGitStatus();
 
   // Use the file operations hook
   const { handleRename } = useFileOperations({

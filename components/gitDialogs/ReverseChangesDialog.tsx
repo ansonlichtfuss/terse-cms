@@ -2,20 +2,20 @@
 
 import { Button } from "@/components/ui/button";
 import { FileTreeDialog } from "./FileTreeDialog";
+import { useGitStatus } from "@/context/GitStatusContext";
 
 interface ReverseChangesDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onRevert: () => void; // Assuming a simple revert action for now
-  files: string[]; // Files to be reverted
 }
 
 export function ReverseChangesDialog({
   open,
   onOpenChange,
   onRevert,
-  files,
 }: ReverseChangesDialogProps) {
+  const { modifiedFiles: files } = useGitStatus();
   const handleRevert = () => {
     onRevert();
   };
@@ -31,7 +31,9 @@ export function ReverseChangesDialog({
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
-          <Button onClick={handleRevert}>Revert Changes</Button>
+          <Button variant="destructive" onClick={handleRevert}>
+            Revert Changes
+          </Button>
         </>
       }
     >

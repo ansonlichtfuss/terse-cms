@@ -2,6 +2,7 @@ import { toast } from "@/components/ui/use-toast";
 import type { FileItem } from "./FileBrowser"; // Assuming FileItem type remains in the main file for now
 import { getItemPath } from "./utils"; // Import utility function
 import { useRouter } from "next/navigation"; // Import useRouter
+import { useGitStatus } from "@/context/GitStatusContext";
 
 interface UseFileOperationsProps {
   type: "files" | "media";
@@ -28,6 +29,7 @@ export const useFileOperations = ({
   setItemToAction,
 }: UseFileOperationsProps): UseFileOperationsResult => {
   const router = useRouter(); // Initialize useRouter
+  const { updateGitStatus } = useGitStatus();
 
   const handleUpload = async (files: FileList | null) => {
     if (!files || files.length === 0) return;
@@ -149,6 +151,9 @@ export const useFileOperations = ({
       // Refresh the list
       await fetchItems(currentPath);
 
+      // Update git status after deletion
+      updateGitStatus();
+
       // Close the dialog and clear the item in action
       setIsDeleteDialogOpen(false);
       setItemToAction(null);
@@ -203,6 +208,9 @@ export const useFileOperations = ({
       sourceParts[sourceParts.length - 1] = newName;
       const newPath = sourceParts.join("/");
 
+      // Update git status after renaming
+      updateGitStatus();
+
       // Navigate to the new URL
       router.push(`/edit/${newPath}`);
     } catch (error) {
@@ -250,6 +258,10 @@ export const useFileOperations = ({
 
       // Refresh the list
       await fetchItems(currentPath);
+
+      // Update git status after moving
+      updateGitStatus();
+
       toast({
         title: "Success",
         description: `${
@@ -287,6 +299,9 @@ export const useFileOperations = ({
 
       // Refresh the list
       await fetchItems(currentPath);
+
+      // Update git status after creating a file
+      updateGitStatus();
     } catch (error) {
       toast({
         title: "Error",

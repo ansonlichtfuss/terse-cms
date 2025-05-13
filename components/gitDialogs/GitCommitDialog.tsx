@@ -7,20 +7,20 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ModifiedFilesTree } from "./ModifiedFilesTree";
 import styles from "./gitCommitDialog.module.css";
+import { useGitStatus } from "@/context/GitStatusContext";
 
 interface GitCommitDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onCommit: (message: string) => void;
-  modifiedFiles?: string[];
 }
 
 export function GitCommitDialog({
   open,
   onOpenChange,
   onCommit,
-  modifiedFiles = [],
 }: GitCommitDialogProps) {
+  const { modifiedFiles } = useGitStatus();
   const [commitMessage, setCommitMessage] = useState(
     `CMS: Updated files at ${new Date().toLocaleString()}`
   );

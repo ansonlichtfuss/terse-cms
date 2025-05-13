@@ -34,6 +34,7 @@ import { useEffect, useState } from "react";
 import packageInfo from "../package.json";
 import { GitCommitDialog } from "./gitDialogs/GitCommitDialog";
 import { ReverseChangesDialog } from "./gitDialogs/ReverseChangesDialog";
+import { useGitStatus } from "@/context/GitStatusContext";
 
 function ThemeToggle() {
   const { theme, setTheme } = useTheme();
@@ -60,26 +61,12 @@ export function Dashboard({
   children?: React.ReactNode;
 }) {
   const [selectedTab, setSelectedTab] = useState("files");
-  const [modifiedFiles, setModifiedFiles] = useState<string[]>([]);
   const [isCommitDialogOpen, setIsCommitDialogOpen] = useState(false);
   const [isRevertDialogOpen, setIsRevertDialogOpen] = useState(false);
   const isMobile = useMediaQuery("(max-width: 768px)");
 
-  useEffect(() => {
-    // Load modified files count from localStorage or API
-    const fetchModifiedFiles = async () => {
-      try {
-        const response = await fetch("/api/git/status");
-        const data = await response.json();
-        setModifiedFiles(data.modifiedFiles || []);
-      } catch (error) {
-        console.error("Failed to fetch git status:", error);
-        setModifiedFiles([]); // Ensure modifiedFiles is always an array
-      }
-    };
-
-    fetchModifiedFiles();
-  }, []);
+  // Use the context to get modified files and the update function
+  const { modifiedFiles, updateGitStatus } = useGitStatus();
 
   const commitChanges = async (message: string) => {
     // Moved commitChanges here
@@ -92,8 +79,8 @@ export function Dashboard({
         body: JSON.stringify({ message }),
       });
 
-      // Clear modified files after successful commit
-      setModifiedFiles([]);
+      // After successful commit, update the git status
+      // updateGitStatus(); // Will uncomment after confirming ReverseChangesDialog
 
       // Update selected file if it was modified
       // if (selectedFile && selectedFile.isModified) {
@@ -132,8 +119,8 @@ export function Dashboard({
         throw new Error("Failed to revert changes");
       }
 
-      // Clear modified files
-      setModifiedFiles([]);
+      // After successful revert, update the git status
+      // updateGitStatus(); // Will uncomment after confirming ReverseChangesDialog
 
       // Update selected file if it was modified
       // if (selectedFile && selectedFile.isModified) {
@@ -212,7 +199,7 @@ export function Dashboard({
             <Button
               variant="outline"
               size="sm"
-              onClick={() => setIsCommitDialogOpen(true)} // Corrected onClick handler
+              onClick={() => setIsCommitDialogOpen(true)}
               disabled={modifiedFiles.length === 0}
               className="flex items-center rounded-r-none  gap-1 h-7 text-xs bg-gradient-secondary transition-all"
             >
@@ -303,7 +290,6 @@ export function Dashboard({
         open={isCommitDialogOpen}
         onOpenChange={setIsCommitDialogOpen}
         onCommit={commitChanges}
-        modifiedFiles={modifiedFiles}
       />
 
       {/* Revert Changes Dialog */}
@@ -311,7 +297,6 @@ export function Dashboard({
         open={isRevertDialogOpen}
         onOpenChange={setIsRevertDialogOpen}
         onRevert={handleRevertChanges}
-        files={modifiedFiles}
       />
     </div>
   );

@@ -59,16 +59,11 @@ const UploadDialog: React.FC<UploadDialogProps> = ({
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-y-auto">
-        {" "}
-        {/* Increased max-width and added max-height/overflow */}
         <DialogHeader>
           <DialogTitle>Upload Files</DialogTitle>
-          <DialogDescription>
-            Drag and drop files here, or click to select files.
-          </DialogDescription>
         </DialogHeader>
         <div
-          className={`border-2 border-dashed rounded-md p-6 text-center cursor-pointer mb-4 ${
+          className={`border-1 border-dashed rounded-md p-6 text-center cursor-pointer mb-4 text-gray-500 hover:text-gray-800 ${
             // Added mb-4 for spacing
             isDraggingOver ? "border-blue-500 bg-blue-50" : "border-gray-300" // Conditional styling
           }`}
@@ -89,7 +84,9 @@ const UploadDialog: React.FC<UploadDialogProps> = ({
               element.value = "";
             }}
           />
-          <p>Drag 'n' drop files here, or click to select files</p>
+          <p className="text-sm">
+            Drag 'n' drop files here, or click to select files
+          </p>
         </div>
         {/* Combined Upload Grid */}
         {fileUploads.length > 0 && (
