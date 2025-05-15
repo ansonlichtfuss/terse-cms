@@ -29,10 +29,17 @@ export async function POST(request: Request) {
     // Switch branch
     await git.checkout(branchName);
 
-    return NextResponse.json({
-      success: true,
-      message: `Switched to branch ${branchName}`,
-    });
+    return NextResponse.json(
+      {
+        success: true,
+        message: `Switched to branch ${branchName}`,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
   } catch (error: any) {
     console.error("Failed to switch branch:", error);
     return NextResponse.json(
