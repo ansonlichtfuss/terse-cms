@@ -35,6 +35,7 @@ import packageInfo from "../package.json";
 import { GitCommitDialog } from "./gitDialogs/GitCommitDialog";
 import { ReverseChangesDialog } from "./gitDialogs/ReverseChangesDialog";
 import { useGitStatus } from "@/context/GitStatusContext";
+import { GitBranchDisplay } from "@/components/git/GitBranchDisplay";
 
 function ThemeToggle() {
   const { theme, setTheme } = useTheme();
@@ -195,6 +196,7 @@ export function Dashboard({
         </div>
         <div className="flex items-center gap-2 px-3 py-2">
           <ThemeToggle />
+          <GitBranchDisplay />
           <div className="flex">
             <Button
               variant="outline"

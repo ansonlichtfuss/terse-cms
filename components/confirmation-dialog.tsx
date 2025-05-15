@@ -21,6 +21,7 @@ interface ConfirmationDialogProps {
   onConfirm: () => void;
   destructive?: boolean;
   itemsList?: string[];
+  hideCancelButton?: boolean; // New prop
 }
 
 export function ConfirmationDialog({
@@ -33,6 +34,7 @@ export function ConfirmationDialog({
   onConfirm,
   destructive = false,
   itemsList,
+  hideCancelButton = false, // Destructure and provide default value
 }: ConfirmationDialogProps) {
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
@@ -59,9 +61,11 @@ export function ConfirmationDialog({
         )}
 
         <AlertDialogFooter>
-          <AlertDialogCancel className="h-7 text-xs">
-            {cancelLabel}
-          </AlertDialogCancel>
+          {!hideCancelButton && ( // Conditionally render cancel button
+            <AlertDialogCancel className="h-7 text-xs">
+              {cancelLabel}
+            </AlertDialogCancel>
+          )}
           <AlertDialogAction
             className={`h-7 text-xs ${
               destructive ? "bg-destructive hover:bg-destructive/90" : ""
