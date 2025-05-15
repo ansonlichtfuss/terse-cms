@@ -1,10 +1,14 @@
-FROM node:18-alpine
+# Stage 1: Builder
+FROM node:lts-alpine AS builder
 
 WORKDIR /app
 
+# Copy package.json and lock file
+COPY package.json pnpm-lock.yaml* ./
+
+RUN corepack enable pnpm
 # Install dependencies
-COPY package.json package-lock.json* ./
-RUN npm ci
+RUN pnpm install --frozen-lockfile
 
 # Copy application code
 COPY . .
@@ -12,21 +16,25 @@ COPY . .
 # Build the application
 RUN npm run build
 
-# Set environment variables
-ENV NODE_ENV production
-ENV MARKDOWN_ROOT_DIR /content
-ENV S3_BUCKET your-s3-bucket
-ENV S3_REGION your-s3-region
-ENV S3_ACCESS_KEY_ID your-s3-access-key
-ENV S3_SECRET_ACCESS_KEY your-s3-secret-key
-ENV USE_MOCK_API true
-ENV GEMINI_API_KEY your-gemini-api-key
+# Stage 2: Runner
+FROM node:lts-alpine AS runner
+
+WORKDIR /app
+
+# Copy necessary files from builder stage
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package.json ./package.json
+COPY --from=builder /app/public ./public
 
 # Install git
 RUN apk add --no-cache git
 
 # Create content directory
-RUN mkdir -p /content
+RUN mkdir -p /cms/files
+
+# Hardcode MARKDOWN_ROOT_DIR
+ENV MARKDOWN_ROOT_DIR=/cms/files
 
 # Expose port
 EXPOSE 3000
