@@ -1,78 +1,52 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation"; // Removed useSearchParams
 import { Dashboard } from "@/components/dashboard";
 import type { FileData } from "@/types";
 import { Editor } from "@/components/editor/editor"; // Corrected import path
+import { useFileContentQuery } from "@/hooks/query/useFileContentQuery";
+import { useSaveFileMutation } from "@/hooks/query/useSaveFileMutation";
+import { useEffect } from "react"; // Keep useEffect for error handling
 
 export default function EditPage() {
   const params = useParams();
   const router = useRouter();
-  const [file, setFile] = useState<FileData | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
 
   // Extract the file path from the URL parameters
   const filePath = Array.isArray(params.path)
     ? params.path.join("/")
     : params.path || "";
 
-  // Removed logic for reading sidebar state from URL parameters
+  // Use the Tanstack Query hook to fetch file content
+  const {
+    data: file,
+    isLoading,
+    error: fetchError,
+  } = useFileContentQuery(filePath);
 
+  // Use the Tanstack Query mutation hook to save file content
+  const {
+    mutate: saveFile,
+    isPending: isSaving,
+    error: saveError,
+  } = useSaveFileMutation();
+
+  // Handle fetch error
   useEffect(() => {
-    if (filePath) {
-      fetchFile(filePath);
-    } else {
-      setIsLoading(false);
+    if (fetchError) {
+      console.error("Failed to fetch file:", fetchError);
+      // Optionally redirect to home or show an error message
+      // router.push("/");
     }
-  }, [filePath]);
+  }, [fetchError, router]);
 
-  const fetchFile = async (path: string) => {
-    setIsLoading(true);
-    try {
-      const response = await fetch(
-        `/api/files?path=${encodeURIComponent(path)}`
-      );
-      if (response.status === 404) {
-        router.push("/");
-        return;
-      }
-      const data = await response.json();
-
-      setFile({
-        path,
-        content: data.content,
-        isModified: false,
-      });
-    } catch (error) {
-      console.error("Failed to fetch file:", error);
-    } finally {
-      setIsLoading(false);
+  // Handle save error
+  useEffect(() => {
+    if (saveError) {
+      console.error("Failed to save file:", saveError);
+      // Optionally show a toast or handle the error in the UI
     }
-  };
-
-  const handleFileSave = async (path: string, content: string) => {
-    try {
-      await fetch("/api/files", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ path, content }),
-      });
-
-      // Update file state
-      if (file && file.path === path) {
-        setFile({
-          ...file,
-          content,
-          isModified: true,
-        });
-      }
-    } catch (error) {
-      console.error("Failed to save file:", error);
-    }
-  };
+  }, [saveError]);
 
   return (
     <Dashboard
@@ -82,8 +56,15 @@ export default function EditPage() {
         <div className="flex items-center justify-center h-full text-xs text-muted-foreground">
           Loading file...
         </div>
+      ) : fetchError ? (
+        <div className="flex items-center justify-center h-full text-xs text-destructive">
+          Error loading file: {fetchError.message}
+        </div>
       ) : file ? (
-        <Editor file={file} onSave={handleFileSave} />
+        <Editor
+          file={file}
+          onSave={(path, content) => saveFile({ path, content })}
+        />
       ) : (
         <div className="flex items-center justify-center h-full text-xs text-muted-foreground">
           Select a file to edit

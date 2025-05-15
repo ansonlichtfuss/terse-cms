@@ -134,6 +134,13 @@ export function FileBrowser({
     handleDelete,
     handleRename,
     handleMove,
+    isCreatingFile,
+    isCreatingFolder,
+    isDeletingFile,
+    isRenamingFile,
+    isMovingFile,
+    isDeletingS3,
+    isMovingS3,
   } = useFileOperations({
     type,
     currentPath,
@@ -232,11 +239,13 @@ export function FileBrowser({
       {/* Use the FileBrowserActions component */}
       <FileBrowserActions
         type={type}
-        isUploading={isUploading}
+        isUploading={isUploading} // Assuming isUploading is still managed locally or in useFileBrowserState
         onRefresh={() => refetch()} // Call refetch from Tanstack Query
         onNewFolderClick={handleNewFolderButtonClick} // Call local handler
         onOpenUploadDialog={handleOpenUploadDialog} // Pass the handler to open the dialog
         currentPath={currentPath} // Pass the currentPath prop
+        isCreatingFolder={isCreatingFolder} // Pass loading state
+        fetchItems={refetch} // Pass the refetch function from useFilesQuery
       />
       <div className="px-4">
         <PathBreadcrumbs
@@ -276,6 +285,9 @@ export function FileBrowser({
                 onDeleteClick={openDeleteDialog} // Pass local handler to open delete dialog
                 onRenameClick={openRenameDialog} // Pass local handler to open rename dialog
                 onMoveClick={openMoveDialog} // Pass local handler to open move dialog
+                isDeleting={isDeletingFile || isDeletingS3} // Pass combined loading state
+                isRenaming={isRenamingFile} // Pass loading state
+                isMoving={isMovingFile || isMovingS3} // Pass combined loading state
               />
             ))}
           </div>
@@ -293,6 +305,7 @@ export function FileBrowser({
         onOpenChange={setIsCreatingFolder}
         onCreate={handleCreateFolder} // Pass the handleCreateFolder function directly
         isMobile={isMobile}
+        isCreating={isCreatingFolder} // Pass loading state
       />
 
       {/* Move File Dialog */}
@@ -318,6 +331,7 @@ export function FileBrowser({
             handleMove(itemToAction, destinationPath)
           } // Call handleMove from operations hook
           isMarkdownFile={type === "files"}
+          isMoving={isMovingFile || isMovingS3} // Pass combined loading state
         />
       )}
 
@@ -336,6 +350,7 @@ export function FileBrowser({
           }}
           onRename={(newName: string) => handleRename(itemToAction, newName)} // Call handleRename from operations hook
           isMarkdownFile={type === "files"}
+          isRenaming={isRenamingFile} // Pass loading state
         />
       )}
 
@@ -355,6 +370,7 @@ export function FileBrowser({
           confirmLabel="Delete"
           onConfirm={() => handleDelete(itemToAction)} // Call handleDelete from operations hook
           destructive={true}
+          isDeleting={isDeletingFile || isDeletingS3} // Pass combined loading state
         />
       )}
 

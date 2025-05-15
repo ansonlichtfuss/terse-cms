@@ -8,12 +8,14 @@ interface ReverseChangesDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onRevert: () => void; // Assuming a simple revert action for now
+  isReverting: boolean;
 }
 
 export function ReverseChangesDialog({
   open,
   onOpenChange,
   onRevert,
+  isReverting,
 }: ReverseChangesDialogProps) {
   const { modifiedFiles: files } = useGitStatus();
   const handleRevert = () => {
@@ -25,14 +27,18 @@ export function ReverseChangesDialog({
       open={open}
       onOpenChange={onOpenChange}
       title="Revert Changes" // Use the specific title
-      files={files}
+      files={files || []}
       footerActions={
         <>
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
-          <Button variant="destructive" onClick={handleRevert}>
-            Revert Changes
+          <Button
+            variant="destructive"
+            onClick={handleRevert}
+            disabled={isReverting}
+          >
+            {isReverting ? "Reverting..." : "Revert Changes"}
           </Button>
         </>
       }

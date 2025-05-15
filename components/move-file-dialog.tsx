@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Folder, ChevronRight, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import styles from "./move-file-dialog.module.css";
+import { useFileTreeQuery } from "@/hooks/query/useFileTreeQuery";
 
 interface S3Item {
   key: string;
@@ -37,6 +38,16 @@ interface MoveFileDialogProps {
   isMarkdownFile?: boolean;
 }
 
+interface MoveFileDialogProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  item: S3Item;
+  currentPath: string;
+  onMove: (destinationPath: string) => void;
+  isMarkdownFile?: boolean;
+  isMoving: boolean; // Add isMoving prop
+}
+
 export function MoveFileDialog({
   open,
   onOpenChange,
@@ -44,101 +55,21 @@ export function MoveFileDialog({
   currentPath,
   onMove,
   isMarkdownFile = false,
+  isMoving, // Destructure isMoving
 }: MoveFileDialogProps) {
-  const [folderTree, setFolderTree] = useState<FolderNode>({
-    key: "",
-    name: "Root",
-    children: [],
-    isExpanded: true,
-  });
-  const [isLoading, setIsLoading] = useState(true);
   const [selectedFolder, setSelectedFolder] = useState("");
+  const [localFolderTree, setLocalFolderTree] = useState<FolderNode | null>(
+    null
+  );
+
+  const { data: folderTree, isLoading, error } = useFileTreeQuery();
 
   useEffect(() => {
-    if (open) {
-      fetchFolderTree();
-    }
-  }, [open]);
-
-  const fetchFolderTree = async () => {
-    setIsLoading(true);
-    try {
-      if (isMarkdownFile) {
-        // Fetch markdown folder structure
-        const response = await fetch("/api/files/tree");
-        const data = await response.json();
-
-        // Convert the file tree to our folder tree format
-        const convertToFolderTree = (
-          nodes: any[],
-          parentKey = ""
-        ): FolderNode[] => {
-          return nodes
-            .filter((node) => node.type === "directory")
-            .map((node) => ({
-              key: node.path,
-              name: node.name,
-              children: node.children
-                ? convertToFolderTree(node.children, node.path)
-                : [],
-              isExpanded: false,
-            }));
-        };
-
-        const rootNode = {
-          key: "",
-          name: "Root",
-          children: convertToFolderTree(data.files || []),
-          isExpanded: true,
-        };
-
-        setFolderTree(rootNode);
-      } else {
-        // In a real implementation, you would fetch the S3 folder structure from the API
-        // For now, we'll use mock data
-        const mockFolderTree = {
-          key: "",
-          name: "Root",
-          children: [
-            {
-              key: "images/",
-              name: "images",
-              children: [
-                {
-                  key: "images/blog/",
-                  name: "blog",
-                  children: [],
-                  isExpanded: false,
-                },
-                {
-                  key: "images/projects/",
-                  name: "projects",
-                  children: [],
-                  isExpanded: false,
-                },
-              ],
-              isExpanded: false,
-            },
-            {
-              key: "documents/",
-              name: "documents",
-              children: [],
-              isExpanded: false,
-            },
-          ],
-          isExpanded: true,
-        };
-
-        setFolderTree(mockFolderTree);
-      }
-
+    if (open && folderTree) {
       setSelectedFolder(currentPath); // Default to current path
-    } catch (error) {
-      console.error("Failed to fetch folder tree:", error);
-    } finally {
-      setIsLoading(false);
+      setLocalFolderTree(folderTree); // Initialize local state with fetched data
     }
-  };
+  }, [open, folderTree, currentPath]);
 
   const toggleFolder = (folderKey: string) => {
     const updateFolderExpansion = (node: FolderNode): FolderNode => {
@@ -156,7 +87,9 @@ export function MoveFileDialog({
       return node;
     };
 
-    setFolderTree(updateFolderExpansion(folderTree));
+    if (localFolderTree) {
+      setLocalFolderTree(updateFolderExpansion(localFolderTree));
+    }
   };
 
   const handleFolderSelect = (folderKey: string) => {
@@ -268,8 +201,12 @@ export function MoveFileDialog({
                 <div className="flex items-center justify-center h-full text-xs text-muted-foreground">
                   Loading...
                 </div>
+              ) : localFolderTree ? (
+                renderFolderTree(localFolderTree)
               ) : (
-                renderFolderTree(folderTree)
+                <div className="flex items-center justify-center h-full text-xs text-muted-foreground">
+                  Error loading folder tree.
+                </div>
               )}
             </div>
           </div>
@@ -286,10 +223,12 @@ export function MoveFileDialog({
             size="sm"
             onClick={handleMove}
             disabled={
-              !selectedFolder || isItemInFolder(item.key, selectedFolder)
+              !selectedFolder ||
+              isItemInFolder(item.key, selectedFolder) ||
+              isMoving // Disable while moving
             }
           >
-            Move
+            {isMoving ? "Moving..." : "Move"}
           </Button>
         </DialogFooter>
       </DialogContent>

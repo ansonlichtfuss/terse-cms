@@ -15,6 +15,9 @@ interface FileItemDropdownProps {
   onMoveClick: (item: FileItem) => void;
   onRenameClick: (item: FileItem) => void;
   onDeleteClick: (item: FileItem) => void;
+  isDeleting: boolean; // Add isDeleting prop
+  isRenaming: boolean; // Add isRenaming prop
+  isMoving: boolean; // Add isMoving prop
 }
 
 export function FileItemDropdown({
@@ -22,6 +25,9 @@ export function FileItemDropdown({
   onMoveClick,
   onRenameClick,
   onDeleteClick,
+  isDeleting, // Destructure new props
+  isRenaming,
+  isMoving,
 }: FileItemDropdownProps) {
   return (
     <DropdownMenu>
@@ -45,6 +51,7 @@ export function FileItemDropdown({
               e.preventDefault();
               onMoveClick(item);
             }}
+            disabled={isMoving} // Disable while moving
           >
             Move
           </DropdownMenuItem>
@@ -72,6 +79,7 @@ export function FileItemDropdown({
             e.preventDefault();
             onRenameClick(item);
           }}
+          disabled={isRenaming} // Disable while renaming
         >
           Rename
         </DropdownMenuItem>
@@ -81,6 +89,7 @@ export function FileItemDropdown({
             onDeleteClick(item);
           }}
           className="dropdown-menu-item-destructive"
+          disabled={isDeleting} // Disable while deleting
         >
           Delete
         </DropdownMenuItem>

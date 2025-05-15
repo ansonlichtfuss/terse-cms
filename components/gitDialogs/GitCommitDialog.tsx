@@ -13,12 +13,14 @@ interface GitCommitDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onCommit: (message: string) => void;
+  isCommitting: boolean;
 }
 
 export function GitCommitDialog({
   open,
   onOpenChange,
   onCommit,
+  isCommitting,
 }: GitCommitDialogProps) {
   const { modifiedFiles } = useGitStatus();
   const [commitMessage, setCommitMessage] = useState(
@@ -34,13 +36,15 @@ export function GitCommitDialog({
       open={open}
       onOpenChange={onOpenChange}
       title="Commit Changes"
-      files={modifiedFiles}
+      files={modifiedFiles || []}
       footerActions={
         <>
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
-          <Button onClick={handleCommit}>Commit Changes</Button>
+          <Button onClick={handleCommit} disabled={isCommitting}>
+            {isCommitting ? "Committing..." : "Commit Changes"}
+          </Button>
         </>
       }
     >

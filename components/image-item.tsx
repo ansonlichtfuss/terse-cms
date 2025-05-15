@@ -1,7 +1,9 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useRef, useEffect } from "react";
 import { Input } from "@/components/ui/input";
+import { useGenerateAltTextMutation } from "@/hooks/query/useGenerateAltTextMutation";
+import { useState } from "react"; // Keep useState for other states
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -35,9 +37,12 @@ export function ImageItem({
   isFirst,
   isLast,
 }: ImageItemProps) {
-  const [generatingAltText, setGeneratingAltText] = useState(false);
-
   const imageField = getImageField(item);
+  const {
+    mutate: generateAltTextMutation,
+    isPending: generatingAltText,
+    error: generateAltTextError,
+  } = useGenerateAltTextMutation();
   const imageUrl = item[imageField] || "";
   const altText = item.alt || "";
 
@@ -87,56 +92,42 @@ export function ImageItem({
 
     // If the URL is valid and the alt text is empty, generate alt text
     if (newUrl && (!altText || altText === "")) {
-      generateAltText(newUrl);
-    }
-  };
-  // Function to generate alt text using Gemini AI
-  const generateAltText = async (imageUrl: string) => {
-    if (!imageUrl) return;
-
-    // Set loading state
-    setGeneratingAltText(true);
-
-    try {
-      const response = await fetch("/api/ai/generate-alt-text", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      generateAltTextMutation(newUrl, {
+        onSuccess: (data) => {
+          if (data.altText) {
+            const newItem = {
+              ...item,
+              alt: data.altText,
+            };
+            onChange(`${path}[${index}]`, newItem);
+            toast({
+              title: "Alt text generated",
+              description: "AI-generated alt text has been added to the image",
+            });
+          }
         },
-        body: JSON.stringify({ imageUrl }),
+        onError: (error) => {
+          console.error("Error generating alt text:", error);
+          toast({
+            title: "Error",
+            description: "Failed to generate alt text",
+            variant: "destructive",
+          });
+        },
       });
-
-      if (!response.ok) {
-        throw new Error("Failed to generate alt text");
-      }
-
-      const data = await response.json();
-
-      if (data.altText) {
-        // Update the alt text for this image
-        const newItem = {
-          ...item,
-          alt: data.altText,
-        };
-        onChange(`${path}[${index}]`, newItem);
-
-        toast({
-          title: "Alt text generated",
-          description: "AI-generated alt text has been added to the image",
-        });
-      }
-    } catch (error) {
-      console.error("Error generating alt text:", error);
-      toast({
-        title: "Error",
-        description: "Failed to generate alt text",
-        variant: "destructive",
-      });
-    } finally {
-      // Clear loading state
-      setGeneratingAltText(false);
     }
   };
+
+  // Handle error from mutation
+  useEffect(() => {
+    if (generateAltTextError) {
+      console.error(
+        "Mutation error generating alt text:",
+        generateAltTextError
+      );
+      // Optionally show a toast or handle the error in the UI
+    }
+  }, [generateAltTextError]);
 
   return (
     <Card className="border overflow-hidden">
@@ -227,7 +218,7 @@ export function ImageItem({
                 variant="ghost"
                 size="sm"
                 className="h-5 px-2 text-xs"
-                onClick={() => generateAltText(imageUrl)}
+                onClick={() => generateAltTextMutation(imageUrl)}
               >
                 Generate
               </Button>

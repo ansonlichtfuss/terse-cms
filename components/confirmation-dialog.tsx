@@ -22,6 +22,7 @@ interface ConfirmationDialogProps {
   destructive?: boolean;
   itemsList?: string[];
   hideCancelButton?: boolean; // New prop
+  isDeleting: boolean; // Add isDeleting prop
 }
 
 export function ConfirmationDialog({
@@ -35,6 +36,7 @@ export function ConfirmationDialog({
   destructive = false,
   itemsList,
   hideCancelButton = false, // Destructure and provide default value
+  isDeleting, // Destructure isDeleting
 }: ConfirmationDialogProps) {
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
@@ -74,8 +76,9 @@ export function ConfirmationDialog({
               e.preventDefault();
               onConfirm();
             }}
+            disabled={isDeleting} // Disable while deleting
           >
-            {confirmLabel}
+            {isDeleting ? "Deleting..." : confirmLabel}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

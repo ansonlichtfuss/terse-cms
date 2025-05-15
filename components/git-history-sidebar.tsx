@@ -1,7 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import { useGitHistoryQuery } from "@/hooks/query/useGitHistoryQuery";
+import { useState } from "react"; // Keep useState for other states
 import { GitCommit, Clock, User, FileText, X } from "lucide-react";
 import { format } from "date-fns";
 import { formatRelativeTime } from "@/utils/date-utils";
@@ -32,37 +34,19 @@ export function GitHistorySidebar({
   onClose,
   lastSaved,
 }: GitHistorySidebarProps) {
-  const [commits, setCommits] = useState<Commit[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const {
+    data: commits,
+    isLoading,
+    error,
+  } = useGitHistoryQuery(isVisible ? filePath : ""); // Only fetch if visible and filePath exists
 
+  // Handle error from fetching history
   useEffect(() => {
-    if (isVisible && filePath) {
-      const fetchHistory = async () => {
-        setIsLoading(true);
-        try {
-          const response = await fetch(
-            `/api/git/history?filePath=${encodeURIComponent(filePath)}`
-          );
-          if (!response.ok) {
-            throw new Error(
-              `Error fetching git history: ${response.statusText}`
-            );
-          }
-          const data: Commit[] = await response.json();
-          setCommits(data);
-        } catch (error) {
-          console.error("Failed to fetch git history:", error);
-          setCommits([]); // Clear commits on error
-        } finally {
-          setIsLoading(false);
-        }
-      };
-
-      fetchHistory();
-    } else {
-      setCommits([]); // Clear commits when not visible or no filePath
+    if (error) {
+      console.error("Error fetching git history:", error);
+      // Optionally show a toast or handle the error in the UI
     }
-  }, [isVisible, filePath]);
+  }, [error]);
 
   if (!isVisible) return null;
 
@@ -100,7 +84,7 @@ export function GitHistorySidebar({
         </div>
       ) : (
         <div className="space-y-2">
-          {commits.length > 0 ? (
+          {commits && commits.length > 0 ? (
             commits.map((commit) => (
               <div
                 key={commit.hash}

@@ -15,6 +15,7 @@ interface CreateFolderDialogProps {
   onOpenChange: (isOpen: boolean) => void;
   onCreate: (folderName: string) => Promise<void>;
   isMobile?: boolean;
+  isCreating: boolean; // Add isCreating prop
 }
 
 export function CreateFolderDialog({
@@ -22,12 +23,13 @@ export function CreateFolderDialog({
   onOpenChange,
   onCreate,
   isMobile = false,
+  isCreating,
 }: CreateFolderDialogProps) {
   const [newFolderName, setNewFolderName] = useState("");
-  const [isCreating, setIsCreating] = useState(false);
+  // isCreating state is now received as a prop
+  // const [isCreating, setIsCreating] = useState(false);
 
   const handleCreate = async () => {
-    setIsCreating(true);
     try {
       await onCreate(newFolderName);
       setNewFolderName(""); // Clear input on success
@@ -35,9 +37,8 @@ export function CreateFolderDialog({
     } catch (error) {
       // Error handling is done in useFileOperations, just prevent dialog close on error
       console.error("Error creating folder:", error);
-    } finally {
-      setIsCreating(false);
     }
+    // setIsCreating is now managed by the parent component
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {

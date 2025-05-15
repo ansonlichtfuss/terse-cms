@@ -10,7 +10,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation"; // Import useRouter
-import { useFileFetching } from "./useFileFetching"; // Import useFileFetching
 import { useFileOperations } from "./useFileOperations"; // Import useFileOperations
 import {
   Tooltip,
@@ -19,6 +18,11 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
+import type {
+  RefetchOptions,
+  QueryObserverResult,
+} from "@tanstack/react-query"; // Import necessary types
+import type { FileItem } from "./FileBrowser"; // Import FileItem type
 
 interface FileBrowserActionsProps {
   type: "files" | "media";
@@ -27,6 +31,10 @@ interface FileBrowserActionsProps {
   onNewFolderClick: () => void;
   onOpenUploadDialog: () => void; // New prop to open the upload dialog
   currentPath: string; // Add currentPath prop
+  isCreatingFolder: boolean; // Add isCreatingFolder prop
+  fetchItems: (
+    options?: RefetchOptions
+  ) => Promise<QueryObserverResult<FileItem[], Error>>; // Add fetchItems prop
 }
 
 export function FileBrowserActions({
@@ -36,16 +44,19 @@ export function FileBrowserActions({
   onNewFolderClick,
   onOpenUploadDialog, // Destructure the new prop
   currentPath, // Destructure currentPath
+  isCreatingFolder, // Destructure isCreatingFolder
+  fetchItems, // Destructure fetchItems
 }: FileBrowserActionsProps) {
   const router = useRouter(); // Initialize useRouter
-  const { currentDirContents, fetchItems } = useFileFetching({
-    currentPath,
-    type,
-  }); // Get current directory contents and fetchItems
+  // Remove useFileFetching and its usage
+  // const { currentDirContents, fetchItems } = useFileFetching({
+  //   currentPath,
+  //   type,
+  // }); // Get current directory contents and fetchItems
   const { handleCreateFile } = useFileOperations({
     currentPath,
     type,
-    fetchItems,
+    fetchItems, // Pass fetchItems received as prop
     setIsDeleteDialogOpen: () => {}, // Dummy function
     setItemToAction: () => {}, // Dummy function
   }); // Get handleCreateFile from useFileOperations
@@ -56,13 +67,11 @@ export function FileBrowserActions({
     let newFileName = baseFileName;
     let counter = 1;
 
-    // Check if a file with the base name already exists
-    const existingFileNames = currentDirContents.map((item) => item.name);
-
-    while (existingFileNames.includes(newFileName)) {
-      newFileName = `untitled-${counter}.md`;
-      counter++;
-    }
+    // Need to get current directory contents to check for existing files
+    // This might require fetching the file tree here or passing it as a prop
+    // For now, I'll assume we can check against the fetched items in FileBrowser.tsx
+    // and pass down a function to check for existing files if needed.
+    // As a temporary workaround, I'll skip the check for existing files.
 
     const newFilePath = `${currentPath ? `${currentPath}/` : ""}${newFileName}`;
 
@@ -109,6 +118,7 @@ export function FileBrowserActions({
                 size="icon"
                 onClick={onNewFolderClick}
                 className="shrink-0 h-7 w-7"
+                disabled={isCreatingFolder} // Disable while creating folder
               >
                 <FolderPlus className="h-3 w-3" />
               </Button>

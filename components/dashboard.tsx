@@ -36,6 +36,8 @@ import { GitCommitDialog } from "./gitDialogs/GitCommitDialog";
 import { ReverseChangesDialog } from "./gitDialogs/ReverseChangesDialog";
 import { useGitStatus } from "@/context/GitStatusContext";
 import { GitBranchDisplay } from "@/components/git/GitBranchDisplay";
+import { useCommitChangesMutation } from "@/hooks/query/useCommitChangesMutation";
+import { useRevertChangesMutation } from "@/hooks/query/useRevertChangesMutation";
 
 function ThemeToggle() {
   const { theme, setTheme } = useTheme();
@@ -66,90 +68,67 @@ export function Dashboard({
   const [isRevertDialogOpen, setIsRevertDialogOpen] = useState(false);
   const isMobile = useMediaQuery("(max-width: 768px)");
 
-  // Use the context to get modified files and the update function
-  const { modifiedFiles, updateGitStatus } = useGitStatus();
+  // Use the context to get modified files
+  const { modifiedFiles } = useGitStatus();
 
-  const commitChanges = async (message: string) => {
-    // Moved commitChanges here
-    try {
-      await fetch("/api/git/commit", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ message }),
-      });
+  // Use the new Tanstack Query mutation hooks
+  const {
+    mutate: commitChanges,
+    isPending: isCommitting,
+    error: commitError,
+  } = useCommitChangesMutation();
+  const {
+    mutate: revertChanges,
+    isPending: isReverting,
+    error: revertError,
+  } = useRevertChangesMutation();
 
-      // After successful commit, update the git status
-      // updateGitStatus(); // Will uncomment after confirming ReverseChangesDialog
-
-      // Update selected file if it was modified
-      // if (selectedFile && selectedFile.isModified) {
-      //   setSelectedFile({
-      //     ...selectedFile,
-      //     isModified: false,
-      //   })
-      // }
-
-      setIsCommitDialogOpen(false);
-
-      toast({
-        title: "Success",
-        description: "Changes committed successfully",
-      });
-    } catch (error) {
-      console.error("Failed to commit changes:", error);
+  // Handle commit success and error
+  useEffect(() => {
+    if (commitError) {
+      console.error("Failed to commit changes:", commitError);
       toast({
         title: "Error",
         description: "Failed to commit changes",
         variant: "destructive",
       });
     }
-  };
+  }, [commitError]);
 
-  const handleRevertChanges = async () => {
-    try {
-      const response = await fetch("/api/git/revert", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to revert changes");
-      }
-
-      // After successful revert, update the git status
-      // updateGitStatus(); // Will uncomment after confirming ReverseChangesDialog
-
-      // Update selected file if it was modified
-      // if (selectedFile && selectedFile.isModified) {
-      //   // Reload the file content
-      //   const fileResponse = await fetch(`/api/files?path=${encodeURIComponent(selectedFile.path)}`)
-      //   const fileData = await fileResponse.json()
-
-      //   setSelectedFile({
-      //     ...selectedFile,
-      //     content: fileData.content,
-      //     isModified: false,
-      //   })
-      // }
-
-      setIsRevertDialogOpen(false);
-
-      toast({
-        title: "Success",
-        description: "Changes reverted successfully",
-      });
-    } catch (error) {
-      console.error("Failed to revert changes:", error);
+  // Handle revert success and error
+  useEffect(() => {
+    if (revertError) {
+      console.error("Failed to revert changes:", revertError);
       toast({
         title: "Error",
         description: "Failed to revert changes",
         variant: "destructive",
       });
     }
+  }, [revertError]);
+
+  const handleCommit = (message: string) => {
+    commitChanges(message, {
+      onSuccess: () => {
+        setIsCommitDialogOpen(false);
+        toast({
+          title: "Success",
+          description: "Changes committed successfully",
+        });
+      },
+    });
+  };
+
+  const handleRevert = () => {
+    revertChanges(undefined, {
+      onSuccess: () => {
+        setIsRevertDialogOpen(false);
+        toast({
+          title: "Success",
+          description: "Changes reverted successfully",
+        });
+      },
+    });
   };
 
   const renderSidebarContent = () => (
@@ -202,7 +181,7 @@ export function Dashboard({
               variant="outline"
               size="sm"
               onClick={() => setIsCommitDialogOpen(true)}
-              disabled={(modifiedFiles?.length || 0) === 0}
+              disabled={(modifiedFiles?.length || 0) === 0 || isCommitting}
               className="flex items-center rounded-r-none  gap-1 h-7 text-xs bg-gradient-secondary transition-all"
             >
               <GitCommit className="h-3 w-3 mr-1" />
@@ -231,6 +210,7 @@ export function Dashboard({
                 <DropdownMenuItem
                   onClick={() => setIsRevertDialogOpen(true)}
                   className="dropdown-menu-item-destructive"
+                  disabled={isReverting}
                 >
                   <RotateCcw className="h-3 w-3 mr-2" />
                   <span className="text-xs">Revert Changes</span>
@@ -291,14 +271,16 @@ export function Dashboard({
       <GitCommitDialog
         open={isCommitDialogOpen}
         onOpenChange={setIsCommitDialogOpen}
-        onCommit={commitChanges}
+        onCommit={handleCommit}
+        isCommitting={isCommitting}
       />
 
       {/* Revert Changes Dialog */}
       <ReverseChangesDialog
         open={isRevertDialogOpen}
         onOpenChange={setIsRevertDialogOpen}
-        onRevert={handleRevertChanges}
+        onRevert={handleRevert}
+        isReverting={isReverting}
       />
     </div>
   );

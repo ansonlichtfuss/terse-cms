@@ -23,8 +23,6 @@ interface UseFileBrowserStateResult {
   setExpandedFolders: React.Dispatch<React.SetStateAction<Set<string>>>;
   isUploading: boolean;
   setIsUploading: React.Dispatch<React.SetStateAction<boolean>>;
-  isCreatingFolder: boolean;
-  setIsCreatingFolder: React.Dispatch<React.SetStateAction<boolean>>;
   newFolderName: string;
   setNewFolderName: React.Dispatch<React.SetStateAction<string>>;
   mounted: boolean;
@@ -77,7 +75,6 @@ export const useFileBrowserState = ({
     return initialExpanded;
   });
   const [isUploading, setIsUploading] = useState(isMobile);
-  const [isCreatingFolder, setIsCreatingFolder] = useState(false);
   const [newFolderName, setNewFolderName] = useState("");
   const [mounted, setMounted] = useState(false);
 
@@ -110,8 +107,6 @@ export const useFileBrowserState = ({
     setExpandedFolders,
     isUploading,
     setIsUploading,
-    isCreatingFolder,
-    setIsCreatingFolder,
     newFolderName,
     setNewFolderName,
     mounted,

@@ -20,6 +20,9 @@ interface FileItemRowProps {
   onDeleteClick: (item: FileItem) => void;
   onRenameClick: (item: FileItem) => void; // Add rename handler
   onMoveClick: (item: FileItem) => void; // Add move handler
+  isDeleting: boolean; // Add isDeleting prop
+  isRenaming: boolean; // Add isRenaming prop
+  isMoving: boolean; // Add isMoving prop
 }
 
 export function FileItemRow({
@@ -30,6 +33,9 @@ export function FileItemRow({
   onDeleteClick,
   onRenameClick, // Destructure new handlers
   onMoveClick, // Destructure new handlers
+  isDeleting, // Destructure new props
+  isRenaming,
+  isMoving,
 }: FileItemRowProps) {
   const itemPath = getItemPath(item);
   const itemName = getItemName(item);
@@ -88,6 +94,9 @@ export function FileItemRow({
           onMoveClick={onMoveClick}
           onRenameClick={onRenameClick}
           onDeleteClick={onDeleteClick}
+          isDeleting={isDeleting} // Pass new props
+          isRenaming={isRenaming}
+          isMoving={isMoving}
         />
       </Link>
     );
@@ -166,6 +175,9 @@ export function FileItemRow({
         onMoveClick={onMoveClick}
         onRenameClick={onRenameClick}
         onDeleteClick={onDeleteClick}
+        isDeleting={isDeleting} // Pass new props
+        isRenaming={isRenaming}
+        isMoving={isMoving}
       />
     </div>
   );

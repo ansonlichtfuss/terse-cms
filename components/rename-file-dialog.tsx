@@ -27,6 +27,7 @@ interface RenameFileDialogProps {
   onRename: (newName: string) => void;
   isMarkdownFile?: boolean;
   isFileOpen?: boolean;
+  isRenaming: boolean; // Add isRenaming prop
 }
 
 export function RenameFileDialog({
@@ -36,6 +37,7 @@ export function RenameFileDialog({
   onRename,
   isMarkdownFile = false,
   isFileOpen = false,
+  isRenaming, // Destructure isRenaming
 }: RenameFileDialogProps) {
   const [newName, setNewName] = useState("");
 
@@ -108,9 +110,11 @@ export function RenameFileDialog({
           <Button
             size="sm"
             onClick={handleRename}
-            disabled={!newName.trim() || newName === getItemName(item.key)}
+            disabled={
+              !newName.trim() || newName === getItemName(item.key) || isRenaming
+            } // Disable while renaming
           >
-            Rename
+            {isRenaming ? "Renaming..." : "Rename"}
           </Button>
         </DialogFooter>
       </DialogContent>
