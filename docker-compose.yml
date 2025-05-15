@@ -4,11 +4,11 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: markdown-cms
+    restart: unless-stopped
     ports:
       - "3000:3000"
     volumes:
-      # - ./cms/files:/cms/files
-      - ./mock-data/filesystem:/cms/files
+      - ./myDir:/cms/files
     # environment:
     # Example of how to pass other variables from your host .env file
     # S3_BUCKET: ${S3_BUCKET}
