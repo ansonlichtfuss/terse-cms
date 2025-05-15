@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -11,6 +10,13 @@ import {
 import { GitBranch, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ConfirmationDialog } from "@/components/confirmation-dialog"; // Import ConfirmationDialog
+import { useState } from "react"; // Import useState
+
+// Import the new Tanstack Query hooks
+import {
+  useGitBranchesQuery,
+  useSwitchGitBranchMutation,
+} from "@/hooks/query/useGitBranches";
 
 interface Branch {
   name: string;
@@ -18,83 +24,43 @@ interface Branch {
 }
 
 export function GitBranchDisplay() {
-  const [branches, setBranches] = useState<Branch[]>([]);
-  const [currentBranch, setCurrentBranch] = useState("Loading...");
-  const [isLoading, setIsLoading] = useState(true);
+  // Use the new Tanstack Query hook for fetching branches
+  const { data: branches, isLoading, error } = useGitBranchesQuery();
+
+  // Use the new Tanstack Query mutation hook for switching branches
+  const {
+    mutate: switchBranch,
+    isPending: isSwitching,
+    error: switchError,
+  } = useSwitchGitBranchMutation();
+
   const [isWarningDialogOpen, setIsWarningDialogOpen] = useState(false); // State for warning dialog
   const [warningDialogMessage, setWarningDialogMessage] = useState(""); // State for warning message
 
-  const fetchBranches = async () => {
-    // Made fetchBranches a separate function
-    try {
-      const response = await fetch("/api/git/branches");
-      const data = await response.json();
-      if (response.ok) {
-        setBranches(data.branches);
-        const current = data.branches.find(
-          (branch: Branch) => branch.isCurrent
-        );
-        if (current) {
-          setCurrentBranch(current.name);
-        } else {
-          setCurrentBranch("Unknown Branch");
-        }
-      } else {
-        setBranches([]);
-        setCurrentBranch("Error");
-        console.error("Failed to fetch branches:", data.error);
-      }
-    } catch (error) {
-      setBranches([]);
-      setCurrentBranch("Error");
-      console.error("Failed to fetch branches:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  // Determine the current branch
+  const currentBranch =
+    branches?.find((branch) => branch.isCurrent)?.name ||
+    (isLoading ? "Loading..." : "Unknown Branch");
 
-  useEffect(() => {
-    fetchBranches();
-  }, []);
-
-  const handleBranchSwitch = async (branchName: string) => {
+  const handleBranchSwitch = (branchName: string) => {
     if (branchName === currentBranch) {
       return; // Don't switch to the current branch
     }
 
-    setIsLoading(true); // Indicate loading while switching
-    try {
-      const response = await fetch("/api/git/switch-branch", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ branchName }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        // Successfully switched branch, refetch branches to update display
-        fetchBranches();
-      } else if (response.status === 409) {
-        // Pending changes detected
-        setWarningDialogMessage(data.error);
+    // Use the mutate function from the mutation hook
+    switchBranch(branchName, {
+      onError: (error) => {
+        setWarningDialogMessage(error.message || "Failed to switch branch.");
         setIsWarningDialogOpen(true);
-      } else {
-        // Other errors
-        setWarningDialogMessage(data.error || "Failed to switch branch.");
-        setIsWarningDialogOpen(true);
-        console.error("Failed to switch branch:", data.error);
-      }
-    } catch (error: any) {
-      setWarningDialogMessage(error.message || "Failed to switch branch.");
-      setIsWarningDialogOpen(true);
-      console.error("Failed to switch branch:", error);
-    } finally {
-      setIsLoading(false); // End loading
-    }
+        console.error("Failed to switch branch:", error);
+      },
+    });
   };
+
+  // Handle errors from fetching branches
+  if (error) {
+    return <div>Error loading branches: {error.message}</div>;
+  }
 
   return (
     <>
@@ -106,14 +72,14 @@ export function GitBranchDisplay() {
             variant="outline"
             size="sm"
             className="h-7 text-xs gap-1"
-            disabled={isLoading}
+            disabled={isLoading || isSwitching} // Disable while loading or switching
           >
             <GitBranch className="h-3 w-3" />
             {currentBranch}
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          {branches.length > 0 ? (
+          {branches && branches.length > 0 ? (
             branches.map((branch) => (
               <DropdownMenuItem
                 key={branch.name}
@@ -122,7 +88,7 @@ export function GitBranchDisplay() {
                   branch.isCurrent && "font-bold"
                 )}
                 onClick={() => handleBranchSwitch(branch.name)} // Add onClick handler
-                disabled={isLoading} // Disable while loading/switching
+                disabled={isLoading || isSwitching} // Disable while loading or switching
               >
                 {branch.isCurrent && <Check className="h-3 w-3 mr-2" />}
                 {branch.name}

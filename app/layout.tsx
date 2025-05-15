@@ -5,6 +5,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { GitStatusProvider } from "@/context/GitStatusContext";
 import { Toaster } from "@/components/ui/toaster";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -13,6 +14,8 @@ export const metadata: Metadata = {
   description: "A CMS for managing Markdown files with YAML front matter",
   generator: "v0.dev",
 };
+
+const queryClient = new QueryClient();
 
 export default function RootLayout({
   children,
@@ -28,7 +31,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <GitStatusProvider>{children}</GitStatusProvider>
+          <QueryClientProvider client={queryClient}>
+            <GitStatusProvider>{children}</GitStatusProvider>
+          </QueryClientProvider>
         </ThemeProvider>
         <Toaster />
       </body>

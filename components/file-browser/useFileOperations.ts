@@ -3,11 +3,23 @@ import type { FileItem } from "./FileBrowser"; // Assuming FileItem type remains
 import { getItemPath } from "./utils"; // Import utility function
 import { useRouter } from "next/navigation"; // Import useRouter
 import { useGitStatus } from "@/context/GitStatusContext";
+import type {
+  RefetchOptions,
+  QueryObserverResult,
+} from "@tanstack/react-query"; // Import necessary types
+
+// Import the new S3 mutation hooks
+import {
+  useDeleteS3ItemMutation,
+  useMoveS3ItemMutation,
+} from "@/hooks/query/useS3Operations";
 
 interface UseFileOperationsProps {
   type: "files" | "media";
   currentPath: string; // Needed for refreshing after operations
-  fetchItems: (path: string) => Promise<void>; // Function to refresh the file list
+  fetchItems: (
+    options?: RefetchOptions
+  ) => Promise<QueryObserverResult<FileItem[], Error>>; // Function to refresh the file list using Tanstack Query's refetch signature
   setIsDeleteDialogOpen: (isOpen: boolean) => void; // Function to close the delete dialog
   setItemToAction: (item: FileItem | null) => void; // Function to clear the item in action
 }
@@ -31,6 +43,10 @@ export const useFileOperations = ({
   const router = useRouter(); // Initialize useRouter
   const { updateGitStatus } = useGitStatus();
 
+  // Use the S3 mutation hooks
+  const { mutate: deleteS3Item } = useDeleteS3ItemMutation();
+  const { mutate: moveS3Item } = useMoveS3ItemMutation();
+
   const handleUpload = async (files: FileList | null) => {
     if (!files || files.length === 0) return;
 
@@ -51,8 +67,8 @@ export const useFileOperations = ({
         throw new Error("Upload failed");
       }
 
-      // Refresh the list
-      await fetchItems(currentPath);
+      // Refresh the list using Tanstack Query's refetch
+      await fetchItems();
       toast({
         title: "Success",
         description: "File uploaded successfully",
@@ -98,8 +114,8 @@ export const useFileOperations = ({
         return; // Exit if not implemented
       }
 
-      // Refresh the list
-      await fetchItems(currentPath);
+      // Refresh the list using Tanstack Query's refetch
+      await fetchItems();
       // Assuming state updates for dialog closing are handled elsewhere
       // setIsCreatingFolder(false);
       // setNewFolderName("");
@@ -131,28 +147,15 @@ export const useFileOperations = ({
         if (!response.ok) {
           throw new Error("Failed to delete file");
         }
+        // Refresh the list using Tanstack Query's refetch for files
+        await fetchItems();
+        // Update git status after deletion
+        updateGitStatus();
       } else {
-        const response = await fetch("/api/s3", {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            key: item.key,
-            type: item.type,
-          }),
-        });
-
-        if (!response.ok) {
-          throw new Error("Failed to delete item");
-        }
+        // Use the S3 mutation hook for media deletion
+        deleteS3Item({ key: item.key, type: item.type });
+        // The onSuccess handler of the mutation will invalidate and refetch
       }
-
-      // Refresh the list
-      await fetchItems(currentPath);
-
-      // Update git status after deletion
-      updateGitStatus();
 
       // Close the dialog and clear the item in action
       setIsDeleteDialogOpen(false);
@@ -246,21 +249,15 @@ export const useFileOperations = ({
         if (!response.ok) {
           throw new Error("Failed to move file");
         }
+        // Refresh the list using Tanstack Query's refetch for files
+        await fetchItems();
+        // Update git status after moving
+        updateGitStatus();
       } else {
-        // For media, implement move API call
-        // This would need to be implemented in the backend
-        toast({
-          title: "Not implemented",
-          description: "Move for media is not implemented yet",
-        });
-        return; // Exit if not implemented
+        // Use the S3 mutation hook for media move
+        moveS3Item({ sourceKey: item.key, destinationPath, type: item.type });
+        // The onSuccess handler of the mutation will invalidate and refetch
       }
-
-      // Refresh the list
-      await fetchItems(currentPath);
-
-      // Update git status after moving
-      updateGitStatus();
 
       toast({
         title: "Success",
@@ -297,8 +294,8 @@ export const useFileOperations = ({
         throw new Error("Failed to create file");
       }
 
-      // Refresh the list
-      await fetchItems(currentPath);
+      // Refresh the list using Tanstack Query's refetch
+      await fetchItems();
 
       // Update git status after creating a file
       updateGitStatus();

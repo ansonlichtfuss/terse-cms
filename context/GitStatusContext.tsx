@@ -1,10 +1,18 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext } from "react"; // Remove useState and useEffect
+
+// Import the new Tanstack Query hooks
+import {
+  useGitStatusQuery,
+  useStageGitChangesMutation,
+} from "@/hooks/query/useGitStatus";
 
 interface GitStatusContextType {
-  modifiedFiles: string[];
-  updateGitStatus: () => Promise<void>;
+  modifiedFiles: string[] | undefined; // Data can be undefined initially
+  isLoading: boolean;
+  error: Error | null;
+  updateGitStatus: () => void; // Update signature to match mutation trigger
 }
 
 const GitStatusContext = createContext<GitStatusContextType | undefined>(
@@ -14,32 +22,22 @@ const GitStatusContext = createContext<GitStatusContextType | undefined>(
 export const GitStatusProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [modifiedFiles, setModifiedFiles] = useState<string[]>([]);
+  // Use the Tanstack Query hook to fetch git status
+  const { data: modifiedFiles, isLoading, error } = useGitStatusQuery();
 
-  const updateGitStatus = async () => {
-    try {
-      // Stage all changes before fetching status
-      await fetch("/api/git/stage", { method: "POST" });
+  // Use the Tanstack Query mutation hook to stage changes (which also refetches status)
+  const { mutate: stageChanges } = useStageGitChangesMutation();
 
-      const response = await fetch("/api/git/status");
-      if (!response.ok) {
-        throw new Error("Failed to fetch git status");
-      }
-      const data = await response.json();
-      setModifiedFiles(data.modifiedFiles);
-    } catch (error) {
-      console.error("Error updating git status:", error);
-      // Optionally handle error in UI
-    }
+  // Provide the data, loading state, error, and mutation trigger via context
+  const contextValue: GitStatusContextType = {
+    modifiedFiles,
+    isLoading,
+    error,
+    updateGitStatus: stageChanges, // Provide the mutation trigger as updateGitStatus
   };
 
-  // Initial fetch of git status on provider mount
-  useEffect(() => {
-    updateGitStatus();
-  }, []);
-
   return (
-    <GitStatusContext.Provider value={{ modifiedFiles, updateGitStatus }}>
+    <GitStatusContext.Provider value={contextValue}>
       {children}
     </GitStatusContext.Provider>
   );

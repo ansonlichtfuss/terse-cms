@@ -202,17 +202,17 @@ export function Dashboard({
               variant="outline"
               size="sm"
               onClick={() => setIsCommitDialogOpen(true)}
-              disabled={modifiedFiles.length === 0}
+              disabled={(modifiedFiles?.length || 0) === 0}
               className="flex items-center rounded-r-none  gap-1 h-7 text-xs bg-gradient-secondary transition-all"
             >
               <GitCommit className="h-3 w-3 mr-1" />
               Commit
-              {modifiedFiles.length > 0 && (
+              {(modifiedFiles?.length || 0) > 0 && (
                 <Badge
                   variant="secondary"
                   className="ml-1 h-4 text-[10px] bg-background pointer-events-none"
                 >
-                  {modifiedFiles.length}
+                  {modifiedFiles?.length || 0}
                 </Badge>
               )}
             </Button>
@@ -221,7 +221,7 @@ export function Dashboard({
                 <Button
                   variant="outline"
                   size="sm"
-                  disabled={modifiedFiles.length === 0}
+                  disabled={(modifiedFiles?.length || 0) === 0}
                   className="px-1 border-l-1 border-l-gray-5`0 rounded-l-none h-7 bg-gradient-secondary transition-all"
                 >
                   <ChevronDown className="h-3 w-3" />

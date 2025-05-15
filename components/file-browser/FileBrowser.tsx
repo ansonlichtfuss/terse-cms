@@ -1,7 +1,6 @@
 "use client";
 
-import type React from "react";
-import { useState } from "react"; // Import useState
+import React, { useState } from "react"; // Import React and useState
 
 import { ConfirmationDialog } from "@/components/confirmation-dialog";
 import styles from "./FileBrowser.module.css";
@@ -16,12 +15,14 @@ import { CreateFolderDialog } from "./CreateFolderDialog"; // Assuming dialogs a
 import { FileBrowserActions } from "./FileBrowserActions";
 import { FileItemRow } from "./FileItemRow";
 import { useFileBrowserState } from "./useFileBrowserState";
-import { useFileFetching } from "./useFileFetching";
 import { useFileOperations } from "./useFileOperations";
 import { getItemName, getItemPath } from "./utils"; // Import utility functions
 import { useRouter } from "next/navigation";
 import { Router } from "next/router";
 import UploadDialog from "./UploadDialog"; // Import UploadDialog from the same directory
+
+// Import the new Tanstack Query hook
+import { useFilesQuery } from "@/hooks/query/useFilesQuery";
 
 // FileItem type definition remains here for now, as it's used by multiple components/hooks
 export interface FileItem {
@@ -78,11 +79,53 @@ export function FileBrowser({
   // Add state for the upload dialog
   const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
 
-  // Use the custom fetching hook
-  const { currentDirContents, isLoading, fetchItems } = useFileFetching({
+  // Use the new Tanstack Query hook for fetching files
+  const {
+    data: items,
+    isLoading,
+    error,
+    refetch,
+  } = useFilesQuery({
     currentPath,
     type,
   });
+
+  // Filter items to get current directory contents (logic moved from useFileFetching)
+  const currentDirContents = React.useMemo(() => {
+    if (!items) return [];
+
+    if (type === "files") {
+      if (currentPath === "") {
+        // At root level, show all top-level files and directories
+        return items.filter((item) => !item.path?.includes("/"));
+      } else {
+        // Find the directory node that matches the current path
+        const pathParts = currentPath.split("/").filter(Boolean);
+        let currentDir: FileItem[] | undefined = items;
+
+        for (let i = 0; i < pathParts.length; i++) {
+          const part = pathParts[i];
+          const nextDir: FileItem | undefined = currentDir?.find(
+            // Explicitly type nextDir
+            (node) =>
+              node.name === part &&
+              (node.type === "directory" || node.type === "folder")
+          );
+
+          if (nextDir && nextDir.children) {
+            currentDir = nextDir.children;
+          } else {
+            currentDir = undefined; // Directory not found
+            break;
+          }
+        }
+        return currentDir || [];
+      }
+    } else {
+      // For media files (S3), items already represent the current directory contents
+      return items;
+    }
+  }, [items, currentPath, type]);
 
   // Use the custom operations hook
   const {
@@ -94,7 +137,7 @@ export function FileBrowser({
   } = useFileOperations({
     type,
     currentPath,
-    fetchItems, // Pass fetchItems for refreshing after operations
+    fetchItems: refetch, // Pass refetch from Tanstack Query for refreshing after operations
     setIsDeleteDialogOpen, // Pass the state setter for the delete dialog
     setItemToAction, // Pass the state setter for the item in action
   });
@@ -190,7 +233,7 @@ export function FileBrowser({
       <FileBrowserActions
         type={type}
         isUploading={isUploading}
-        onRefresh={() => fetchItems(currentPath)} // Call fetchItems from fetching hook
+        onRefresh={() => refetch()} // Call refetch from Tanstack Query
         onNewFolderClick={handleNewFolderButtonClick} // Call local handler
         onOpenUploadDialog={handleOpenUploadDialog} // Pass the handler to open the dialog
         currentPath={currentPath} // Pass the currentPath prop
@@ -210,12 +253,17 @@ export function FileBrowser({
           "px-4 pt-2 pb-8 overflow-y-auto max-h-[calc(100vh-180px)]"
         )}
       >
-        {!currentDirContents && isLoading && (
+        {isLoading && (
           <div className="flex items-center justify-center h-20 text-muted-foreground text-xs">
             Loading...
           </div>
         )}
-        {currentDirContents.length > 0 && (
+        {error && (
+          <div className="flex items-center justify-center h-20 text-destructive text-xs">
+            Error loading files: {error.message}
+          </div>
+        )}
+        {!isLoading && !error && currentDirContents.length > 0 && (
           // Render list view using FileItemRow component
           <div className="space-y-1 px-0 max-h-full">
             {currentDirContents.map((item) => (
@@ -232,7 +280,7 @@ export function FileBrowser({
             ))}
           </div>
         )}
-        {!currentDirContents && !isLoading && (
+        {!isLoading && !error && currentDirContents.length === 0 && (
           <div className="flex items-center justify-center h-20 text-muted-foreground text-xs">
             No items found
           </div>
