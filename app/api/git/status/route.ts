@@ -25,7 +25,7 @@ export async function GET(request: Request) {
     if (!isRepo) {
       return NextResponse.json(
         { error: "Not a git repository" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -49,7 +49,7 @@ export async function GET(request: Request) {
     console.error("Error getting git status:", error);
     return NextResponse.json(
       { error: "Failed to get git status" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

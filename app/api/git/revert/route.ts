@@ -25,7 +25,7 @@ export async function POST(request: Request) {
     if (!isRepo) {
       return NextResponse.json(
         { error: "Not a git repository" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -41,7 +41,7 @@ export async function POST(request: Request) {
     console.error("Error reverting changes:", error);
     return NextResponse.json(
       { error: "Failed to revert changes" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

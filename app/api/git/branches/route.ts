@@ -15,7 +15,7 @@ export async function GET() {
     console.error("Failed to get git branches:", error);
     return NextResponse.json(
       { error: "Failed to get git branches" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

@@ -14,7 +14,7 @@ export async function POST() {
     if (!isRepo) {
       return NextResponse.json(
         { error: "Not a git repository" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -26,7 +26,7 @@ export async function POST() {
     console.error("Error staging changes:", error);
     return NextResponse.json(
       { error: "Failed to stage changes" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

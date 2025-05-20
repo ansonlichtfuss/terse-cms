@@ -1,16 +1,18 @@
-import type React from "react";
-import Link from "next/link";
 import { File, Folder } from "lucide-react";
-import styles from "./FileItemRow.module.css";
-import { cn } from "@/lib/utils";
-import { getItemName, getItemPath } from "./utils"; // Import utility functions
-import type { FileItem } from "./FileBrowser"; // Assuming FileItem type remains in the main file for now
-import { FileItemDropdown } from "./FileItemDropdown";
+import Link from "next/link";
+import type React from "react";
+
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
+import { cn } from "@/lib/utils";
+
+import type { FileItem } from "./FileBrowser"; // Assuming FileItem type remains in the main file for now
+import { FileItemDropdown } from "./FileItemDropdown";
+import styles from "./FileItemRow.module.css";
+import { getItemName, getItemPath } from "./utils"; // Import utility functions
 
 interface FileItemRowProps {
   item: FileItem;
@@ -56,7 +58,7 @@ export function FileItemRow({
         className={cn(
           styles["file-row"],
           "flex items-center justify-between py-1 px-1 rounded-md w-full",
-          isSelected ? styles.selected : styles["file-row:hover"]
+          isSelected ? styles.selected : styles["file-row:hover"],
         )}
         draggable={!isFolder}
         onDragStart={(event) => {
@@ -67,21 +69,21 @@ export function FileItemRow({
           className={cn(
             styles["file-item"],
             "flex items-center min-w-0 overflow-hidden flex-1 pr-1 max-w-[200px]",
-            isTextFile && "pl-2"
+            isTextFile && "pl-2",
           )}
         >
           {!isTextFile && (
             <File
               className={cn(
                 styles["file-item-icon"],
-                "h-4 w-4 text-muted-foreground mr-1 shrink-0"
+                "h-4 w-4 text-muted-foreground mr-1 shrink-0",
               )}
             />
           )}
           <span
             className={cn(
               styles["file-item-name"],
-              "text-xs truncate block w-full"
+              "text-xs truncate block w-full",
             )}
             title={itemName}
           >
@@ -109,7 +111,7 @@ export function FileItemRow({
       className={cn(
         styles["file-row"],
         "flex items-center justify-between py-1 px-1 rounded-md cursor-pointer w-full",
-        isSelected ? styles.selected : styles["file-row:hover"]
+        isSelected ? styles.selected : styles["file-row:hover"],
       )}
       onClick={isFolder ? () => onItemClick(item) : undefined}
       draggable={!isFolder}
@@ -120,14 +122,14 @@ export function FileItemRow({
       <div
         className={cn(
           styles["folder-item"],
-          "flex items-center min-w-0 overflow-hidden flex-1 pr-1 max-w-[200px]"
+          "flex items-center min-w-0 overflow-hidden flex-1 pr-1 max-w-[200px]",
         )}
       >
         {isFolder ? (
           <Folder
             className={cn(
               styles["folder-item-icon"],
-              "h-4 w-4 text-muted-foreground mr-1 shrink-0"
+              "h-4 w-4 text-muted-foreground mr-1 shrink-0",
             )}
           />
         ) : type === "media" &&
@@ -155,14 +157,14 @@ export function FileItemRow({
           <File
             className={cn(
               styles["file-item-icon"],
-              "h-4 w-4 text-muted-foreground mr-1 shrink-0"
+              "h-4 w-4 text-muted-foreground mr-1 shrink-0",
             )}
           />
         )}
         <span
           className={cn(
             styles["folder-item-name"],
-            "text-xs truncate block w-full"
+            "text-xs truncate block w-full",
           )}
           title={itemName}
         >

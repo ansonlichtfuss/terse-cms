@@ -1,31 +1,31 @@
-import { toast } from "@/components/ui/use-toast";
-import type { FileItem } from "./FileBrowser"; // Assuming FileItem type remains in the main file for now
-import { getItemPath } from "./utils"; // Import utility function
-import { useRouter } from "next/navigation"; // Import useRouter
-import { useGitStatus } from "@/context/GitStatusContext";
 import type {
-  RefetchOptions,
   QueryObserverResult,
+  RefetchOptions,
 } from "@tanstack/react-query"; // Import necessary types
+import { useRouter } from "next/navigation"; // Import useRouter
 
+import { toast } from "@/components/ui/use-toast";
+import { useGitStatus } from "@/context/GitStatusContext";
+// Import the new file operation mutation hooks
+import { useCreateFileMutation } from "@/hooks/query/useCreateFileMutation";
+import { useCreateFolderMutation } from "@/hooks/query/useCreateFolderMutation";
+import { useDeleteFileMutation } from "@/hooks/query/useDeleteFileMutation";
+import { useMoveFileMutation } from "@/hooks/query/useMoveFileMutation";
+import { useRenameFileMutation } from "@/hooks/query/useRenameFileMutation";
 // Import the new S3 mutation hooks
 import {
   useDeleteS3ItemMutation,
   useMoveS3ItemMutation,
 } from "@/hooks/query/useS3Operations";
 
-// Import the new file operation mutation hooks
-import { useCreateFileMutation } from "@/hooks/query/useCreateFileMutation";
-import { useCreateFolderMutation } from "@/hooks/query/useCreateFolderMutation";
-import { useDeleteFileMutation } from "@/hooks/query/useDeleteFileMutation";
-import { useRenameFileMutation } from "@/hooks/query/useRenameFileMutation";
-import { useMoveFileMutation } from "@/hooks/query/useMoveFileMutation";
+import type { FileItem } from "./FileBrowser"; // Assuming FileItem type remains in the main file for now
+import { getItemPath } from "./utils"; // Import utility function
 
 interface UseFileOperationsProps {
   type: "files" | "media";
   currentPath: string; // Needed for refreshing after operations
   fetchItems: (
-    options?: RefetchOptions
+    options?: RefetchOptions,
   ) => Promise<QueryObserverResult<FileItem[], Error>>; // Function to refresh the file list using Tanstack Query's refetch signature
   setIsDeleteDialogOpen: (isOpen: boolean) => void; // Function to close the delete dialog
   setItemToAction: (item: FileItem | null) => void; // Function to clear the item in action
@@ -165,7 +165,7 @@ export const useFileOperations = ({
               variant: "destructive",
             });
           },
-        }
+        },
       );
     }
   };
@@ -198,7 +198,7 @@ export const useFileOperations = ({
                 variant: "destructive",
               });
             },
-          }
+          },
         );
       } else {
         // Use the S3 mutation hook for media deletion
@@ -226,7 +226,7 @@ export const useFileOperations = ({
                 variant: "destructive",
               });
             },
-          }
+          },
         );
       }
     } catch (error) {
@@ -277,7 +277,7 @@ export const useFileOperations = ({
               variant: "destructive",
             });
           },
-        }
+        },
       );
     } else {
       // For media, implement rename API call or mutation
@@ -323,7 +323,7 @@ export const useFileOperations = ({
                 variant: "destructive",
               });
             },
-          }
+          },
         );
       } else {
         // Use the S3 mutation hook for media move
@@ -351,7 +351,7 @@ export const useFileOperations = ({
                 variant: "destructive",
               });
             },
-          }
+          },
         );
       }
     } catch (error) {
@@ -384,7 +384,7 @@ export const useFileOperations = ({
           // Re-throw to allow calling component to handle errors
           throw error;
         },
-      }
+      },
     );
   };
 

@@ -1,16 +1,12 @@
-import type React from "react";
-import {
-  RefreshCw,
-  FolderPlus,
-  Upload,
-  LayoutGrid,
-  List,
-  FilePlus,
-} from "lucide-react"; // Added FilePlus icon
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import type {
+  QueryObserverResult,
+  RefetchOptions,
+} from "@tanstack/react-query"; // Import necessary types
+import { FilePlus, FolderPlus, RefreshCw, Upload } from "lucide-react"; // Added FilePlus icon
 import { useRouter } from "next/navigation"; // Import useRouter
-import { useFileOperations } from "./useFileOperations"; // Import useFileOperations
+import type React from "react";
+
+import { Button } from "@/components/ui/button";
 import {
   Tooltip,
   TooltipContent,
@@ -18,11 +14,9 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import type {
-  RefetchOptions,
-  QueryObserverResult,
-} from "@tanstack/react-query"; // Import necessary types
+
 import type { FileItem } from "./FileBrowser"; // Import FileItem type
+import { useFileOperations } from "./useFileOperations"; // Import useFileOperations
 
 interface FileBrowserActionsProps {
   type: "files" | "media";
@@ -33,7 +27,7 @@ interface FileBrowserActionsProps {
   currentPath: string; // Add currentPath prop
   isCreatingFolder: boolean; // Add isCreatingFolder prop
   fetchItems: (
-    options?: RefetchOptions
+    options?: RefetchOptions,
   ) => Promise<QueryObserverResult<FileItem[], Error>>; // Add fetchItems prop
 }
 
@@ -63,9 +57,9 @@ export function FileBrowserActions({
 
   const handleNewFileClick = async () => {
     // Make the function async
-    let baseFileName = "untitled.md";
-    let newFileName = baseFileName;
-    let counter = 1;
+    const baseFileName = "untitled.md";
+    const newFileName = baseFileName;
+    const counter = 1;
 
     // Need to get current directory contents to check for existing files
     // This might require fetching the file tree here or passing it as a prop
@@ -91,7 +85,7 @@ export function FileBrowserActions({
         className={cn(
           "relative",
           "mb-2 mx-3",
-          "p-1 border rounded-md bg-gradient-secondary"
+          "p-1 border rounded-md bg-gradient-secondary",
         )}
       >
         <div className={cn("flex", "gap-1", "justify-center")}>

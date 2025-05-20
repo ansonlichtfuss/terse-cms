@@ -1,5 +1,6 @@
-import type React from "react";
 import { MoreHorizontal } from "lucide-react";
+import type React from "react";
+
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -7,7 +8,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { cn } from "@/lib/utils";
+
 import type { FileItem } from "./FileBrowser";
 
 interface FileItemDropdownProps {

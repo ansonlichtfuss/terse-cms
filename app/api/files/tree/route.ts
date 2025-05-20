@@ -88,7 +88,7 @@ export async function GET(request: Request) {
     console.error("Error reading file tree:", error);
     return NextResponse.json(
       { error: "Failed to read file tree" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

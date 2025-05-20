@@ -1,11 +1,19 @@
 "use client";
 
+import {
+  ChevronDown,
+  GitCommit,
+  Menu,
+  Moon,
+  RotateCcw,
+  Sun,
+} from "lucide-react";
+import { useTheme } from "next-themes";
 import type React from "react";
+import { useEffect, useState } from "react";
 
-import { ConfirmationDialog } from "@/components/confirmation-dialog";
 import { FileBrowser } from "@/components/file-browser/FileBrowser";
-import containerStyles from "./file-browser/FileBrowserContainer.module.css"; // Import the container styles
-import { cn } from "@/lib/utils"; // Import cn utility
+import { GitBranchDisplay } from "@/components/git/GitBranchDisplay";
 import { Logo } from "@/components/logo";
 import { MediaManager } from "@/components/media-manager";
 import { Badge } from "@/components/ui/badge";
@@ -19,25 +27,16 @@ import {
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "@/components/ui/use-toast";
-import { useMediaQuery } from "@/hooks/use-media-query";
-import {
-  ChevronDown,
-  Menu,
-  Moon,
-  RotateCcw,
-  Save,
-  Sun,
-  GitCommit,
-} from "lucide-react";
-import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
-import packageInfo from "../package.json";
-import { GitCommitDialog } from "./gitDialogs/GitCommitDialog";
-import { ReverseChangesDialog } from "./gitDialogs/ReverseChangesDialog";
 import { useGitStatus } from "@/context/GitStatusContext";
-import { GitBranchDisplay } from "@/components/git/GitBranchDisplay";
 import { useCommitChangesMutation } from "@/hooks/query/useCommitChangesMutation";
 import { useRevertChangesMutation } from "@/hooks/query/useRevertChangesMutation";
+import { useMediaQuery } from "@/hooks/use-media-query";
+import { cn } from "@/lib/utils"; // Import cn utility
+
+import packageInfo from "../package.json";
+import containerStyles from "./file-browser/FileBrowserContainer.module.css"; // Import the container styles
+import { GitCommitDialog } from "./gitDialogs/GitCommitDialog";
+import { ReverseChangesDialog } from "./gitDialogs/ReverseChangesDialog";
 
 function ThemeToggle() {
   const { theme, setTheme } = useTheme();
@@ -253,7 +252,7 @@ export function Dashboard({
           <div
             className={cn(
               containerStyles["file-browser-container"],
-              "w-[280px] border-r max-h-full"
+              "w-[280px] border-r max-h-full",
             )}
           >
             {renderSidebarContent()}

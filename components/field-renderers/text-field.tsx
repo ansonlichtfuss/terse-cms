@@ -1,13 +1,13 @@
-"use client"
+"use client";
 
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 interface TextFieldProps {
-  name: string
-  value: string
-  path: string
-  onChange: (path: string, value: string) => void
+  name: string;
+  value: string;
+  path: string;
+  onChange: (path: string, value: string) => void;
 }
 
 export function TextField({ name, value, path, onChange }: TextFieldProps) {
@@ -16,7 +16,12 @@ export function TextField({ name, value, path, onChange }: TextFieldProps) {
       <Label htmlFor={path} className="capitalize text-xs">
         {name}
       </Label>
-      <Input id={path} value={value} onChange={(e) => onChange(path, e.target.value)} className="h-7 text-xs" />
+      <Input
+        id={path}
+        value={value}
+        onChange={(e) => onChange(path, e.target.value)}
+        className="h-7 text-xs"
+      />
     </div>
-  )
+  );
 }

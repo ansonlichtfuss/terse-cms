@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
 import matter from "gray-matter";
+import { useEffect, useState } from "react";
 
 export function useFrontMatter(content: string) {
   const [frontMatter, setFrontMatter] = useState<any>({});

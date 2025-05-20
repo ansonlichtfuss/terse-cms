@@ -4,11 +4,12 @@ export function insertTextAtCursor(
   cursorPosition: { start: number; end: number },
   textToInsert: string,
 ): { newContent: string; newCursorPos: number } {
-  const { start, end } = cursorPosition
-  const newContent = content.substring(0, start) + textToInsert + content.substring(end)
-  const newCursorPos = start + textToInsert.length
+  const { start, end } = cursorPosition;
+  const newContent =
+    content.substring(0, start) + textToInsert + content.substring(end);
+  const newCursorPos = start + textToInsert.length;
 
-  return { newContent, newCursorPos }
+  return { newContent, newCursorPos };
 }
 
 // Helper function to insert text at the beginning of the line
@@ -17,12 +18,15 @@ export function insertTextAtLineStart(
   cursorPosition: { start: number },
   textToInsert: string,
 ): { newContent: string; newCursorPos: number } {
-  const { start } = cursorPosition
-  const lineStart = content.lastIndexOf("\n", start - 1) + 1
-  const newContent = content.substring(0, lineStart) + textToInsert + content.substring(lineStart)
-  const newCursorPos = lineStart + textToInsert.length
+  const { start } = cursorPosition;
+  const lineStart = content.lastIndexOf("\n", start - 1) + 1;
+  const newContent =
+    content.substring(0, lineStart) +
+    textToInsert +
+    content.substring(lineStart);
+  const newCursorPos = lineStart + textToInsert.length;
 
-  return { newContent, newCursorPos }
+  return { newContent, newCursorPos };
 }
 
 // Helper function to wrap selected text
@@ -33,11 +37,16 @@ export function wrapSelectedText(
   suffix: string,
   defaultText: string,
 ): { newContent: string; newCursorPos: number } {
-  const { start, end } = cursorPosition
-  const selectedText = content.substring(start, end)
-  const textToInsert = selectedText || defaultText
-  const newContent = content.substring(0, start) + prefix + textToInsert + suffix + content.substring(end)
-  const newCursorPos = start + prefix.length + textToInsert.length
+  const { start, end } = cursorPosition;
+  const selectedText = content.substring(start, end);
+  const textToInsert = selectedText || defaultText;
+  const newContent =
+    content.substring(0, start) +
+    prefix +
+    textToInsert +
+    suffix +
+    content.substring(end);
+  const newCursorPos = start + prefix.length + textToInsert.length;
 
-  return { newContent, newCursorPos }
+  return { newContent, newCursorPos };
 }

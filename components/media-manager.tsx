@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+
 import { FileBrowser } from "./file-browser/FileBrowser";
 
 interface MediaManagerProps {

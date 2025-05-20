@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+
 import type { FileData } from "@/types";
 
 const fetchFileContent = async (path: string): Promise<FileData> => {

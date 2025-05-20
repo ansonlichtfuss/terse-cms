@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { type FileUploadState } from "./useFileUploads"; // Import FileUploadState type
+
+// Import FileUploadState type
 
 interface UseDragAndDropProps {
   onFilesSelected: (files: FileList | null) => void;

@@ -10,7 +10,7 @@ export async function POST(request: Request) {
     if (!branchName) {
       return NextResponse.json(
         { error: "Branch name is required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -22,7 +22,7 @@ export async function POST(request: Request) {
           error:
             "Pending changes detected. Please commit or stash them before switching branches.",
         },
-        { status: 409 }
+        { status: 409 },
       ); // 409 Conflict
     }
 
@@ -38,13 +38,13 @@ export async function POST(request: Request) {
         headers: {
           "Content-Type": "application/json",
         },
-      }
+      },
     );
   } catch (error: any) {
     console.error("Failed to switch branch:", error);
     return NextResponse.json(
       { error: error.message || "Failed to switch branch" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

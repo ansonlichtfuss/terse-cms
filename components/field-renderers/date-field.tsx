@@ -1,18 +1,23 @@
-"use client"
+"use client";
 
-import { Button } from "@/components/ui/button"
-import { Calendar } from "@/components/ui/calendar"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { Label } from "@/components/ui/label"
-import { CalendarIcon } from "lucide-react"
-import { format } from "date-fns"
-import { cn } from "@/lib/utils"
+import { format } from "date-fns";
+import { CalendarIcon } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import { Label } from "@/components/ui/label";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
 
 interface DateFieldProps {
-  name: string
-  value: string
-  path: string
-  onChange: (path: string, value: string | null) => void
+  name: string;
+  value: string;
+  path: string;
+  onChange: (path: string, value: string | null) => void;
 }
 
 export function DateField({ name, value, path, onChange }: DateFieldProps) {
@@ -25,7 +30,10 @@ export function DateField({ name, value, path, onChange }: DateFieldProps) {
         <PopoverTrigger asChild>
           <Button
             variant="outline"
-            className={cn("w-full justify-start text-left font-normal h-7 text-xs", !value && "text-muted-foreground")}
+            className={cn(
+              "w-full justify-start text-left font-normal h-7 text-xs",
+              !value && "text-muted-foreground",
+            )}
           >
             <CalendarIcon className="mr-2 h-3 w-3" />
             {value ? format(new Date(value), "PPP") : "Pick a date"}
@@ -38,13 +46,13 @@ export function DateField({ name, value, path, onChange }: DateFieldProps) {
             onSelect={(date) => {
               if (date) {
                 // Preserve time component if it exists
-                const currentDate = value ? new Date(value) : new Date()
-                date.setHours(currentDate.getHours())
-                date.setMinutes(currentDate.getMinutes())
-                date.setSeconds(currentDate.getSeconds())
-                onChange(path, date.toISOString())
+                const currentDate = value ? new Date(value) : new Date();
+                date.setHours(currentDate.getHours());
+                date.setMinutes(currentDate.getMinutes());
+                date.setSeconds(currentDate.getSeconds());
+                onChange(path, date.toISOString());
               } else {
-                onChange(path, null)
+                onChange(path, null);
               }
             }}
             initialFocus
@@ -52,5 +60,5 @@ export function DateField({ name, value, path, onChange }: DateFieldProps) {
         </PopoverContent>
       </Popover>
     </div>
-  )
+  );
 }

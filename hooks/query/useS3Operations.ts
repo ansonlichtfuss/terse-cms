@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import type { FileItem } from "@/components/file-browser/FileBrowser"; // Assuming FileItem type is accessible
+
+// Assuming FileItem type is accessible
 
 interface DeleteS3ItemVariables {
   key: string;

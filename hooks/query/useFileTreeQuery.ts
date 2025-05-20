@@ -18,7 +18,7 @@ const fetchFileTree = async (): Promise<{ files: FileTreeNode[] }> => {
 // Convert the file tree to our folder tree format
 const convertToFileTree = (
   nodes: FileTreeNode[],
-  parentKey = ""
+  parentKey = "",
 ): FolderNode[] => {
   return nodes
     .filter((node) => node.type === "directory")

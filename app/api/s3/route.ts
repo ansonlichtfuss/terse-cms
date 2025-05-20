@@ -30,7 +30,7 @@ export async function GET(request: Request) {
       console.error("Error reading mock S3 data:", error);
       return NextResponse.json(
         { error: "Failed to read mock S3 data" },
-        { status: 500 }
+        { status: 500 },
       );
     }
   }
@@ -89,7 +89,7 @@ export async function GET(request: Request) {
     console.error("Error listing S3 objects:", error);
     return NextResponse.json(
       { error: "Failed to list S3 objects" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -117,7 +117,7 @@ export async function DELETE(request: Request) {
         const parentFolder = pathModule.dirname(key);
         if (s3Data[parentFolder]) {
           s3Data[parentFolder] = s3Data[parentFolder].filter(
-            (item: any) => item.key !== key
+            (item: any) => item.key !== key,
           );
         }
       } else if (type === "folder") {
@@ -129,7 +129,7 @@ export async function DELETE(request: Request) {
             delete s3Data[dataKey];
           } else {
             s3Data[dataKey] = s3Data[dataKey].filter(
-              (item: any) => !item.key.startsWith(folderKey)
+              (item: any) => !item.key.startsWith(folderKey),
             );
           }
         }
@@ -142,7 +142,7 @@ export async function DELETE(request: Request) {
       console.error("Error deleting mock S3 object:", error);
       return NextResponse.json(
         { error: "Failed to delete mock S3 object" },
-        { status: 500 }
+        { status: 500 },
       );
     }
   }
@@ -209,7 +209,7 @@ export async function DELETE(request: Request) {
     console.error("Error deleting S3 object:", error);
     return NextResponse.json(
       { error: "Failed to delete S3 object" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

@@ -1,6 +1,8 @@
-import React, { useRef, useLayoutEffect } from "react";
-import styles from "./breadcrumbs.module.css";
+import React, { useLayoutEffect, useRef } from "react";
+
 import { cn } from "@/lib/utils";
+
+import styles from "./breadcrumbs.module.css";
 
 interface BreadcrumbsContainerProps {
   children: React.ReactNode;
@@ -46,7 +48,7 @@ export function BreadcrumbsContainer({
         "items-center",
         "w-full",
         "max-w-full",
-        "relative"
+        "relative",
       )}
     >
       {/* Left Gradient */}
@@ -58,7 +60,7 @@ export function BreadcrumbsContainer({
           "bottom-0",
           "w-8",
           "pointer-events-none",
-          "z-10"
+          "z-10",
         )}
         style={{
           background:
@@ -77,7 +79,7 @@ export function BreadcrumbsContainer({
           "bottom-0",
           "w-8",
           "pointer-events-none",
-          "z-10"
+          "z-10",
         )}
         style={{
           background:
@@ -93,7 +95,7 @@ export function BreadcrumbsContainer({
           "flex",
           "items-center",
           "flex-1",
-          styles.breadcrumbsScrollable
+          styles.breadcrumbsScrollable,
         )}
       >
         {children}

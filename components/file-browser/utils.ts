@@ -1,4 +1,5 @@
 import type { FileNode } from "@/types";
+
 import type { FileItem } from "./FileBrowser"; // Assuming FileItem type remains in the main file for now
 
 // Convert FileNode to FileItem

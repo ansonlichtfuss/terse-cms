@@ -1,11 +1,13 @@
-import type React from "react";
+import "./globals.css";
+
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "./globals.css";
+import type React from "react";
+
+import { ReactQueryClientProvider } from "@/components/ReactQueryClientProvider";
 import { ThemeProvider } from "@/components/theme-provider";
-import { GitStatusProvider } from "@/context/GitStatusContext";
 import { Toaster } from "@/components/ui/toaster";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { GitStatusProvider } from "@/context/GitStatusContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -15,28 +17,26 @@ export const metadata: Metadata = {
   generator: "v0.dev",
 };
 
-const queryClient = new QueryClient();
-
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={inter.className}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="light"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <QueryClientProvider client={queryClient}>
+    <ReactQueryClientProvider>
+      <html lang="en" suppressHydrationWarning>
+        <body className={inter.className}>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="light"
+            enableSystem
+            disableTransitionOnChange
+          >
             <GitStatusProvider>{children}</GitStatusProvider>
-          </QueryClientProvider>
-        </ThemeProvider>
-        <Toaster />
-      </body>
-    </html>
+          </ThemeProvider>
+          <Toaster />
+        </body>
+      </html>
+    </ReactQueryClientProvider>
   );
 }

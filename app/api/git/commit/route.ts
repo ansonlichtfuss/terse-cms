@@ -19,7 +19,7 @@ export async function POST(request: Request) {
     if (!message) {
       return NextResponse.json(
         { error: "Commit message is required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -34,7 +34,7 @@ export async function POST(request: Request) {
     if (!isRepo) {
       return NextResponse.json(
         { error: "Not a git repository" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -52,7 +52,7 @@ export async function POST(request: Request) {
     console.error("Error committing changes:", error);
     return NextResponse.json(
       { error: "Failed to commit changes" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

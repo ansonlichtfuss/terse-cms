@@ -1,10 +1,11 @@
 import {
   Dialog,
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
 } from "@/components/ui/dialog";
+
 import { ModifiedFilesTree } from "./ModifiedFilesTree"; // Assuming ModifiedFilesTree can be reused
 
 interface FileTreeDialogProps {

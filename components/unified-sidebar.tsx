@@ -1,18 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-  TabsListProps,
-} from "@/components/ui/tabs";
 import matter from "gray-matter";
-import { MetadataDisplay } from "@/components/metadata/metadataDisplay";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useEffect, useState } from "react";
+
 import { GitHistorySidebar } from "@/components/git-history-sidebar";
+import { MetadataDisplay } from "@/components/metadata/metadataDisplay";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface UnifiedSidebarProps {
   content: string;
@@ -54,7 +49,7 @@ export function UnifiedSidebar({
     return () => {
       window.removeEventListener(
         "switch-to-history-tab",
-        handleSwitchToHistoryTab
+        handleSwitchToHistoryTab,
       );
     };
   }, []);

@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { useGitHistoryQuery } from "@/hooks/query/useGitHistoryQuery";
-import { useState } from "react"; // Keep useState for other states
-import { GitCommit, Clock, User, FileText, X } from "lucide-react";
 import { format } from "date-fns";
+import { Clock, FileText, GitCommit, User } from "lucide-react";
+import { useEffect } from "react";
+
+// Keep useState for other states
+import { useGitHistoryQuery } from "@/hooks/query/useGitHistoryQuery";
 import { formatRelativeTime } from "@/utils/date-utils";
 
 interface Commit {

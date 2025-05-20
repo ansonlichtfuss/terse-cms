@@ -15,7 +15,7 @@ const createFolder = async ({
   // file folder creation is not yet implemented in the backend.
   // For now, I'll create a placeholder mutation.
   console.log(
-    `Attempting to create folder at path: ${path} with name: ${name}`
+    `Attempting to create folder at path: ${path} with name: ${name}`,
   );
   // Simulate API call
   return new Promise((resolve, reject) => {

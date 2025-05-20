@@ -1,5 +1,5 @@
 export const buildTextFileTree = (
-  paths: string[]
+  paths: string[],
 ): Array<{ text: string; isFile: boolean; depth: number }> => {
   const tree: { [key: string]: any } = {};
 
@@ -17,7 +17,7 @@ export const buildTextFileTree = (
 
   const formatTree = (
     node: any,
-    depth: number = 0
+    depth: number = 0,
   ): Array<{ text: string; isFile: boolean; depth: number }> => {
     const result: Array<{ text: string; isFile: boolean; depth: number }> = [];
     const keys = Object.keys(node)

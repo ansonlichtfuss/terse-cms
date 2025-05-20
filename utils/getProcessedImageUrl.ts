@@ -18,7 +18,7 @@ async function loadConfig(): Promise<MarkdownCMSConfig | null> {
     // we'll just proceed without the thumbnail service.
     console.warn(
       "Could not load markdowncms.config.js. Thumbnail service will not be available.",
-      error
+      error,
     );
     return null;
   }
@@ -34,7 +34,7 @@ async function loadConfig(): Promise<MarkdownCMSConfig | null> {
 export async function getProcessedImageUrl(
   originalUrl: string,
   width: number,
-  height: number
+  height: number,
 ): Promise<string> {
   const loadedConfig = await loadConfig();
 
@@ -47,14 +47,14 @@ export async function getProcessedImageUrl(
         const thumbnailUrl = loadedConfig.imageService.getThumbnailUrl(
           originalUrl,
           width,
-          height
+          height,
         );
         // Basic validation for the returned URL
         if (thumbnailUrl && typeof thumbnailUrl === "string") {
           return thumbnailUrl;
         } else {
           console.error(
-            "Thumbnail service getThumbnailUrl returned an invalid value. Using original URL."
+            "Thumbnail service getThumbnailUrl returned an invalid value. Using original URL.",
           );
           return originalUrl;
         }
@@ -62,7 +62,7 @@ export async function getProcessedImageUrl(
     } catch (error) {
       console.error(
         "Error processing image URL with thumbnail service:",
-        error
+        error,
       );
       return originalUrl; // Fallback to original URL on error
     }

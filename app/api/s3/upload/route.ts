@@ -27,7 +27,7 @@ export async function POST(request: Request) {
       success: true,
       key,
       url: `https://placehold.co/600x400/EEE/31343C?text=${encodeURIComponent(
-        fileName
+        fileName,
       )}`,
     });
   }
@@ -87,7 +87,7 @@ export async function POST(request: Request) {
     console.error("Error uploading file to S3:", error);
     return NextResponse.json(
       { error: "Failed to upload file" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

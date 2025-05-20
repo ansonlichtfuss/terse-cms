@@ -1,5 +1,7 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+
 import { toast } from "@/components/ui/use-toast";
+
 import type { FileItem } from "./FileBrowser"; // Assuming FileItem type remains in the main file for now
 import { fileNodeToFileItem } from "./utils"; // Import the utility function
 
@@ -47,7 +49,7 @@ export const useFileFetching = ({
             const part = pathParts[i];
             const nextDir = currentDir.find(
               (node: FileItem) =>
-                node.name === part && node.type === "directory"
+                node.name === part && node.type === "directory",
             );
 
             if (nextDir && nextDir.children) {
@@ -74,7 +76,7 @@ export const useFileFetching = ({
       } else {
         // For media files (S3)
         const response = await fetch(
-          `/api/s3?path=${encodeURIComponent(path)}`
+          `/api/s3?path=${encodeURIComponent(path)}`,
         );
         const data = await response.json();
         setItems(data.items || []);

@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 
 const generateAltText = async (
-  imageUrl: string
+  imageUrl: string,
 ): Promise<{ altText: string }> => {
   const response = await fetch("/api/ai/generate-alt-text", {
     method: "POST",

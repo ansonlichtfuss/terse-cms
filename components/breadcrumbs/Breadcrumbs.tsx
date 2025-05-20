@@ -1,13 +1,15 @@
 "use client";
 
-import { BreadcrumbSeparator } from "./BreadcrumbSeparator";
-import { BreadcrumbItem } from "./BreadcrumbItem";
-import { BreadcrumbsContainer } from "./BreadcrumbsContainer";
-import React, { useRef, useLayoutEffect } from "react";
-import { ChevronRight, Home } from "lucide-react";
+import { Home } from "lucide-react";
 import Link from "next/link";
-import styles from "./breadcrumbs.module.css";
+import React from "react";
+
 import { cn } from "@/lib/utils";
+
+import { BreadcrumbItem } from "./BreadcrumbItem";
+import styles from "./breadcrumbs.module.css";
+import { BreadcrumbsContainer } from "./BreadcrumbsContainer";
+import { BreadcrumbSeparator } from "./BreadcrumbSeparator";
 
 interface PathBreadcrumbsProps {
   currentPath: string;
@@ -69,7 +71,7 @@ export function PathBreadcrumbs({
           "inline-flex",
           styles.breadcrumbItem,
           "shrink-0",
-          "truncate"
+          "truncate",
         )}
         onClick={(e) => {
           e.preventDefault();

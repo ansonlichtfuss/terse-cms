@@ -15,7 +15,7 @@ interface Commit {
 
 const fetchGitHistory = async (filePath: string): Promise<Commit[]> => {
   const response = await fetch(
-    `/api/git/history?filePath=${encodeURIComponent(filePath)}`
+    `/api/git/history?filePath=${encodeURIComponent(filePath)}`,
   );
   if (!response.ok) {
     throw new Error(`Error fetching git history: ${response.statusText}`);

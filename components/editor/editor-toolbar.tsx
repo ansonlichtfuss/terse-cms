@@ -1,14 +1,14 @@
 "use client";
 
+import { getToolbarItems } from "@/components/editor/editor-toolbar-items";
 import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Separator } from "@/components/ui/separator";
-import { getToolbarItems } from "@/components/editor/editor-toolbar-items";
 
 interface EditorToolbarProps {
   onAction: (action: string, value?: string) => void;

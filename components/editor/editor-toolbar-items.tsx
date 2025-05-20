@@ -1,51 +1,98 @@
 import {
   Bold,
-  Italic,
+  Code,
   Heading1,
   Heading2,
   Heading3,
+  ImageIcon,
+  Italic,
+  Link,
   List,
   ListOrdered,
-  Link,
-  ImageIcon,
-  Code,
   Quote,
-  Undo,
   Redo,
-} from "lucide-react"
-import type { EditorToolbarGroup } from "@/types"
+  Undo,
+} from "lucide-react";
 
-export function getToolbarItems(onImageClick: () => void): EditorToolbarGroup[] {
+import type { EditorToolbarGroup } from "@/types";
+
+export function getToolbarItems(
+  onImageClick: () => void,
+): EditorToolbarGroup[] {
   return [
     {
       group: "headings",
       items: [
-        { icon: <Heading1 className="h-4 w-4" />, action: "heading", value: "# ", tooltip: "Heading 1" },
-        { icon: <Heading2 className="h-4 w-4" />, action: "heading", value: "## ", tooltip: "Heading 2" },
-        { icon: <Heading3 className="h-4 w-4" />, action: "heading", value: "### ", tooltip: "Heading 3" },
+        {
+          icon: <Heading1 className="h-4 w-4" />,
+          action: "heading",
+          value: "# ",
+          tooltip: "Heading 1",
+        },
+        {
+          icon: <Heading2 className="h-4 w-4" />,
+          action: "heading",
+          value: "## ",
+          tooltip: "Heading 2",
+        },
+        {
+          icon: <Heading3 className="h-4 w-4" />,
+          action: "heading",
+          value: "### ",
+          tooltip: "Heading 3",
+        },
       ],
     },
     {
       group: "formatting",
       items: [
         { icon: <Bold className="h-4 w-4" />, action: "bold", tooltip: "Bold" },
-        { icon: <Italic className="h-4 w-4" />, action: "italic", tooltip: "Italic" },
+        {
+          icon: <Italic className="h-4 w-4" />,
+          action: "italic",
+          tooltip: "Italic",
+        },
       ],
     },
     {
       group: "lists",
       items: [
-        { icon: <List className="h-4 w-4" />, action: "list", tooltip: "Bullet List" },
-        { icon: <ListOrdered className="h-4 w-4" />, action: "ordered-list", tooltip: "Numbered List" },
+        {
+          icon: <List className="h-4 w-4" />,
+          action: "list",
+          tooltip: "Bullet List",
+        },
+        {
+          icon: <ListOrdered className="h-4 w-4" />,
+          action: "ordered-list",
+          tooltip: "Numbered List",
+        },
       ],
     },
     {
       group: "elements",
       items: [
-        { icon: <Link className="h-4 w-4" />, action: "link", tooltip: "Insert Link" },
-        { icon: <ImageIcon className="h-4 w-4" />, action: "image", tooltip: "Insert Image", onClick: onImageClick },
-        { icon: <Code className="h-4 w-4" />, action: "code", tooltip: "Code Block" },
-        { icon: <Quote className="h-4 w-4" />, action: "quote", tooltip: "Blockquote" },
+        {
+          icon: <Link className="h-4 w-4" />,
+          action: "link",
+          tooltip: "Insert Link",
+        },
+        {
+          icon: <ImageIcon className="h-4 w-4" />,
+          action: "image",
+          tooltip: "Insert Image",
+          onClick: onImageClick,
+        },
+        {
+          icon: <Code className="h-4 w-4" />,
+          action: "code",
+          tooltip: "Code Block",
+        },
+        {
+          icon: <Quote className="h-4 w-4" />,
+          action: "quote",
+          tooltip: "Blockquote",
+        },
       ],
     },
     {
@@ -55,5 +102,5 @@ export function getToolbarItems(onImageClick: () => void): EditorToolbarGroup[] 
         { icon: <Redo className="h-4 w-4" />, action: "redo", tooltip: "Redo" },
       ],
     },
-  ]
+  ];
 }

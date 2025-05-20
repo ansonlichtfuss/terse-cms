@@ -10,7 +10,7 @@ export async function GET(request: Request) {
   if (!filePath) {
     return NextResponse.json(
       { error: "Path parameter is required" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -32,7 +32,7 @@ export async function GET(request: Request) {
     if (!fs.existsSync(fullPath)) {
       return NextResponse.json(
         { error: "File not found in mock filesystem" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -76,7 +76,7 @@ export async function POST(request: Request) {
     if (!filePath) {
       return NextResponse.json(
         { error: "Path parameter is required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -134,7 +134,7 @@ export async function DELETE(request: Request) {
     if (!filePath) {
       return NextResponse.json(
         { error: "Path parameter is required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -156,7 +156,7 @@ export async function DELETE(request: Request) {
       if (!fs.existsSync(fullPath)) {
         return NextResponse.json(
           { error: "File not found in mock filesystem" },
-          { status: 404 }
+          { status: 404 },
         );
       }
 
@@ -200,7 +200,7 @@ export async function DELETE(request: Request) {
     console.error("Error deleting file:", error);
     return NextResponse.json(
       { error: "Failed to delete file" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

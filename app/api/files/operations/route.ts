@@ -17,7 +17,7 @@ export async function POST(request: Request) {
     if (!sourcePath) {
       return NextResponse.json(
         { error: "Source path is required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -34,7 +34,7 @@ export async function POST(request: Request) {
     if (!fs.existsSync(fullSourcePath)) {
       return NextResponse.json(
         { error: "Source file not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -42,7 +42,7 @@ export async function POST(request: Request) {
       if (!destinationPath) {
         return NextResponse.json(
           { error: "Destination path is required" },
-          { status: 400 }
+          { status: 400 },
         );
       }
 
@@ -69,7 +69,7 @@ export async function POST(request: Request) {
       if (!newName) {
         return NextResponse.json(
           { error: "New name is required" },
-          { status: 400 }
+          { status: 400 },
         );
       }
 
@@ -92,7 +92,7 @@ export async function POST(request: Request) {
     console.error("Error performing file operation:", error);
     return NextResponse.json(
       { error: "Failed to perform operation" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

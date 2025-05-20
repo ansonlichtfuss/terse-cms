@@ -1,28 +1,26 @@
 "use client";
 
+import { Home } from "lucide-react";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react"; // Import React and useState
 
-import { ConfirmationDialog } from "@/components/confirmation-dialog";
-import styles from "./FileBrowser.module.css";
-import { cn } from "@/lib/utils";
-import { MoveFileDialog } from "@/components/move-file-dialog";
 import { PathBreadcrumbs } from "@/components/breadcrumbs/Breadcrumbs";
+import { ConfirmationDialog } from "@/components/confirmation-dialog";
+import { MoveFileDialog } from "@/components/move-file-dialog";
 import { RenameFileDialog } from "@/components/rename-file-dialog";
-import { Home } from "lucide-react";
+// Import the new Tanstack Query hook
+import { useFilesQuery } from "@/hooks/query/useFilesQuery";
+import { cn } from "@/lib/utils";
 
 // Import the new hooks and components
 import { CreateFolderDialog } from "./CreateFolderDialog"; // Assuming dialogs are also moved
+import styles from "./FileBrowser.module.css";
 import { FileBrowserActions } from "./FileBrowserActions";
 import { FileItemRow } from "./FileItemRow";
+import UploadDialog from "./UploadDialog"; // Import UploadDialog from the same directory
 import { useFileBrowserState } from "./useFileBrowserState";
 import { useFileOperations } from "./useFileOperations";
 import { getItemName, getItemPath } from "./utils"; // Import utility functions
-import { useRouter } from "next/navigation";
-import { Router } from "next/router";
-import UploadDialog from "./UploadDialog"; // Import UploadDialog from the same directory
-
-// Import the new Tanstack Query hook
-import { useFilesQuery } from "@/hooks/query/useFilesQuery";
 
 // FileItem type definition remains here for now, as it's used by multiple components/hooks
 export interface FileItem {
@@ -67,8 +65,8 @@ export function FileBrowser({
     setExpandedFolders,
     isUploading,
     setIsUploading,
-    isCreatingFolder,
-    setIsCreatingFolder,
+    isCreateFolderDialogOpen,
+    setIsCreateFolderDialogOpen,
     newFolderName,
     setNewFolderName,
     mounted,
@@ -109,7 +107,7 @@ export function FileBrowser({
             // Explicitly type nextDir
             (node) =>
               node.name === part &&
-              (node.type === "directory" || node.type === "folder")
+              (node.type === "directory" || node.type === "folder"),
           );
 
           if (nextDir && nextDir.children) {
@@ -220,7 +218,7 @@ export function FileBrowser({
 
   // Local handler for create folder button click
   const handleNewFolderButtonClick = () => {
-    setIsCreatingFolder(true);
+    setIsCreateFolderDialogOpen(true);
   };
 
   // Local handler to open the upload dialog
@@ -244,7 +242,7 @@ export function FileBrowser({
         onNewFolderClick={handleNewFolderButtonClick} // Call local handler
         onOpenUploadDialog={handleOpenUploadDialog} // Pass the handler to open the dialog
         currentPath={currentPath} // Pass the currentPath prop
-        isCreatingFolder={isCreatingFolder} // Pass loading state
+        isCreatingFolder={isCreatingFolder} // Pass loading state (This is the loading state from useFileOperations)
         fetchItems={refetch} // Pass the refetch function from useFilesQuery
       />
       <div className="px-4">
@@ -259,7 +257,7 @@ export function FileBrowser({
       {/* Main content area with padding at the bottom to account for the action bar */}
       <div
         className={cn(
-          "px-4 pt-2 pb-8 overflow-y-auto max-h-[calc(100vh-180px)]"
+          "px-4 pt-2 pb-8 overflow-y-auto max-h-[calc(100vh-180px)]",
         )}
       >
         {isLoading && (
@@ -301,11 +299,11 @@ export function FileBrowser({
 
       {/* Create Folder Dialog */}
       <CreateFolderDialog
-        open={isCreatingFolder}
-        onOpenChange={setIsCreatingFolder}
+        open={isCreateFolderDialogOpen}
+        onOpenChange={setIsCreateFolderDialogOpen}
         onCreate={handleCreateFolder} // Pass the handleCreateFolder function directly
         isMobile={isMobile}
-        isCreating={isCreatingFolder} // Pass loading state
+        isCreating={isCreatingFolder} // Pass loading state (This is the loading state from useFileOperations)
       />
 
       {/* Move File Dialog */}
@@ -365,7 +363,7 @@ export function FileBrowser({
               : "File"
           }`}
           description={`Are you sure you want to delete ${getItemName(
-            itemToAction
+            itemToAction,
           )}? This action cannot be undone.`}
           confirmLabel="Delete"
           onConfirm={() => handleDelete(itemToAction)} // Call handleDelete from operations hook

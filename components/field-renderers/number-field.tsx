@@ -1,13 +1,13 @@
-"use client"
+"use client";
 
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 interface NumberFieldProps {
-  name: string
-  value: number
-  path: string
-  onChange: (path: string, value: number) => void
+  name: string;
+  value: number;
+  path: string;
+  onChange: (path: string, value: number) => void;
 }
 
 export function NumberField({ name, value, path, onChange }: NumberFieldProps) {
@@ -24,5 +24,5 @@ export function NumberField({ name, value, path, onChange }: NumberFieldProps) {
         className="h-7 text-xs"
       />
     </div>
-  )
+  );
 }

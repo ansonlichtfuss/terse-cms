@@ -1,13 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import {} from "@/components/ui/dialog";
-import { FileTreeDialog } from "./FileTreeDialog";
+
 import { Button } from "@/components/ui/button";
+import {} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { ModifiedFilesTree } from "./ModifiedFilesTree";
-import styles from "./gitCommitDialog.module.css";
 import { useGitStatus } from "@/context/GitStatusContext";
+
+import { FileTreeDialog } from "./FileTreeDialog";
+import styles from "./gitCommitDialog.module.css";
 
 interface GitCommitDialogProps {
   open: boolean;
@@ -24,7 +25,7 @@ export function GitCommitDialog({
 }: GitCommitDialogProps) {
   const { modifiedFiles } = useGitStatus();
   const [commitMessage, setCommitMessage] = useState(
-    `CMS: Updated files at ${new Date().toLocaleString()}`
+    `CMS: Updated files at ${new Date().toLocaleString()}`,
   );
 
   const handleCommit = () => {

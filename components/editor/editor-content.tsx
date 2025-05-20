@@ -1,14 +1,14 @@
 "use client";
 
 import type React from "react";
+import { useEffect, useRef, useState } from "react";
 
-import { useState, useRef, useEffect } from "react";
-import { Textarea } from "@/components/ui/textarea";
 import {
   insertTextAtCursor,
   insertTextAtLineStart,
   wrapSelectedText,
 } from "@/components/editor/utils";
+import { Textarea } from "@/components/ui/textarea";
 
 interface EditorContentProps {
   content: string;
@@ -82,12 +82,12 @@ export function insertAtCursor(
   content: string,
   cursorPosition: CursorPosition,
   textToInsert: string,
-  onChange: (content: string) => void
+  onChange: (content: string) => void,
 ) {
   const { newContent, newCursorPos } = insertTextAtCursor(
     content,
     cursorPosition,
-    textToInsert
+    textToInsert,
   );
   onChange(newContent);
 
@@ -109,7 +109,7 @@ export function handleToolbarAction(
   textareaRef: React.RefObject<HTMLTextAreaElement | null>,
   content: string,
   cursorPosition: CursorPosition,
-  onChange: (content: string) => void
+  onChange: (content: string) => void,
 ) {
   if (!textareaRef.current) return content;
 
@@ -156,7 +156,7 @@ export function handleToolbarAction(
         { start, end },
         "1. ",
         "",
-        "List item"
+        "List item",
       );
       newContent = olContent;
       newCursorPos = olPos;

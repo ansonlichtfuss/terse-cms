@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 interface UseFileBrowserStateProps {
   isMobile?: boolean;
@@ -25,6 +25,8 @@ interface UseFileBrowserStateResult {
   setIsUploading: React.Dispatch<React.SetStateAction<boolean>>;
   newFolderName: string;
   setNewFolderName: React.Dispatch<React.SetStateAction<string>>;
+  isCreateFolderDialogOpen: boolean;
+  setIsCreateFolderDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
   mounted: boolean;
 }
 
@@ -76,6 +78,8 @@ export const useFileBrowserState = ({
   });
   const [isUploading, setIsUploading] = useState(isMobile);
   const [newFolderName, setNewFolderName] = useState("");
+  const [isCreateFolderDialogOpen, setIsCreateFolderDialogOpen] =
+    useState(false);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -109,6 +113,8 @@ export const useFileBrowserState = ({
     setIsUploading,
     newFolderName,
     setNewFolderName,
+    isCreateFolderDialogOpen,
+    setIsCreateFolderDialogOpen,
     mounted,
   };
 };

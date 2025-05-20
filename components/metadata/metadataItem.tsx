@@ -1,7 +1,8 @@
-import { FileIcon, CalendarIcon, CheckIcon, XIcon } from "lucide-react";
+import { CalendarIcon, CheckIcon, FileIcon, XIcon } from "lucide-react";
+
 import { Badge } from "@/components/ui/badge";
-import { isImageUrl, isImageArray } from "@/utils/media-utils";
 import { formatDate, isDateString } from "@/utils/date-utils";
+import { isImageArray, isImageUrl } from "@/utils/media-utils";
 
 interface MetadataItemProps {
   keyName: string;

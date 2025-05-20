@@ -1,16 +1,17 @@
-import React, { useState, useEffect } from "react"; // Import useEffect
+import React, { useEffect } from "react"; // Import useEffect
+
+import { Button } from "@/components/ui/button"; // Import Button
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
+  DialogFooter, // Import DialogFooter
   DialogHeader,
   DialogTitle,
-  DialogFooter, // Import DialogFooter
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button"; // Import Button
-import { useFileUploads } from "./useFileUploads"; // Import useFileUploads hook
-import { useDragAndDrop } from "./useDragAndDrop"; // Import useDragAndDrop hook
+
 import { FileUploadItem } from "./FileUploadItem"; // Import FileUploadItem component
+import { useDragAndDrop } from "./useDragAndDrop"; // Import useDragAndDrop hook
+import { useFileUploads } from "./useFileUploads"; // Import useFileUploads hook
 import { type FileUploadState } from "./useFileUploads"; // Import FileUploadState type
 
 interface UploadDialogProps {

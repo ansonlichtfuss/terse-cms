@@ -1,26 +1,28 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import { Clock, Edit2 } from "lucide-react";
-import type { FileData } from "@/types";
+import matter from "gray-matter";
 import { debounce } from "lodash";
-import { MediaDialog } from "@/components/media-dialog";
+import { Clock, Edit2 } from "lucide-react";
+import { useRouter } from "next/navigation"; // Keep useRouter for other purposes if needed
+import { useEffect, useRef, useState } from "react";
+
+import {
+  type CursorPosition,
+  EditorContent,
+  handleToolbarAction,
+} from "@/components/editor/editor-content";
 import { EditorToolbar } from "@/components/editor/editor-toolbar";
+import { MediaDialog } from "@/components/media-dialog";
+import { RenameFileDialog } from "@/components/rename-file-dialog";
 import { UnifiedSidebar } from "@/components/unified-sidebar";
+import { useGitStatus } from "@/context/GitStatusContext";
 import {
   getUserPreferences,
   saveUserPreferences,
 } from "@/lib/user-preferences";
-import {
-  EditorContent,
-  handleToolbarAction,
-  type CursorPosition,
-} from "@/components/editor/editor-content";
-import matter from "gray-matter";
-import { RenameFileDialog } from "@/components/rename-file-dialog";
-import { useRouter } from "next/navigation"; // Keep useRouter for other purposes if needed
+import type { FileData } from "@/types";
+
 import { useFileOperations } from "../file-browser/useFileOperations";
-import { useGitStatus } from "@/context/GitStatusContext";
 
 interface EditorProps {
   file: FileData;
@@ -63,7 +65,7 @@ export function Editor({ file, onSave }: EditorProps) {
           isSavingRef.current = false;
         }, 100);
       },
-      1000
+      1000,
     );
   }
 
@@ -177,7 +179,7 @@ export function Editor({ file, onSave }: EditorProps) {
       textareaRef,
       content,
       cursorPosition,
-      handleContentChange
+      handleContentChange,
     );
 
     // Auto-save the updated content

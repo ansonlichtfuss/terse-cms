@@ -1,5 +1,9 @@
 "use client";
 
+import { Check, GitBranch } from "lucide-react";
+import { useState } from "react"; // Import useState
+
+import { ConfirmationDialog } from "@/components/confirmation-dialog"; // Import ConfirmationDialog
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -7,16 +11,12 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { GitBranch, Check } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { ConfirmationDialog } from "@/components/confirmation-dialog"; // Import ConfirmationDialog
-import { useState } from "react"; // Import useState
-
 // Import the new Tanstack Query hooks
 import {
   useGitBranchesQuery,
   useSwitchGitBranchMutation,
 } from "@/hooks/query/useGitBranches";
+import { cn } from "@/lib/utils";
 
 interface Branch {
   name: string;
@@ -85,7 +85,7 @@ export function GitBranchDisplay() {
                 key={branch.name}
                 className={cn(
                   "cursor-pointer",
-                  branch.isCurrent && "font-bold"
+                  branch.isCurrent && "font-bold",
                 )}
                 onClick={() => handleBranchSwitch(branch.name)} // Add onClick handler
                 disabled={isLoading || isSwitching} // Disable while loading or switching

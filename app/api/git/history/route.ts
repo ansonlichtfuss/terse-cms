@@ -20,7 +20,7 @@ export async function GET(request: Request) {
     if (!filePath) {
       return NextResponse.json(
         { error: "filePath parameter is required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -30,7 +30,7 @@ export async function GET(request: Request) {
     if (!isRepo) {
       return NextResponse.json(
         { error: "Not a git repository" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -60,7 +60,7 @@ export async function GET(request: Request) {
 
           // Parse the summary line for insertions and deletions
           const summaryLine = lines.find((line) =>
-            line.includes("insertions(+)")
+            line.includes("insertions(+)"),
           );
           if (summaryLine) {
             const insertionMatch = summaryLine.match(/(\d+) insertions\(\+\)/);
@@ -75,7 +75,7 @@ export async function GET(request: Request) {
 
           // Find the line with the total files changed
           const totalFilesLine = lines.find(
-            (line) => line.includes("changed") && line.match(/\d+/)
+            (line) => line.includes("changed") && line.match(/\d+/),
           );
           if (totalFilesLine) {
             const totalFilesMatch = totalFilesLine.match(/(\d+) file changed/);
@@ -86,7 +86,7 @@ export async function GET(request: Request) {
         } catch (showError) {
           console.error(
             `Error fetching stats for commit ${commit.hash}:`,
-            showError
+            showError,
           );
           // Keep insertions and deletions and totalFilesChanged as 0 in case of error
         }
@@ -103,7 +103,7 @@ export async function GET(request: Request) {
             totalFilesChanged,
           },
         };
-      })
+      }),
     );
 
     return NextResponse.json(commits);
@@ -111,7 +111,7 @@ export async function GET(request: Request) {
     console.error("Error fetching git history:", error);
     return NextResponse.json(
       { error: "Failed to fetch git history" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

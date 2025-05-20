@@ -1,7 +1,9 @@
-import React from "react";
 import Link from "next/link";
-import styles from "./breadcrumbs.module.css";
+import React from "react";
+
 import { cn } from "@/lib/utils";
+
+import styles from "./breadcrumbs.module.css";
 
 interface BreadcrumbItemProps {
   part: string;
@@ -23,7 +25,7 @@ export function BreadcrumbItem({
       <span
         className={cn(
           styles.breadcrumbItem,
-          isLast && styles.breadcrumbCurrent
+          isLast && styles.breadcrumbCurrent,
         )}
         title={part}
         style={{ minWidth: "30px" }}
@@ -52,7 +54,7 @@ export function BreadcrumbItem({
       className={cn(
         styles.breadcrumbItem,
         isLast && styles.breadcrumbCurrent,
-        "truncate"
+        "truncate",
       )}
       onClick={() => onNavigate(currentAccumulatedPath)}
       title={part}

@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
+
 import { useToast } from "@/components/ui/use-toast";
 
 interface FileUploadState {
@@ -22,8 +23,8 @@ const useFileUploads = ({ uploadPath }: UseFileUploadsProps) => {
       prevUploads.map((upload) =>
         upload.file.name === file.name
           ? { ...upload, status: "uploading", progress: 0 }
-          : upload
-      )
+          : upload,
+      ),
     );
 
     const formData = new FormData();
@@ -36,14 +37,14 @@ const useFileUploads = ({ uploadPath }: UseFileUploadsProps) => {
       xhr.upload.addEventListener("progress", (event) => {
         if (event.lengthComputable) {
           const percentCompleted = Math.round(
-            (event.loaded * 100) / event.total
+            (event.loaded * 100) / event.total,
           );
           setFileUploads((prevUploads) =>
             prevUploads.map((upload) =>
               upload.file.name === file.name
                 ? { ...upload, progress: percentCompleted }
-                : upload
-            )
+                : upload,
+            ),
           );
         }
       });
@@ -60,8 +61,8 @@ const useFileUploads = ({ uploadPath }: UseFileUploadsProps) => {
                     uploadedUrl: response.url,
                     progress: 100,
                   }
-                : upload
-            )
+                : upload,
+            ),
           );
         } else {
           const errorMessage = response.error || "Upload failed";
@@ -69,8 +70,8 @@ const useFileUploads = ({ uploadPath }: UseFileUploadsProps) => {
             prevUploads.map((upload) =>
               upload.file.name === file.name
                 ? { ...upload, status: "error", error: errorMessage }
-                : upload
-            )
+                : upload,
+            ),
           );
           toast({
             title: "Upload Failed",
@@ -86,8 +87,8 @@ const useFileUploads = ({ uploadPath }: UseFileUploadsProps) => {
           prevUploads.map((upload) =>
             upload.file.name === file.name
               ? { ...upload, status: "error", error: errorMessage }
-              : upload
-          )
+              : upload,
+          ),
         );
         toast({
           title: "Upload Failed",
@@ -104,8 +105,8 @@ const useFileUploads = ({ uploadPath }: UseFileUploadsProps) => {
         prevUploads.map((upload) =>
           upload.file.name === file.name
             ? { ...upload, status: "error", error: errorMessage }
-            : upload
-        )
+            : upload,
+        ),
       );
       toast({
         title: "Upload Failed",
@@ -122,4 +123,4 @@ const useFileUploads = ({ uploadPath }: UseFileUploadsProps) => {
   };
 };
 
-export { useFileUploads, type FileUploadState };
+export { type FileUploadState, useFileUploads };

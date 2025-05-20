@@ -1,16 +1,17 @@
 "use client";
 
-import { useRef, useEffect } from "react";
-import { Input } from "@/components/ui/input";
-import { useGenerateAltTextMutation } from "@/hooks/query/useGenerateAltTextMutation";
+import { ArrowDown, ArrowUp, ImageIcon, Loader2, Trash } from "lucide-react";
+import { useEffect, useRef } from "react";
 import { useState } from "react"; // Keep useState for other states
-import { Label } from "@/components/ui/label";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ImageIcon, Loader2, ArrowUp, ArrowDown, Trash } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { toast } from "@/components/ui/use-toast";
-import { getImageField } from "@/utils/media-utils";
+import { useGenerateAltTextMutation } from "@/hooks/query/useGenerateAltTextMutation";
 import { getProcessedImageUrl } from "@/utils/getProcessedImageUrl";
+import { getImageField } from "@/utils/media-utils";
 
 interface ImageItemProps {
   item: any;
@@ -123,7 +124,7 @@ export function ImageItem({
     if (generateAltTextError) {
       console.error(
         "Mutation error generating alt text:",
-        generateAltTextError
+        generateAltTextError,
       );
       // Optionally show a toast or handle the error in the UI
     }

@@ -16,7 +16,7 @@ interface GitStatusContextType {
 }
 
 const GitStatusContext = createContext<GitStatusContextType | undefined>(
-  undefined
+  undefined,
 );
 
 export const GitStatusProvider: React.FC<{ children: React.ReactNode }> = ({

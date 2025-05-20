@@ -1,18 +1,20 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { ChevronDown, ChevronRight, Folder } from "lucide-react";
+import { useEffect, useState } from "react";
+
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Folder, ChevronRight, ChevronDown } from "lucide-react";
-import { cn } from "@/lib/utils";
-import styles from "./move-file-dialog.module.css";
 import { useFileTreeQuery } from "@/hooks/query/useFileTreeQuery";
+import { cn } from "@/lib/utils";
+
+import styles from "./move-file-dialog.module.css";
 
 interface S3Item {
   key: string;
@@ -59,7 +61,7 @@ export function MoveFileDialog({
 }: MoveFileDialogProps) {
   const [selectedFolder, setSelectedFolder] = useState("");
   const [localFolderTree, setLocalFolderTree] = useState<FolderNode | null>(
-    null
+    null,
   );
 
   const { data: folderTree, isLoading, error } = useFileTreeQuery();
@@ -141,7 +143,7 @@ export function MoveFileDialog({
           className={cn(
             "flex items-center py-1 px-2 rounded-md cursor-pointer",
             isSelected ? "bg-muted" : "hover:bg-muted/50",
-            isItemInThisFolder && "opacity-50 cursor-not-allowed"
+            isItemInThisFolder && "opacity-50 cursor-not-allowed",
           )}
           style={{ paddingLeft: `${level * 12 + 8}px` }}
           onClick={() => {
