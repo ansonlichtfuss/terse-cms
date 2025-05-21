@@ -79,7 +79,11 @@ export async function GET(request: Request) {
         type: "file",
         size: item.Size,
         lastModified: item.LastModified?.toISOString(),
-        url: `https://${S3_BUCKET}.s3.${S3_REGION}.amazonaws.com/${item.Key}`,
+        url: item.Key
+          ? item.Key.endsWith("/")
+            ? `${process.env.S3_FOLDER_URL_BASE || (S3_REGION.startsWith("http") ? `${S3_REGION}/${S3_BUCKET}/` : `https://${S3_BUCKET}.s3.${S3_REGION}.amazonaws.com/`)}${item.Key}`
+            : `${process.env.S3_FILE_URL_BASE || (S3_REGION.startsWith("http") ? `${S3_REGION}/${S3_BUCKET}/` : `https://${S3_BUCKET}.s3.${S3_REGION}.amazonaws.com/`)}${item.Key}`
+          : "",
       }));
 
     return NextResponse.json({
