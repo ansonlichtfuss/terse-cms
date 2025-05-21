@@ -1,7 +1,7 @@
 module.exports = {
   extends: [
     "next/core-web-vitals",
-    "eslint:recommended",
+    // "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:prettier/recommended",
   ],

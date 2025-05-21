@@ -24,14 +24,12 @@
   font-size: 0.7rem;
   height: 1.2rem;
   color: var(--muted-foreground);
-  cursor: pointer;
   padding: 1px 3px;
   border-radius: 2px;
-  max-width: 80px;
   min-width: 1px;
 }
 
-.breadcrumbItem:hover {
+.breadcrumbItemClickable:hover {
   color: var(--foreground);
   background: var(--muted);
 }

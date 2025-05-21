@@ -1,5 +1,6 @@
 import React, { useEffect } from "react"; // Import useEffect
 
+// Import Breadcrumbs
 import { Button } from "@/components/ui/button"; // Import Button
 import {
   Dialog,
@@ -9,6 +10,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
+import { PathBreadcrumbs } from "../breadcrumbs/Breadcrumbs";
 import { FileUploadItem } from "./FileUploadItem"; // Import FileUploadItem component
 import { useDragAndDrop } from "./useDragAndDrop"; // Import useDragAndDrop hook
 import { useFileUploads } from "./useFileUploads"; // Import useFileUploads hook
@@ -62,6 +64,11 @@ const UploadDialog: React.FC<UploadDialogProps> = ({
       <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Upload Files</DialogTitle>
+          <PathBreadcrumbs
+            currentPath={uploadPath}
+            onNavigate={() => {}}
+            isClickable={false}
+          />
         </DialogHeader>
         <div
           className={`border-1 border-dashed rounded-md p-6 text-center cursor-pointer mb-4 text-gray-500 hover:text-gray-800 ${
@@ -86,7 +93,7 @@ const UploadDialog: React.FC<UploadDialogProps> = ({
             }}
           />
           <p className="text-sm">
-            Drag 'n' drop files here, or click to select files
+            Drag and drop files here, or click to select files
           </p>
         </div>
         {/* Combined Upload Grid */}

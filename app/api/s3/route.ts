@@ -16,7 +16,6 @@ export async function GET(request: Request) {
   if (useMock) {
     // Dynamically import Node.js modules only on the server
     const fs = await import("fs");
-    const pathModule = await import("path");
 
     const MOCK_S3_FILE = "mock-data/s3-items.json";
 
@@ -49,7 +48,8 @@ export async function GET(request: Request) {
 
     // Create S3 client
     const s3Client = new S3Client({
-      region: S3_REGION,
+      region: S3_REGION.startsWith("http") ? "us-east-1" : S3_REGION, // Use a default region if a custom endpoint is provided
+      endpoint: S3_REGION.startsWith("http") ? S3_REGION : undefined, // Use endpoint if S3_REGION is a URL
       credentials: {
         accessKeyId: S3_ACCESS_KEY_ID,
         secretAccessKey: S3_SECRET_ACCESS_KEY,
@@ -117,6 +117,7 @@ export async function DELETE(request: Request) {
         const parentFolder = pathModule.dirname(key);
         if (s3Data[parentFolder]) {
           s3Data[parentFolder] = s3Data[parentFolder].filter(
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             (item: any) => item.key !== key,
           );
         }
@@ -129,6 +130,7 @@ export async function DELETE(request: Request) {
             delete s3Data[dataKey];
           } else {
             s3Data[dataKey] = s3Data[dataKey].filter(
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               (item: any) => !item.key.startsWith(folderKey),
             );
           }
@@ -163,7 +165,8 @@ export async function DELETE(request: Request) {
 
     // Create S3 client
     const s3Client = new S3Client({
-      region: S3_REGION,
+      region: S3_REGION.startsWith("http") ? "us-east-1" : S3_REGION, // Use a default region if a custom endpoint is provided
+      endpoint: S3_REGION.startsWith("http") ? S3_REGION : undefined, // Use endpoint if S3_REGION is a URL
       credentials: {
         accessKeyId: S3_ACCESS_KEY_ID,
         secretAccessKey: S3_SECRET_ACCESS_KEY,

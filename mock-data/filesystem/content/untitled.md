@@ -1,0 +1,1 @@
+https://tinacms-media-library.s3.https://s3.us-west-000.backblazeb2.com.amazonaws.com/2023/10-13-naples-italy/IMG_8300.jpg
