@@ -145,7 +145,7 @@ export function FileItemRow({
                 />
               </div>
             </HoverCardTrigger>
-            <HoverCardContent className="w-auto p-0">
+            <HoverCardContent side="right" className="w-auto p-0">
               <img
                 src={item.url || "/placeholder.svg"}
                 alt={itemName}
