@@ -7,11 +7,15 @@ import { FileBrowser } from "./file-browser/FileBrowser";
 interface MediaManagerProps {
   onSelect: (url: string) => void;
   isMobile?: boolean;
+  onPathChange?: (path: string, type: "files" | "media") => void; // Update onPathChange prop signature
+  selectedPath?: string; // Add selectedPath prop
 }
 
 export function MediaManager({
   onSelect,
   isMobile = false,
+  onPathChange, // Receive onPathChange prop
+  selectedPath, // Receive selectedPath prop
 }: MediaManagerProps) {
   const [selectedMediaUrl, setSelectedMediaUrl] = useState<string | null>(null);
 
@@ -24,6 +28,8 @@ export function MediaManager({
           onSelect(url || path);
         }}
         isMobile={isMobile}
+        onPathChange={onPathChange} // Pass onPathChange to FileBrowser
+        selectedPath={selectedPath} // Pass selectedPath to FileBrowser
       />
     </div>
   );

@@ -63,6 +63,8 @@ export function Dashboard({
   children?: React.ReactNode;
 }) {
   const [selectedTab, setSelectedTab] = useState("files");
+  const [contentBrowserPath, setContentBrowserPath] = useState(""); // State for content file browser path
+  const [mediaBrowserPath, setMediaBrowserPath] = useState(""); // State for media file browser path
   const [isCommitDialogOpen, setIsCommitDialogOpen] = useState(false);
   const [isRevertDialogOpen, setIsRevertDialogOpen] = useState(false);
   const isMobile = useMediaQuery("(max-width: 768px)");
@@ -148,10 +150,27 @@ export function Dashboard({
           </TabsList>
         </div>
         <TabsContent value="files">
-          <FileBrowser selectedPath={selectedFilePath} type="files" />
+          <FileBrowser
+            selectedPath={contentBrowserPath} // Pass content path state
+            onPathChange={(path, type) => {
+              // Receive type parameter
+              setContentBrowserPath(path);
+            }}
+            type="files"
+          />
         </TabsContent>
         <TabsContent value="media">
           <MediaManager
+            selectedPath={mediaBrowserPath} // Pass media path state
+            onPathChange={(path, type) => {
+              // Receive type parameter
+              // Ensure media paths have a trailing slash for folders (except root)
+              const formattedPath =
+                path && type === "media" && !path.endsWith("/")
+                  ? `${path}/`
+                  : path;
+              setMediaBrowserPath(formattedPath);
+            }}
             onSelect={(url) => {
               // if (selectedFile) {
               // Logic to insert media URL into editor or YAML front matter

@@ -39,6 +39,7 @@ interface FileBrowserProps {
   onSelect?: (path: string, url?: string) => void;
   selectedPath?: string;
   isMobile?: boolean;
+  onPathChange?: (path: string, type: "files" | "media") => void; // Modify onPathChange prop to include type
 }
 
 export function FileBrowser({
@@ -46,6 +47,7 @@ export function FileBrowser({
   onSelect,
   selectedPath,
   isMobile = false,
+  onPathChange, // Receive onPathChange prop
 }: FileBrowserProps) {
   // Use the custom state hook, passing selectedPath
   const {
@@ -71,6 +73,14 @@ export function FileBrowser({
     setNewFolderName,
     mounted,
   } = useFileBrowserState({ isMobile, selectedPath });
+
+  // Create a handler that calls both setCurrentPath and onPathChange
+  const handlePathChange = (path: string) => {
+    setCurrentPath(path);
+    if (onPathChange) {
+      onPathChange(path, type); // Pass the type along with the path
+    }
+  };
 
   const router = useRouter();
 
@@ -153,10 +163,10 @@ export function FileBrowser({
 
     if (item.type === "folder" || item.type === "directory") {
       if (type === "files") {
-        setCurrentPath(itemPath);
+        handlePathChange(itemPath);
       } else {
         // For S3, add trailing slash for folders
-        setCurrentPath(itemPath.endsWith("/") ? itemPath : `${itemPath}/`);
+        handlePathChange(itemPath.endsWith("/") ? itemPath : `${itemPath}/`);
       }
     } else {
       setSelectedItem(itemPath);
@@ -179,11 +189,11 @@ export function FileBrowser({
   // Local handler for breadcrumb navigation
   const handleBreadcrumbNavigation = (path: string) => {
     if (type === "files") {
-      setCurrentPath(path);
+      handlePathChange(path);
     } else {
       // For S3, add trailing slash for folders
       const formattedPath = path ? `${path}/` : "";
-      setCurrentPath(formattedPath);
+      handlePathChange(formattedPath);
     }
 
     // Reset expanded folders when navigating to root
