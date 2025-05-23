@@ -25,6 +25,7 @@ export const useDeleteFileMutation = () => {
     onSuccess: () => {
       // Invalidate the file tree query to refetch the file list
       queryClient.invalidateQueries({ queryKey: ['fileTree'] });
+      queryClient.invalidateQueries({ queryKey: ['files'] });
       // Invalidate the git status query as deleting a file affects it
       queryClient.invalidateQueries({ queryKey: ['gitStatus'] });
     }

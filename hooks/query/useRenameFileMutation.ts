@@ -32,6 +32,7 @@ export const useRenameFileMutation = () => {
     onSuccess: () => {
       // Invalidate the file tree query to refetch the file list
       queryClient.invalidateQueries({ queryKey: ['fileTree'] });
+      queryClient.invalidateQueries({ queryKey: ['files'] });
       // Invalidate the git status query as renaming a file affects it
       queryClient.invalidateQueries({ queryKey: ['gitStatus'] });
     }
