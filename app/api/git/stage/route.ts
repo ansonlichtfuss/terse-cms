@@ -1,14 +1,11 @@
 import { NextResponse } from 'next/server';
 import { simpleGit } from 'simple-git';
 
-// Get the root directory from environment variable or use a default
 import { getMarkdownRootDir } from '@/lib/paths';
-
-const ROOT_DIR = getMarkdownRootDir();
 
 export async function POST() {
   try {
-    const git = simpleGit('./mock-data'); // Assuming the git repo is in mock-data as per status endpoint
+    const git = simpleGit(getMarkdownRootDir()); // Assuming the git repo is in mock-data as per status endpoint
 
     // Check if directory is a git repository
     const isRepo = await git.checkIsRepo();

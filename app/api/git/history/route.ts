@@ -1,13 +1,10 @@
 import { NextResponse } from 'next/server';
 import { simpleGit, SimpleGitOptions } from 'simple-git';
 
-// Get the root directory from environment variable or use a default
 import { getMarkdownRootDir } from '@/lib/paths';
 
-const ROOT_DIR = getMarkdownRootDir();
-
 const options: Partial<SimpleGitOptions> = {
-  baseDir: './mock-data',
+  baseDir: getMarkdownRootDir(),
   binary: 'git',
   maxConcurrentProcesses: 6
 };
@@ -32,7 +29,7 @@ export async function GET(request: Request) {
 
     // Get commit history for the specific file
     // Construct the full path relative to the baseDir
-    const fullPath = `filesystem/${filePath}`;
+    const fullPath = filePath;
     const log = await git.log({ file: fullPath });
 
     const commits = await Promise.all(

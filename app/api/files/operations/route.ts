@@ -2,13 +2,7 @@ import { NextResponse } from 'next/server';
 
 import { getMarkdownRootDir } from '@/lib/paths';
 
-// Check if we're in a browser environment
-const isBrowser = typeof window !== 'undefined';
-
 export async function POST(request: Request) {
-  // Always use mock data in browser or if mock mode is enabled
-  const useMock = isBrowser || process.env.USE_MOCK_API === 'true';
-
   try {
     const { operation, sourcePath, destinationPath, newName, type } = await request.json();
 

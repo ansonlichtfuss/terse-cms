@@ -12,7 +12,7 @@ interface FileNode {
   children?: FileNode[];
 }
 
-export async function GET(request: Request) {
+export async function GET(_request: Request) {
   // Always use mock data in browser or if mock mode is enabled
   const useMock = isBrowser || process.env.USE_MOCK_API === 'true';
 

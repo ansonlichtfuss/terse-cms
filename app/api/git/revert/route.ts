@@ -1,22 +1,12 @@
 import { NextResponse } from 'next/server';
 
-// Check if we're in a browser environment
-const isBrowser = typeof window !== 'undefined';
-
-// Get the root directory from environment variable or use a default
-import { getMarkdownRootDir } from '@/lib/paths';
-
-const ROOT_DIR = getMarkdownRootDir();
-
-export async function POST(request: Request) {
-  // Always use mock data in browser or if mock mode is enabled
-  const useMock = isBrowser || process.env.USE_MOCK_API === 'true';
-
+export async function POST(_request: Request) {
   try {
     // Dynamically import simple-git only on the server
     const { simpleGit } = await import('simple-git');
+    const { getMarkdownRootDir: getActualMarkdownRootDir } = await import('@/lib/paths');
 
-    const git = simpleGit('./mock-data');
+    const git = simpleGit(getActualMarkdownRootDir());
 
     // Check if directory is a git repository
     const isRepo = await git.checkIsRepo();
