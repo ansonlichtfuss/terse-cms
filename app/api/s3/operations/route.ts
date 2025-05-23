@@ -23,7 +23,7 @@ export async function POST(request: Request) {
         // In mock mode, just return success
         return NextResponse.json({
           success: true,
-          message: `File ${operation === 'move' ? 'moved' : 'renamed'} successfully`
+          message: `File ${operation === 'move' ? 'moved' : 'renamed'}`
         });
       }
 
@@ -67,7 +67,7 @@ export async function POST(request: Request) {
 
       return NextResponse.json({
         success: true,
-        message: `File ${operation === 'move' ? 'moved' : 'renamed'} successfully`
+        message: `File ${operation === 'move' ? 'moved' : 'renamed'}`
       });
     } else {
       return NextResponse.json({ error: 'Invalid operation' }, { status: 400 });

@@ -102,7 +102,7 @@ export function ImageItem({
             };
             onChange(`${path}[${index}]`, newItem);
             toast({
-              title: 'Alt text generated successfully'
+              title: 'Alt text generated'
             });
           }
         },

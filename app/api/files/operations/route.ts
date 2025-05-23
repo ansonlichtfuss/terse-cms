@@ -43,7 +43,7 @@ export async function POST(request: Request) {
 
       return NextResponse.json({
         success: true,
-        message: `${type === 'directory' ? 'Folder' : 'File'} moved successfully`
+        message: `${type === 'directory' ? 'Folder' : 'File'} moved`
       });
     } else if (operation === 'rename') {
       if (!newName) {
@@ -58,7 +58,7 @@ export async function POST(request: Request) {
 
       return NextResponse.json({
         success: true,
-        message: `${type === 'directory' ? 'Folder' : 'File'} renamed successfully`
+        message: `${type === 'directory' ? 'Folder' : 'File'} renamed`
       });
     } else {
       return NextResponse.json({ error: 'Invalid operation' }, { status: 400 });

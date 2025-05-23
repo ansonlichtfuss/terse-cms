@@ -83,7 +83,7 @@ export const useFileOperations = ({
       // Refresh the list using Tanstack Query's refetch
       await fetchItems();
       toast({
-        title: 'File uploaded successfully'
+        title: 'File uploaded'
       });
     } catch (error) {
       console.error('Failed to upload file:', error);
@@ -120,7 +120,7 @@ export const useFileOperations = ({
         }
         await fetchItems(); // Refresh after S3 folder creation
         toast({
-          title: 'Folder created successfully'
+          title: 'Folder created'
         });
       } catch (error) {
         console.error('Failed to create folder:', error);
@@ -136,7 +136,7 @@ export const useFileOperations = ({
         {
           onSuccess: () => {
             toast({
-              title: 'Folder created successfully'
+              title: 'Folder created'
             });
           },
           onError: (error) => {
@@ -163,7 +163,7 @@ export const useFileOperations = ({
               setIsDeleteDialogOpen(false);
               setItemToAction(null);
               toast({
-                title: `${item.type === 'directory' || item.type === 'folder' ? 'Folder' : 'File'} deleted successfully`
+                title: `${item.type === 'directory' || item.type === 'folder' ? 'Folder' : 'File'} deleted`
               });
             },
             onError: (error) => {
@@ -185,7 +185,7 @@ export const useFileOperations = ({
               setIsDeleteDialogOpen(false);
               setItemToAction(null);
               toast({
-                title: `${item.type === 'directory' || item.type === 'folder' ? 'Folder' : 'File'} deleted successfully`
+                title: `${item.type === 'directory' || item.type === 'folder' ? 'Folder' : 'File'} deleted`
               });
             },
             onError: (error) => {
@@ -221,7 +221,7 @@ export const useFileOperations = ({
         {
           onSuccess: () => {
             toast({
-              title: `${item.type === 'directory' || item.type === 'folder' ? 'Folder' : 'File'} renamed successfully`
+              title: `${item.type === 'directory' || item.type === 'folder' ? 'Folder' : 'File'} renamed`
             });
             // Construct the new path and navigate
             const sourcePath = getItemPath(item);
@@ -263,7 +263,7 @@ export const useFileOperations = ({
           {
             onSuccess: () => {
               toast({
-                title: `${item.type === 'directory' || item.type === 'folder' ? 'Folder' : 'File'} moved successfully`
+                title: `${item.type === 'directory' || item.type === 'folder' ? 'Folder' : 'File'} moved`
               });
               // Assuming state updates for dialog closing are handled elsewhere
               // setIsMoveDialogOpen(false);
@@ -285,7 +285,7 @@ export const useFileOperations = ({
           {
             onSuccess: () => {
               toast({
-                title: `${item.type === 'directory' || item.type === 'folder' ? 'Folder' : 'File'} moved successfully`
+                title: `${item.type === 'directory' || item.type === 'folder' ? 'Folder' : 'File'} moved`
               });
               // Assuming state updates for dialog closing are handled elsewhere
               // setIsMoveDialogOpen(false);
@@ -317,7 +317,7 @@ export const useFileOperations = ({
       {
         onSuccess: () => {
           toast({
-            title: 'File created successfully'
+            title: 'File created'
           });
         },
         onError: (error) => {

@@ -20,7 +20,7 @@ export async function POST(_request: Request) {
 
     return NextResponse.json({
       success: true,
-      message: 'Changes reverted successfully'
+      message: 'Changes reverted'
     });
   } catch (error) {
     console.error('Error reverting changes:', error);

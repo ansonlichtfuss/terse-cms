@@ -90,7 +90,7 @@ export function Dashboard({ selectedFilePath, children }: { selectedFilePath?: s
       onSuccess: () => {
         setIsCommitDialogOpen(false);
         toast({
-          title: 'Changes committed successfully'
+          title: 'Changes committed'
         });
       }
     });
@@ -101,7 +101,7 @@ export function Dashboard({ selectedFilePath, children }: { selectedFilePath?: s
       onSuccess: () => {
         setIsRevertDialogOpen(false);
         toast({
-          title: 'Changes reverted successfully'
+          title: 'Changes reverted'
         });
       }
     });
