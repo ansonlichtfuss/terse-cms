@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 interface UseFileBrowserStateProps {
   isMobile?: boolean;
@@ -33,7 +33,7 @@ interface UseFileBrowserStateResult {
 export const useFileBrowserState = ({
   isMobile = false,
   inSidebar = false,
-  selectedPath,
+  selectedPath
 }: UseFileBrowserStateProps): UseFileBrowserStateResult => {
   const [selectedItem, setSelectedItem] = useState<string | null>(null);
   const [isMoveDialogOpen, setIsMoveDialogOpen] = useState(false);
@@ -43,33 +43,29 @@ export const useFileBrowserState = ({
   const [currentPath, setCurrentPath] = useState<string>(() => {
     // Initialize currentPath based on selectedPath
     if (selectedPath) {
-      const parts = selectedPath.split("/");
+      const parts = selectedPath.split('/');
       // If it's a file (contains a dot)
-      if (selectedPath.includes(".")) {
+      if (selectedPath.includes('.')) {
         // If it's a file at the root, set currentPath to ""
         if (parts.length === 1) {
-          return "";
+          return '';
         }
         // If it's a file in a subdirectory, set currentPath to its directory
-        return parts.slice(0, -1).join("/");
+        return parts.slice(0, -1).join('/');
       }
       // If it's a folder or root, use the path itself
       return selectedPath;
     }
-    return ""; // Default to root
+    return ''; // Default to root
   });
   const [expandedFolders, setExpandedFolders] = useState<Set<string>>(() => {
     // Initialize expandedFolders based on selectedPath
     const initialExpanded = new Set<string>();
     if (selectedPath) {
-      const parts = selectedPath.split("/");
-      let current = "";
+      const parts = selectedPath.split('/');
+      let current = '';
       // Add all parent directories to expandedFolders
-      for (
-        let i = 0;
-        i < parts.length - (selectedPath.includes(".") ? 1 : 0);
-        i++
-      ) {
+      for (let i = 0; i < parts.length - (selectedPath.includes('.') ? 1 : 0); i++) {
         current = current ? `${current}/${parts[i]}` : parts[i];
         initialExpanded.add(current);
       }
@@ -77,9 +73,8 @@ export const useFileBrowserState = ({
     return initialExpanded;
   });
   const [isUploading, setIsUploading] = useState(isMobile);
-  const [newFolderName, setNewFolderName] = useState("");
-  const [isCreateFolderDialogOpen, setIsCreateFolderDialogOpen] =
-    useState(false);
+  const [newFolderName, setNewFolderName] = useState('');
+  const [isCreateFolderDialogOpen, setIsCreateFolderDialogOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -115,6 +110,6 @@ export const useFileBrowserState = ({
     setNewFolderName,
     isCreateFolderDialogOpen,
     setIsCreateFolderDialogOpen,
-    mounted,
+    mounted
   };
 };

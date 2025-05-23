@@ -1,22 +1,19 @@
-"use client";
+'use client';
 
-import { Check, GitBranch } from "lucide-react";
-import { useState } from "react"; // Import useState
+import { Check, GitBranch } from 'lucide-react';
+import { useState } from 'react'; // Import useState
 
-import { ConfirmationDialog } from "@/components/confirmation-dialog"; // Import ConfirmationDialog
-import { Button } from "@/components/ui/button";
+import { ConfirmationDialog } from '@/components/confirmation-dialog'; // Import ConfirmationDialog
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu';
 // Import the new Tanstack Query hooks
-import {
-  useGitBranchesQuery,
-  useSwitchGitBranchMutation,
-} from "@/hooks/query/useGitBranches";
-import { cn } from "@/lib/utils";
+import { useGitBranchesQuery, useSwitchGitBranchMutation } from '@/hooks/query/useGitBranches';
+import { cn } from '@/lib/utils';
 
 interface Branch {
   name: string;
@@ -28,19 +25,14 @@ export function GitBranchDisplay() {
   const { data: branches, isLoading, error } = useGitBranchesQuery();
 
   // Use the new Tanstack Query mutation hook for switching branches
-  const {
-    mutate: switchBranch,
-    isPending: isSwitching,
-    error: switchError,
-  } = useSwitchGitBranchMutation();
+  const { mutate: switchBranch, isPending: isSwitching, error: switchError } = useSwitchGitBranchMutation();
 
   const [isWarningDialogOpen, setIsWarningDialogOpen] = useState(false); // State for warning dialog
-  const [warningDialogMessage, setWarningDialogMessage] = useState(""); // State for warning message
+  const [warningDialogMessage, setWarningDialogMessage] = useState(''); // State for warning message
 
   // Determine the current branch
   const currentBranch =
-    branches?.find((branch) => branch.isCurrent)?.name ||
-    (isLoading ? "Loading..." : "Unknown Branch");
+    branches?.find((branch) => branch.isCurrent)?.name || (isLoading ? 'Loading...' : 'Unknown Branch');
 
   const handleBranchSwitch = (branchName: string) => {
     if (branchName === currentBranch) {
@@ -50,10 +42,10 @@ export function GitBranchDisplay() {
     // Use the mutate function from the mutation hook
     switchBranch(branchName, {
       onError: (error) => {
-        setWarningDialogMessage(error.message || "Failed to switch branch.");
+        setWarningDialogMessage(error.message || 'Failed to switch branch.');
         setIsWarningDialogOpen(true);
-        console.error("Failed to switch branch:", error);
-      },
+        console.error('Failed to switch branch:', error);
+      }
     });
   };
 
@@ -64,7 +56,7 @@ export function GitBranchDisplay() {
 
   return (
     <>
-      {" "}
+      {' '}
       {/* Use a fragment to include the dialog */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -83,10 +75,7 @@ export function GitBranchDisplay() {
             branches.map((branch) => (
               <DropdownMenuItem
                 key={branch.name}
-                className={cn(
-                  "cursor-pointer",
-                  branch.isCurrent && "font-bold",
-                )}
+                className={cn('cursor-pointer', branch.isCurrent && 'font-bold')}
                 onClick={() => handleBranchSwitch(branch.name)} // Add onClick handler
                 disabled={isLoading || isSwitching} // Disable while loading or switching
               >

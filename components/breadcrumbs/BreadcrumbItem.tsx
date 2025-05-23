@@ -1,15 +1,15 @@
-import React from "react";
+import React from 'react';
 
-import { cn } from "@/lib/utils";
+import { cn } from '@/lib/utils';
 
-import styles from "./breadcrumbs.module.css";
+import styles from './breadcrumbs.module.css';
 
 interface BreadcrumbItemProps {
   part: string;
   isLast: boolean;
   currentAccumulatedPath: string;
   onNavigate: (path: string) => void;
-  type: "files" | "media";
+  type: 'files' | 'media';
   isClickable?: boolean;
 }
 
@@ -19,7 +19,7 @@ export function BreadcrumbItem({
   currentAccumulatedPath,
   onNavigate,
   type,
-  isClickable = true,
+  isClickable = true
 }: BreadcrumbItemProps) {
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -30,34 +30,24 @@ export function BreadcrumbItem({
     isClickable && styles.breadcrumbItemClickable,
     styles.breadcrumbItem,
     isLast && styles.breadcrumbCurrent,
-    isClickable ? "max-w-20 truncate" : "",
-    isClickable ? "cursor-pointer" : "cursor-default",
+    isClickable ? 'max-w-20 truncate' : '',
+    isClickable ? 'cursor-pointer' : 'cursor-default'
   );
 
-  if (type === "files") {
+  if (type === 'files') {
     return isLast || !isClickable ? (
-      <span className={itemClassName} title={part} style={{ minWidth: "30px" }}>
+      <span className={itemClassName} title={part} style={{ minWidth: '30px' }}>
         {part}
       </span>
     ) : (
-      <span
-        className={itemClassName}
-        title={part}
-        onClick={handleClick}
-        style={{ minWidth: "30px" }}
-      >
+      <span className={itemClassName} title={part} onClick={handleClick} style={{ minWidth: '30px' }}>
         {part}
       </span>
     );
   }
 
   return (
-    <span
-      className={itemClassName}
-      onClick={handleClick}
-      title={part}
-      style={{ minWidth: "30px" }}
-    >
+    <span className={itemClassName} onClick={handleClick} title={part} style={{ minWidth: '30px' }}>
       {part}
     </span>
   );

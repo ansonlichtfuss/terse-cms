@@ -1,7 +1,7 @@
-import { ChevronRight } from "lucide-react";
-import React from "react";
+import { ChevronRight } from 'lucide-react';
+import React from 'react';
 
-import styles from "./breadcrumbs.module.css";
+import styles from './breadcrumbs.module.css';
 
 export function BreadcrumbSeparator() {
   return (

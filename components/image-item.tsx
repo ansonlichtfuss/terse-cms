@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import { ArrowDown, ArrowUp, ImageIcon, Loader2, Trash } from "lucide-react";
-import { useEffect, useRef } from "react";
-import { useState } from "react"; // Keep useState for other states
+import { ArrowDown, ArrowUp, ImageIcon, Loader2, Trash } from 'lucide-react';
+import { useEffect, useRef } from 'react';
+import { useState } from 'react'; // Keep useState for other states
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { toast } from "@/components/ui/use-toast";
-import { useGenerateAltTextMutation } from "@/hooks/query/useGenerateAltTextMutation";
-import { getProcessedImageUrl } from "@/utils/getProcessedImageUrl";
-import { getImageField } from "@/utils/media-utils";
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { toast } from '@/components/ui/use-toast';
+import { useGenerateAltTextMutation } from '@/hooks/query/useGenerateAltTextMutation';
+import { getProcessedImageUrl } from '@/utils/getProcessedImageUrl';
+import { getImageField } from '@/utils/media-utils';
 
 interface ImageItemProps {
   item: any;
@@ -36,16 +36,16 @@ export function ImageItem({
   onMoveDown,
   openMediaDialog,
   isFirst,
-  isLast,
+  isLast
 }: ImageItemProps) {
   const imageField = getImageField(item);
   const {
     mutate: generateAltTextMutation,
     isPending: generatingAltText,
-    error: generateAltTextError,
+    error: generateAltTextError
   } = useGenerateAltTextMutation();
-  const imageUrl = item[imageField] || "";
-  const altText = item.alt || "";
+  const imageUrl = item[imageField] || '';
+  const altText = item.alt || '';
 
   const [processedImageUrl, setProcessedImageUrl] = useState(imageUrl); // State for the processed URL
   const imageRef = useRef<HTMLImageElement>(null); // Ref for the image element
@@ -80,11 +80,11 @@ export function ImageItem({
   const handleUrlChange = (newUrl: string) => {
     const newItem = {
       ...item,
-      [imageField]: newUrl,
+      [imageField]: newUrl
     };
 
     // If we're using a non-standard field, also set the url field
-    if (imageField !== "url") {
+    if (imageField !== 'url') {
       newItem.url = newUrl;
     }
 
@@ -92,29 +92,29 @@ export function ImageItem({
     setProcessedImageUrl(newUrl); // Update processed URL immediately on change
 
     // If the URL is valid and the alt text is empty, generate alt text
-    if (newUrl && (!altText || altText === "")) {
+    if (newUrl && (!altText || altText === '')) {
       generateAltTextMutation(newUrl, {
         onSuccess: (data) => {
           if (data.altText) {
             const newItem = {
               ...item,
-              alt: data.altText,
+              alt: data.altText
             };
             onChange(`${path}[${index}]`, newItem);
             toast({
-              title: "Alt text generated",
-              description: "AI-generated alt text has been added to the image",
+              title: 'Alt text generated',
+              description: 'AI-generated alt text has been added to the image'
             });
           }
         },
         onError: (error) => {
-          console.error("Error generating alt text:", error);
+          console.error('Error generating alt text:', error);
           toast({
-            title: "Error",
-            description: "Failed to generate alt text",
-            variant: "destructive",
+            title: 'Error',
+            description: 'Failed to generate alt text',
+            variant: 'destructive'
           });
-        },
+        }
       });
     }
   };
@@ -122,10 +122,7 @@ export function ImageItem({
   // Handle error from mutation
   useEffect(() => {
     if (generateAltTextError) {
-      console.error(
-        "Mutation error generating alt text:",
-        generateAltTextError,
-      );
+      console.error('Mutation error generating alt text:', generateAltTextError);
       // Optionally show a toast or handle the error in the UI
     }
   }, [generateAltTextError]);
@@ -136,12 +133,12 @@ export function ImageItem({
         {imageUrl ? (
           <img
             ref={imageRef} // Attach the ref
-            src={processedImageUrl || "/placeholder.svg"} // Use the processed URL
+            src={processedImageUrl || '/placeholder.svg'} // Use the processed URL
             alt={altText || `Image ${index + 1}`}
             className="w-full h-full object-cover"
             onError={(e) => {
               // If image fails to load, show placeholder
-              e.currentTarget.src = "/placeholder.svg?height=200&width=300";
+              e.currentTarget.src = '/placeholder.svg?height=200&width=300';
             }}
           />
         ) : (
@@ -197,12 +194,7 @@ export function ImageItem({
               onChange={(e) => handleUrlChange(e.target.value)}
               className="h-8 text-xs"
             />
-            <Button
-              variant="outline"
-              size="sm"
-              className="h-8 px-2"
-              onClick={() => openMediaDialog(index)}
-            >
+            <Button variant="outline" size="sm" className="h-8 px-2" onClick={() => openMediaDialog(index)}>
               <ImageIcon className="h-3 w-3" />
             </Button>
           </div>
@@ -232,16 +224,12 @@ export function ImageItem({
               onChange={(e) => {
                 const newItem = {
                   ...item,
-                  alt: e.target.value,
+                  alt: e.target.value
                 };
                 onChange(`${path}[${index}]`, newItem);
               }}
               className="h-8 text-xs"
-              placeholder={
-                generatingAltText
-                  ? "Generating alt text..."
-                  : "Describe the image"
-              }
+              placeholder={generatingAltText ? 'Generating alt text...' : 'Describe the image'}
               disabled={generatingAltText}
             />
             {generatingAltText && (

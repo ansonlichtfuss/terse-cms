@@ -1,27 +1,16 @@
-"use client";
+'use client';
 
-import { ChevronDown, ChevronRight, Plus } from "lucide-react";
-import { useState } from "react";
+import { ChevronDown, ChevronRight, Plus } from 'lucide-react';
+import { useState } from 'react';
 
-import { ImageItem } from "@/components/image-item";
-import { MediaDialog } from "@/components/media-dialog";
-import { Button } from "@/components/ui/button";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
-import { Label } from "@/components/ui/label";
-import type { ImageArrayFieldProps } from "@/types";
+import { ImageItem } from '@/components/image-item';
+import { MediaDialog } from '@/components/media-dialog';
+import { Button } from '@/components/ui/button';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { Label } from '@/components/ui/label';
+import type { ImageArrayFieldProps } from '@/types';
 
-export function ImageArrayField({
-  name,
-  value,
-  path,
-  onChange,
-  onAddItem,
-  onRemoveItem,
-}: ImageArrayFieldProps) {
+export function ImageArrayField({ name, value, path, onChange, onAddItem, onRemoveItem }: ImageArrayFieldProps) {
   const [isOpen, setIsOpen] = useState(true);
   const [isMediaDialogOpen, setIsMediaDialogOpen] = useState(false);
   const [activeImageIndex, setActiveImageIndex] = useState<number | null>(null);
@@ -31,7 +20,7 @@ export function ImageArrayField({
       const newValue = [...value];
       newValue[activeImageIndex] = {
         ...newValue[activeImageIndex],
-        url: url,
+        url: url
       };
       onChange(path, newValue);
     }
@@ -71,8 +60,8 @@ export function ImageArrayField({
   // Custom function to add a new image item with only url and alt fields
   const handleAddImageItem = () => {
     const newItem = {
-      url: "",
-      alt: "",
+      url: '',
+      alt: ''
     };
 
     const newValue = [...value, newItem];
@@ -84,16 +73,8 @@ export function ImageArrayField({
       <Collapsible open={isOpen} onOpenChange={setIsOpen} className="space-y-2">
         <div className="flex items-center justify-between">
           <CollapsibleTrigger asChild>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="p-0 hover:bg-transparent"
-            >
-              {isOpen ? (
-                <ChevronDown className="h-4 w-4 mr-1" />
-              ) : (
-                <ChevronRight className="h-4 w-4 mr-1" />
-              )}
+            <Button variant="ghost" size="sm" className="p-0 hover:bg-transparent">
+              {isOpen ? <ChevronDown className="h-4 w-4 mr-1" /> : <ChevronRight className="h-4 w-4 mr-1" />}
               <Label className="capitalize cursor-pointer">{name}</Label>
             </Button>
           </CollapsibleTrigger>
@@ -123,11 +104,7 @@ export function ImageArrayField({
         </CollapsibleContent>
       </Collapsible>
 
-      <MediaDialog
-        open={isMediaDialogOpen}
-        onOpenChange={setIsMediaDialogOpen}
-        onSelect={handleMediaSelect}
-      />
+      <MediaDialog open={isMediaDialogOpen} onOpenChange={setIsMediaDialogOpen} onSelect={handleMediaSelect} />
     </>
   );
 }

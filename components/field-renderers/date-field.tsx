@@ -1,17 +1,13 @@
-"use client";
+'use client';
 
-import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
+import { format } from 'date-fns';
+import { CalendarIcon } from 'lucide-react';
 
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import { Label } from "@/components/ui/label";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
+import { Button } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
+import { Label } from '@/components/ui/label';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { cn } from '@/lib/utils';
 
 interface DateFieldProps {
   name: string;
@@ -30,13 +26,10 @@ export function DateField({ name, value, path, onChange }: DateFieldProps) {
         <PopoverTrigger asChild>
           <Button
             variant="outline"
-            className={cn(
-              "w-full justify-start text-left font-normal h-7 text-xs",
-              !value && "text-muted-foreground",
-            )}
+            className={cn('w-full justify-start text-left font-normal h-7 text-xs', !value && 'text-muted-foreground')}
           >
             <CalendarIcon className="mr-2 h-3 w-3" />
-            {value ? format(new Date(value), "PPP") : "Pick a date"}
+            {value ? format(new Date(value), 'PPP') : 'Pick a date'}
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0">

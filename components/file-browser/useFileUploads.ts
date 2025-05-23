@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState } from 'react';
 
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from '@/components/ui/use-toast';
 
 interface FileUploadState {
   file: File;
-  status: "pending" | "uploading" | "complete" | "error";
+  status: 'pending' | 'uploading' | 'complete' | 'error';
   progress: number;
   uploadedUrl?: string;
   error?: string;
@@ -21,35 +21,29 @@ const useFileUploads = ({ uploadPath }: UseFileUploadsProps) => {
   const uploadFile = async (file: File) => {
     setFileUploads((prevUploads) =>
       prevUploads.map((upload) =>
-        upload.file.name === file.name
-          ? { ...upload, status: "uploading", progress: 0 }
-          : upload,
-      ),
+        upload.file.name === file.name ? { ...upload, status: 'uploading', progress: 0 } : upload
+      )
     );
 
     const formData = new FormData();
-    formData.append("file", file);
-    formData.append("path", uploadPath);
+    formData.append('file', file);
+    formData.append('path', uploadPath);
 
     try {
       const xhr = new XMLHttpRequest();
 
-      xhr.upload.addEventListener("progress", (event) => {
+      xhr.upload.addEventListener('progress', (event) => {
         if (event.lengthComputable) {
-          const percentCompleted = Math.round(
-            (event.loaded * 100) / event.total,
-          );
+          const percentCompleted = Math.round((event.loaded * 100) / event.total);
           setFileUploads((prevUploads) =>
             prevUploads.map((upload) =>
-              upload.file.name === file.name
-                ? { ...upload, progress: percentCompleted }
-                : upload,
-            ),
+              upload.file.name === file.name ? { ...upload, progress: percentCompleted } : upload
+            )
           );
         }
       });
 
-      xhr.addEventListener("load", () => {
+      xhr.addEventListener('load', () => {
         const response = JSON.parse(xhr.responseText);
         if (xhr.status >= 200 && xhr.status < 300) {
           setFileUploads((prevUploads) =>
@@ -57,61 +51,55 @@ const useFileUploads = ({ uploadPath }: UseFileUploadsProps) => {
               upload.file.name === file.name
                 ? {
                     ...upload,
-                    status: "complete",
+                    status: 'complete',
                     uploadedUrl: response.url,
-                    progress: 100,
+                    progress: 100
                   }
-                : upload,
-            ),
+                : upload
+            )
           );
         } else {
-          const errorMessage = response.error || "Upload failed";
+          const errorMessage = response.error || 'Upload failed';
           setFileUploads((prevUploads) =>
             prevUploads.map((upload) =>
-              upload.file.name === file.name
-                ? { ...upload, status: "error", error: errorMessage }
-                : upload,
-            ),
+              upload.file.name === file.name ? { ...upload, status: 'error', error: errorMessage } : upload
+            )
           );
           toast({
-            title: "Upload Failed",
+            title: 'Upload Failed',
             description: `${file.name}: ${errorMessage}`,
-            variant: "destructive",
+            variant: 'destructive'
           });
         }
       });
 
-      xhr.addEventListener("error", () => {
-        const errorMessage = "Network error";
+      xhr.addEventListener('error', () => {
+        const errorMessage = 'Network error';
         setFileUploads((prevUploads) =>
           prevUploads.map((upload) =>
-            upload.file.name === file.name
-              ? { ...upload, status: "error", error: errorMessage }
-              : upload,
-          ),
+            upload.file.name === file.name ? { ...upload, status: 'error', error: errorMessage } : upload
+          )
         );
         toast({
-          title: "Upload Failed",
+          title: 'Upload Failed',
           description: `${file.name}: ${errorMessage}`,
-          variant: "destructive",
+          variant: 'destructive'
         });
       });
 
-      xhr.open("POST", "/api/s3/upload");
+      xhr.open('POST', '/api/s3/upload');
       xhr.send(formData);
     } catch (error: any) {
-      const errorMessage = error.message || "An error occurred";
+      const errorMessage = error.message || 'An error occurred';
       setFileUploads((prevUploads) =>
         prevUploads.map((upload) =>
-          upload.file.name === file.name
-            ? { ...upload, status: "error", error: errorMessage }
-            : upload,
-        ),
+          upload.file.name === file.name ? { ...upload, status: 'error', error: errorMessage } : upload
+        )
       );
       toast({
-        title: "Upload Failed",
+        title: 'Upload Failed',
         description: `${file.name}: ${errorMessage}`,
-        variant: "destructive",
+        variant: 'destructive'
       });
     }
   };
@@ -119,7 +107,7 @@ const useFileUploads = ({ uploadPath }: UseFileUploadsProps) => {
   return {
     fileUploads,
     setFileUploads, // Expose setFileUploads for resetting state in UploadDialog
-    uploadFile,
+    uploadFile
   };
 };
 

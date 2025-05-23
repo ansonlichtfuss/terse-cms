@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 export const useMediaQuery = (query: string): boolean => {
   // Default to false to avoid hydration mismatch
@@ -17,10 +17,10 @@ export const useMediaQuery = (query: string): boolean => {
     };
 
     // Modern browsers
-    mediaQuery.addEventListener("change", handleChange);
+    mediaQuery.addEventListener('change', handleChange);
 
     return () => {
-      mediaQuery.removeEventListener("change", handleChange);
+      mediaQuery.removeEventListener('change', handleChange);
     };
   }, [query]);
 

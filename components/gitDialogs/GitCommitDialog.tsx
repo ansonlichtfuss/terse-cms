@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import { useState } from "react";
+import { useState } from 'react';
 
-import { Button } from "@/components/ui/button";
-import {} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { useGitStatus } from "@/context/GitStatusContext";
+import { Button } from '@/components/ui/button';
+import {} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { useGitStatus } from '@/context/GitStatusContext';
 
-import { FileTreeDialog } from "./FileTreeDialog";
-import styles from "./gitCommitDialog.module.css";
+import { FileTreeDialog } from './FileTreeDialog';
+import styles from './gitCommitDialog.module.css';
 
 interface GitCommitDialogProps {
   open: boolean;
@@ -17,16 +17,9 @@ interface GitCommitDialogProps {
   isCommitting: boolean;
 }
 
-export function GitCommitDialog({
-  open,
-  onOpenChange,
-  onCommit,
-  isCommitting,
-}: GitCommitDialogProps) {
+export function GitCommitDialog({ open, onOpenChange, onCommit, isCommitting }: GitCommitDialogProps) {
   const { modifiedFiles } = useGitStatus();
-  const [commitMessage, setCommitMessage] = useState(
-    `CMS: Updated files at ${new Date().toLocaleString()}`,
-  );
+  const [commitMessage, setCommitMessage] = useState(`CMS: Updated files at ${new Date().toLocaleString()}`);
 
   const handleCommit = () => {
     onCommit(commitMessage);
@@ -44,7 +37,7 @@ export function GitCommitDialog({
             Cancel
           </Button>
           <Button onClick={handleCommit} disabled={isCommitting}>
-            {isCommitting ? "Committing..." : "Commit Changes"}
+            {isCommitting ? 'Committing...' : 'Commit Changes'}
           </Button>
         </>
       }

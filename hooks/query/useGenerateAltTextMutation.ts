@@ -1,18 +1,16 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation } from '@tanstack/react-query';
 
-const generateAltText = async (
-  imageUrl: string,
-): Promise<{ altText: string }> => {
-  const response = await fetch("/api/ai/generate-alt-text", {
-    method: "POST",
+const generateAltText = async (imageUrl: string): Promise<{ altText: string }> => {
+  const response = await fetch('/api/ai/generate-alt-text', {
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ imageUrl }),
+    body: JSON.stringify({ imageUrl })
   });
 
   if (!response.ok) {
-    throw new Error("Failed to generate alt text");
+    throw new Error('Failed to generate alt text');
   }
 
   return response.json();
@@ -20,6 +18,6 @@ const generateAltText = async (
 
 export const useGenerateAltTextMutation = () => {
   return useMutation({
-    mutationFn: generateAltText,
+    mutationFn: generateAltText
   });
 };

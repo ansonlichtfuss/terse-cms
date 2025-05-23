@@ -1,5 +1,5 @@
-import { NextResponse } from "next/server";
-import simpleGit from "simple-git";
+import { NextResponse } from 'next/server';
+import simpleGit from 'simple-git';
 
 const git = simpleGit();
 
@@ -8,10 +8,7 @@ export async function POST(request: Request) {
     const { branchName } = await request.json();
 
     if (!branchName) {
-      return NextResponse.json(
-        { error: "Branch name is required" },
-        { status: 400 },
-      );
+      return NextResponse.json({ error: 'Branch name is required' }, { status: 400 });
     }
 
     // Check for pending changes
@@ -19,10 +16,9 @@ export async function POST(request: Request) {
     if (status.files.length > 0) {
       return NextResponse.json(
         {
-          error:
-            "Pending changes detected. Please commit or stash them before switching branches.",
+          error: 'Pending changes detected. Please commit or stash them before switching branches.'
         },
-        { status: 409 },
+        { status: 409 }
       ); // 409 Conflict
     }
 
@@ -32,19 +28,16 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         success: true,
-        message: `Switched to branch ${branchName}`,
+        message: `Switched to branch ${branchName}`
       },
       {
         headers: {
-          "Content-Type": "application/json",
-        },
-      },
+          'Content-Type': 'application/json'
+        }
+      }
     );
   } catch (error: any) {
-    console.error("Failed to switch branch:", error);
-    return NextResponse.json(
-      { error: error.message || "Failed to switch branch" },
-      { status: 500 },
-    );
+    console.error('Failed to switch branch:', error);
+    return NextResponse.json({ error: error.message || 'Failed to switch branch' }, { status: 500 });
   }
 }

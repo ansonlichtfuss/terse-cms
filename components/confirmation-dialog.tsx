@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   AlertDialog,
@@ -8,8 +8,8 @@ import {
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+  AlertDialogTitle
+} from '@/components/ui/alert-dialog';
 
 interface ConfirmationDialogProps {
   open: boolean;
@@ -30,22 +30,20 @@ export function ConfirmationDialog({
   onOpenChange,
   title,
   description,
-  confirmLabel = "Confirm",
-  cancelLabel = "Cancel",
+  confirmLabel = 'Confirm',
+  cancelLabel = 'Cancel',
   onConfirm,
   destructive = false,
   itemsList,
   hideCancelButton = false, // Destructure and provide default value
-  isDeleting, // Destructure isDeleting
+  isDeleting // Destructure isDeleting
 }: ConfirmationDialogProps) {
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent className="max-w-md">
         <AlertDialogHeader>
           <AlertDialogTitle>{title}</AlertDialogTitle>
-          <AlertDialogDescription className="text-xs">
-            {description}
-          </AlertDialogDescription>
+          <AlertDialogDescription className="text-xs">{description}</AlertDialogDescription>
         </AlertDialogHeader>
 
         {itemsList && itemsList.length > 0 && (
@@ -64,21 +62,17 @@ export function ConfirmationDialog({
 
         <AlertDialogFooter>
           {!hideCancelButton && ( // Conditionally render cancel button
-            <AlertDialogCancel className="h-7 text-xs">
-              {cancelLabel}
-            </AlertDialogCancel>
+            <AlertDialogCancel className="h-7 text-xs">{cancelLabel}</AlertDialogCancel>
           )}
           <AlertDialogAction
-            className={`h-7 text-xs ${
-              destructive ? "bg-destructive hover:bg-destructive/90" : ""
-            }`}
+            className={`h-7 text-xs ${destructive ? 'bg-destructive hover:bg-destructive/90' : ''}`}
             onClick={(e) => {
               e.preventDefault();
               onConfirm();
             }}
             disabled={isDeleting} // Disable while deleting
           >
-            {isDeleting ? "Deleting..." : confirmLabel}
+            {isDeleting ? 'Deleting...' : confirmLabel}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

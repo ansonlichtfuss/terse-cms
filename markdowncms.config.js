@@ -10,9 +10,7 @@ const config = {
      */
     matcher: (url) => {
       // TODO: Implement actual URL pattern matching logic
-      console.warn(
-        "Thumbnail service matcher is not implemented. All images will use original URLs.",
-      );
+      console.warn('Thumbnail service matcher is not implemented. All images will use original URLs.');
       return false; // Default to not matching
     },
 
@@ -26,12 +24,10 @@ const config = {
      */
     getThumbnailUrl: (url, width, height) => {
       // TODO: Implement actual thumbnail URL generation logic
-      console.warn(
-        "Thumbnail service getThumbnailUrl is not implemented. Using original URL.",
-      );
+      console.warn('Thumbnail service getThumbnailUrl is not implemented. Using original URL.');
       return url; // Default to returning original URL
-    },
-  },
+    }
+  }
   // Other configurations can be added here later
 };
 

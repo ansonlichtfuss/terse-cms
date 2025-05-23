@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState } from 'react';
 
 // Import FileUploadState type
 
@@ -39,7 +39,7 @@ const useDragAndDrop = ({ onFilesSelected }: UseDragAndDropProps) => {
     handleDrop,
     handleDragOver,
     handleDragLeave,
-    handleFileSelect,
+    handleFileSelect
   };
 };
 

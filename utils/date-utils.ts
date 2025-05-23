@@ -1,4 +1,4 @@
-import { format, isValid, parseISO } from "date-fns";
+import { format, isValid, parseISO } from 'date-fns';
 
 // Helper function to format dates
 export function formatDate(dateString: string): string {
@@ -6,17 +6,17 @@ export function formatDate(dateString: string): string {
     // Try different date formats
     const date = new Date(dateString);
     if (isValid(date)) {
-      return format(date, "PPP");
+      return format(date, 'PPP');
     }
 
     // Try ISO format
     const isoDate = parseISO(dateString);
     if (isValid(isoDate)) {
-      return format(isoDate, "PPP");
+      return format(isoDate, 'PPP');
     }
   } catch (e) {
     // Not a valid date string
-    console.error("Error formatting date:", e);
+    console.error('Error formatting date:', e);
   }
   return dateString;
 }
@@ -48,10 +48,7 @@ export function isDateString(value: string): boolean {
 // Helper to check if a value is a date object
 export function isDateObject(value: any): boolean {
   return (
-    value instanceof Date ||
-    (typeof value === "object" &&
-      value !== null &&
-      typeof value.toISOString === "function")
+    value instanceof Date || (typeof value === 'object' && value !== null && typeof value.toISOString === 'function')
   );
 }
 
@@ -72,7 +69,7 @@ export function formatRelativeTime(dateString: string): string {
     } else if (diffDays < 7) {
       return `${diffDays}d`;
     } else {
-      return format(date, "MMM d");
+      return format(date, 'MMM d');
     }
   } catch (e) {
     return dateString;

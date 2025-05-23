@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import matter from "gray-matter";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useEffect, useState } from "react";
+import matter from 'gray-matter';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
-import { GitHistorySidebar } from "@/components/git-history-sidebar";
-import { MetadataDisplay } from "@/components/metadata/metadataDisplay";
-import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { GitHistorySidebar } from '@/components/git-history-sidebar';
+import { MetadataDisplay } from '@/components/metadata/metadataDisplay';
+import { Button } from '@/components/ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 interface UnifiedSidebarProps {
   content: string;
@@ -17,23 +17,17 @@ interface UnifiedSidebarProps {
   lastSaved?: Date | null;
 }
 
-export function UnifiedSidebar({
-  content,
-  filePath,
-  isVisible,
-  onToggle,
-  lastSaved,
-}: UnifiedSidebarProps) {
-  const [activeTab, setActiveTab] = useState<string>("metadata");
+export function UnifiedSidebar({ content, filePath, isVisible, onToggle, lastSaved }: UnifiedSidebarProps) {
+  const [activeTab, setActiveTab] = useState<string>('metadata');
   const [frontMatter, setFrontMatter] = useState<Record<string, any>>({});
 
   // Parse front matter whenever content changes
   useEffect(() => {
     try {
-      const { data } = matter(content || "");
+      const { data } = matter(content || '');
       setFrontMatter(data || {});
     } catch (error) {
-      console.error("Error parsing front matter:", error);
+      console.error('Error parsing front matter:', error);
       setFrontMatter({});
     }
   }, [content]);
@@ -41,16 +35,13 @@ export function UnifiedSidebar({
   // Add an event listener to switch to the history tab
   useEffect(() => {
     const handleSwitchToHistoryTab = () => {
-      setActiveTab("history");
+      setActiveTab('history');
     };
 
-    window.addEventListener("switch-to-history-tab", handleSwitchToHistoryTab);
+    window.addEventListener('switch-to-history-tab', handleSwitchToHistoryTab);
 
     return () => {
-      window.removeEventListener(
-        "switch-to-history-tab",
-        handleSwitchToHistoryTab,
-      );
+      window.removeEventListener('switch-to-history-tab', handleSwitchToHistoryTab);
     };
   }, []);
 
@@ -83,12 +74,7 @@ export function UnifiedSidebar({
             <TabsTrigger value="metadata">Metadata</TabsTrigger>
             <TabsTrigger value="history">History</TabsTrigger>
           </TabsList>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onToggle}
-            className="h-7 w-7 p-0 ml-0"
-          >
+          <Button variant="ghost" size="sm" onClick={onToggle} className="h-7 w-7 p-0 ml-0">
             <ChevronRight className="h-4 w-4" />
           </Button>
         </div>
@@ -105,12 +91,7 @@ export function UnifiedSidebar({
           <TabsContent value="history" className="m-0 p-0">
             <div className="h-full overflow-y-auto">
               <div className="px-4 pt-1">
-                <GitHistorySidebar
-                  filePath={filePath}
-                  isVisible={isVisible}
-                  onClose={onToggle}
-                  lastSaved={lastSaved}
-                />
+                <GitHistorySidebar filePath={filePath} isVisible={isVisible} onClose={onToggle} lastSaved={lastSaved} />
               </div>
             </div>
           </TabsContent>

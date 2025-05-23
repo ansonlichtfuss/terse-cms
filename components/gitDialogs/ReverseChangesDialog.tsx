@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
-import { useGitStatus } from "@/context/GitStatusContext";
+import { Button } from '@/components/ui/button';
+import { useGitStatus } from '@/context/GitStatusContext';
 
-import { FileTreeDialog } from "./FileTreeDialog";
+import { FileTreeDialog } from './FileTreeDialog';
 
 interface ReverseChangesDialogProps {
   open: boolean;
@@ -12,12 +12,7 @@ interface ReverseChangesDialogProps {
   isReverting: boolean;
 }
 
-export function ReverseChangesDialog({
-  open,
-  onOpenChange,
-  onRevert,
-  isReverting,
-}: ReverseChangesDialogProps) {
+export function ReverseChangesDialog({ open, onOpenChange, onRevert, isReverting }: ReverseChangesDialogProps) {
   const { modifiedFiles: files } = useGitStatus();
   const handleRevert = () => {
     onRevert();
@@ -34,20 +29,15 @@ export function ReverseChangesDialog({
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
-          <Button
-            variant="destructive"
-            onClick={handleRevert}
-            disabled={isReverting}
-          >
-            {isReverting ? "Reverting..." : "Revert Changes"}
+          <Button variant="destructive" onClick={handleRevert} disabled={isReverting}>
+            {isReverting ? 'Reverting...' : 'Revert Changes'}
           </Button>
         </>
       }
     >
       {/* Add the warning text above the file tree */}
       <p className="text-sm text-muted-foreground mb-4">
-        Are you sure you want to revert all changes? This action cannot be
-        undone.
+        Are you sure you want to revert all changes? This action cannot be undone.
       </p>
     </FileTreeDialog>
   );

@@ -1,24 +1,18 @@
-"use client";
+'use client';
 
-import { ChevronDown, ChevronRight, Folder } from "lucide-react";
-import { useEffect, useState } from "react";
+import { ChevronDown, ChevronRight, Folder } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { useFileTreeQuery } from "@/hooks/query/useFileTreeQuery";
-import { cn } from "@/lib/utils";
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { useFileTreeQuery } from '@/hooks/query/useFileTreeQuery';
+import { cn } from '@/lib/utils';
 
-import styles from "./move-file-dialog.module.css";
+import styles from './move-file-dialog.module.css';
 
 interface S3Item {
   key: string;
-  type: "file" | "folder";
+  type: 'file' | 'folder';
   size?: number;
   lastModified?: string;
   url?: string;
@@ -57,12 +51,10 @@ export function MoveFileDialog({
   currentPath,
   onMove,
   isMarkdownFile = false,
-  isMoving, // Destructure isMoving
+  isMoving // Destructure isMoving
 }: MoveFileDialogProps) {
-  const [selectedFolder, setSelectedFolder] = useState("");
-  const [localFolderTree, setLocalFolderTree] = useState<FolderNode | null>(
-    null,
-  );
+  const [selectedFolder, setSelectedFolder] = useState('');
+  const [localFolderTree, setLocalFolderTree] = useState<FolderNode | null>(null);
 
   const { data: folderTree, isLoading, error } = useFileTreeQuery();
 
@@ -82,7 +74,7 @@ export function MoveFileDialog({
       if (node.children.length > 0) {
         return {
           ...node,
-          children: node.children.map(updateFolderExpansion),
+          children: node.children.map(updateFolderExpansion)
         };
       }
 
@@ -105,14 +97,14 @@ export function MoveFileDialog({
   const getItemName = (key: string): string => {
     if (isMarkdownFile) {
       // For markdown files, the key is the full path
-      const parts = key.split("/");
-      return parts[parts.length - 1] || "Root";
+      const parts = key.split('/');
+      return parts[parts.length - 1] || 'Root';
     } else {
       // For S3 items, remove trailing slash for folders
-      const cleanKey = key.endsWith("/") ? key.slice(0, -1) : key;
+      const cleanKey = key.endsWith('/') ? key.slice(0, -1) : key;
       // Get the last part of the path
-      const parts = cleanKey.split("/");
-      return parts[parts.length - 1] || "Root";
+      const parts = cleanKey.split('/');
+      return parts[parts.length - 1] || 'Root';
     }
   };
 
@@ -120,9 +112,9 @@ export function MoveFileDialog({
     const itemName = getItemName(itemKey);
     if (isMarkdownFile) {
       // For markdown files
-      if (folderKey === "") {
+      if (folderKey === '') {
         // Can't move to root if already in root
-        return itemKey.indexOf("/") === -1;
+        return itemKey.indexOf('/') === -1;
       }
       // Check if the itemKey is directly within the folderKey
       return itemKey === `${folderKey}/${itemName}`;
@@ -141,9 +133,9 @@ export function MoveFileDialog({
       <div key={node.key} className="select-none">
         <div
           className={cn(
-            "flex items-center py-1 px-2 rounded-md cursor-pointer",
-            isSelected ? "bg-muted" : "hover:bg-muted/50",
-            isItemInThisFolder && "opacity-50 cursor-not-allowed",
+            'flex items-center py-1 px-2 rounded-md cursor-pointer',
+            isSelected ? 'bg-muted' : 'hover:bg-muted/50',
+            isItemInThisFolder && 'opacity-50 cursor-not-allowed'
           )}
           style={{ paddingLeft: `${level * 12 + 8}px` }}
           onClick={() => {
@@ -162,11 +154,7 @@ export function MoveFileDialog({
                 toggleFolder(node.key);
               }}
             >
-              {node.isExpanded ? (
-                <ChevronDown className="h-3 w-3" />
-              ) : (
-                <ChevronRight className="h-3 w-3" />
-              )}
+              {node.isExpanded ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />}
             </Button>
           ) : (
             <div className="w-5 mr-1" />
@@ -176,9 +164,7 @@ export function MoveFileDialog({
         </div>
 
         {node.isExpanded && node.children.length > 0 && (
-          <div>
-            {node.children.map((child) => renderFolderTree(child, level + 1))}
-          </div>
+          <div>{node.children.map((child) => renderFolderTree(child, level + 1))}</div>
         )}
       </div>
     );
@@ -188,21 +174,16 @@ export function MoveFileDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>
-            Move {item.type === "folder" ? "Folder" : "File"}
-          </DialogTitle>
+          <DialogTitle>Move {item.type === 'folder' ? 'Folder' : 'File'}</DialogTitle>
         </DialogHeader>
         <div className="py-4">
           <p className="text-xs mb-2">
-            Select destination folder for{" "}
-            <span className="font-medium">{getItemName(item.key)}</span>:
+            Select destination folder for <span className="font-medium">{getItemName(item.key)}</span>:
           </p>
           <div className="border rounded-md h-60">
             <div className="h-full p-2 overflow-y-auto">
               {isLoading ? (
-                <div className="flex items-center justify-center h-full text-xs text-muted-foreground">
-                  Loading...
-                </div>
+                <div className="flex items-center justify-center h-full text-xs text-muted-foreground">Loading...</div>
               ) : localFolderTree ? (
                 renderFolderTree(localFolderTree)
               ) : (
@@ -214,23 +195,17 @@ export function MoveFileDialog({
           </div>
         </div>
         <DialogFooter>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => onOpenChange(false)}
-          >
+          <Button variant="outline" size="sm" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
           <Button
             size="sm"
             onClick={handleMove}
             disabled={
-              !selectedFolder ||
-              isItemInFolder(item.key, selectedFolder) ||
-              isMoving // Disable while moving
+              !selectedFolder || isItemInFolder(item.key, selectedFolder) || isMoving // Disable while moving
             }
           >
-            {isMoving ? "Moving..." : "Move"}
+            {isMoving ? 'Moving...' : 'Move'}
           </Button>
         </DialogFooter>
       </DialogContent>

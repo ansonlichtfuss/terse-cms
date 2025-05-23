@@ -1,14 +1,9 @@
-"use client";
+'use client';
 
-import { getToolbarItems } from "@/components/editor/editor-toolbar-items";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { getToolbarItems } from '@/components/editor/editor-toolbar-items';
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface EditorToolbarProps {
   onAction: (action: string, value?: string) => void;
@@ -23,9 +18,7 @@ export function EditorToolbar({ onAction, onImageClick }: EditorToolbarProps) {
       <div className="flex items-center gap-1 p-1 border rounded-md bg-gradient-secondary">
         {toolbarItems.map((group, groupIndex) => (
           <div key={group.group} className="flex items-center">
-            {groupIndex > 0 && (
-              <Separator orientation="vertical" className="mx-1 h-6" />
-            )}
+            {groupIndex > 0 && <Separator orientation="vertical" className="mx-1 h-6" />}
             <div className="flex items-center gap-1">
               {group.items.map((item) => (
                 <Tooltip key={item.tooltip}>

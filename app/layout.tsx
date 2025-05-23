@@ -1,37 +1,28 @@
-import "./globals.css";
+import './globals.css';
 
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import type React from "react";
+import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
+import type React from 'react';
 
-import { ReactQueryClientProvider } from "@/components/ReactQueryClientProvider";
-import { ThemeProvider } from "@/components/theme-provider";
-import { Toaster } from "@/components/ui/toaster";
-import { GitStatusProvider } from "@/context/GitStatusContext";
+import { ReactQueryClientProvider } from '@/components/ReactQueryClientProvider';
+import { ThemeProvider } from '@/components/theme-provider';
+import { Toaster } from '@/components/ui/toaster';
+import { GitStatusProvider } from '@/context/GitStatusContext';
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: "Markdown CMS - File Editor",
-  description: "A CMS for managing Markdown files with YAML front matter",
-  generator: "v0.dev",
+  title: 'Markdown CMS - File Editor',
+  description: 'A CMS for managing Markdown files with YAML front matter',
+  generator: 'v0.dev'
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <ReactQueryClientProvider>
       <html lang="en" suppressHydrationWarning>
         <body className={inter.className}>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="light"
-            enableSystem
-            disableTransitionOnChange
-          >
+          <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
             <GitStatusProvider>{children}</GitStatusProvider>
           </ThemeProvider>
           <Toaster />

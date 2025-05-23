@@ -1,21 +1,15 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 interface S3Item {
   key: string;
-  type: "file" | "folder";
+  type: 'file' | 'folder';
   size?: number;
   lastModified?: string;
   url?: string;
@@ -38,9 +32,9 @@ export function RenameFileDialog({
   onRename,
   isMarkdownFile = false,
   isFileOpen = false,
-  isRenaming, // Destructure isRenaming
+  isRenaming // Destructure isRenaming
 }: RenameFileDialogProps) {
-  const [newName, setNewName] = useState("");
+  const [newName, setNewName] = useState('');
 
   useEffect(() => {
     if (open && item) {
@@ -53,14 +47,14 @@ export function RenameFileDialog({
   const getItemName = (key: string): string => {
     if (isMarkdownFile) {
       // For markdown files, the key is the full path
-      const parts = key.split("/");
-      return parts[parts.length - 1] || "Root";
+      const parts = key.split('/');
+      return parts[parts.length - 1] || 'Root';
     } else {
       // For S3 items, remove trailing slash for folders
-      const cleanKey = key.endsWith("/") ? key.slice(0, -1) : key;
+      const cleanKey = key.endsWith('/') ? key.slice(0, -1) : key;
       // Get the last part of the path
-      const parts = cleanKey.split("/");
-      return parts[parts.length - 1] || "Root";
+      const parts = cleanKey.split('/');
+      return parts[parts.length - 1] || 'Root';
     }
   };
 
@@ -75,9 +69,7 @@ export function RenameFileDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>
-            Rename {item.type === "folder" ? "Folder" : "File"}
-          </DialogTitle>
+          <DialogTitle>Rename {item.type === 'folder' ? 'Folder' : 'File'}</DialogTitle>
         </DialogHeader>
         <div className="py-4">
           <div className="space-y-2">
@@ -96,26 +88,19 @@ export function RenameFileDialog({
         </div>
         {isFileOpen && (
           <div className="text-sm text-red-500 mb-4">
-            Warning: Renaming this file will close the current editor tab and
-            any unsaved changes will be lost.
+            Warning: Renaming this file will close the current editor tab and any unsaved changes will be lost.
           </div>
         )}
         <DialogFooter>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => onOpenChange(false)}
-          >
+          <Button variant="outline" size="sm" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
           <Button
             size="sm"
             onClick={handleRename}
-            disabled={
-              !newName.trim() || newName === getItemName(item.key) || isRenaming
-            } // Disable while renaming
+            disabled={!newName.trim() || newName === getItemName(item.key) || isRenaming} // Disable while renaming
           >
-            {isRenaming ? "Renaming..." : "Rename"}
+            {isRenaming ? 'Renaming...' : 'Rename'}
           </Button>
         </DialogFooter>
       </DialogContent>

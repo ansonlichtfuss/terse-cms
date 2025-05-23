@@ -1,26 +1,22 @@
-import { FileText } from "lucide-react";
+import { FileText } from 'lucide-react';
 
 interface LogoProps {
-  size?: "sm" | "md" | "lg";
+  size?: 'sm' | 'md' | 'lg';
   withText?: boolean;
   withIcon?: boolean;
 }
 
-export function Logo({
-  size = "md",
-  withText = true,
-  withIcon = false,
-}: LogoProps) {
+export function Logo({ size = 'md', withText = true, withIcon = false }: LogoProps) {
   const sizeClasses = {
-    sm: "h-6 w-6",
-    md: "h-8 w-8",
-    lg: "h-10 w-10",
+    sm: 'h-6 w-6',
+    md: 'h-8 w-8',
+    lg: 'h-10 w-10'
   };
 
   const textSizeClasses = {
-    sm: "text-sm",
-    md: "text-base",
-    lg: "text-lg",
+    sm: 'text-sm',
+    md: 'text-base',
+    lg: 'text-lg'
   };
 
   return (
@@ -35,9 +31,7 @@ export function Logo({
       )}
       {withText && (
         <div className="font-semibold tracking-tight leading-none">
-          <span className={`${textSizeClasses[size]} gradient-underline`}>
-            Markdown
-          </span>
+          <span className={`${textSizeClasses[size]} gradient-underline`}>Markdown</span>
           <span className={`${textSizeClasses[size]} ml-1`}>CMS</span>
         </div>
       )}

@@ -1,28 +1,21 @@
-"use client";
+'use client';
 
-import matter from "gray-matter";
-import { debounce } from "lodash";
-import { Clock, Edit2 } from "lucide-react";
-import { useRouter } from "next/navigation"; // Keep useRouter for other purposes if needed
-import { useEffect, useRef, useState } from "react";
+import matter from 'gray-matter';
+import { debounce } from 'lodash';
+import { Clock, Edit2 } from 'lucide-react';
+import { useRouter } from 'next/navigation'; // Keep useRouter for other purposes if needed
+import { useEffect, useRef, useState } from 'react';
 
-import {
-  type CursorPosition,
-  EditorContent,
-  handleToolbarAction,
-} from "@/components/editor/editor-content";
-import { EditorToolbar } from "@/components/editor/editor-toolbar";
-import { MediaDialog } from "@/components/media-dialog";
-import { RenameFileDialog } from "@/components/rename-file-dialog";
-import { UnifiedSidebar } from "@/components/unified-sidebar";
-import { useGitStatus } from "@/context/GitStatusContext";
-import {
-  getUserPreferences,
-  saveUserPreferences,
-} from "@/lib/user-preferences";
-import type { FileData } from "@/types";
+import { type CursorPosition, EditorContent, handleToolbarAction } from '@/components/editor/editor-content';
+import { EditorToolbar } from '@/components/editor/editor-toolbar';
+import { MediaDialog } from '@/components/media-dialog';
+import { RenameFileDialog } from '@/components/rename-file-dialog';
+import { UnifiedSidebar } from '@/components/unified-sidebar';
+import { useGitStatus } from '@/context/GitStatusContext';
+import { getUserPreferences, saveUserPreferences } from '@/lib/user-preferences';
+import type { FileData } from '@/types';
 
-import { useFileOperations } from "../file-browser/useFileOperations";
+import { useFileOperations } from '../file-browser/useFileOperations';
 
 interface EditorProps {
   file: FileData;
@@ -30,11 +23,11 @@ interface EditorProps {
 }
 
 export function Editor({ file, onSave }: EditorProps) {
-  const [content, setContent] = useState("");
+  const [content, setContent] = useState('');
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const [isMediaDialogOpen, setIsMediaDialogOpen] = useState(false);
   const [isSidebarVisible, setIsSidebarVisible] = useState(true);
-  const [fileTitle, setFileTitle] = useState("");
+  const [fileTitle, setFileTitle] = useState('');
   const [isRenameDialogOpen, setIsRenameDialogOpen] = useState(false);
 
   // Reference to the textarea element
@@ -43,7 +36,7 @@ export function Editor({ file, onSave }: EditorProps) {
   // Track cursor position for inserting at cursor
   const [cursorPosition, setCursorPosition] = useState<CursorPosition>({
     start: 0,
-    end: 0,
+    end: 0
   });
 
   // Use refs to track the previous file and whether we're currently saving
@@ -54,19 +47,16 @@ export function Editor({ file, onSave }: EditorProps) {
   // Create a stable debounced save function
   const debouncedSaveRef = useRef<any>(null);
   if (!debouncedSaveRef.current) {
-    debouncedSaveRef.current = debounce(
-      async (path: string, content: string) => {
-        isSavingRef.current = true;
-        await onSave(path, content); // Assuming onSave is async and awaits the save operation
-        setLastSaved(new Date());
-        // Update git status after saving
-        updateGitStatus();
-        setTimeout(() => {
-          isSavingRef.current = false;
-        }, 100);
-      },
-      1000,
-    );
+    debouncedSaveRef.current = debounce(async (path: string, content: string) => {
+      isSavingRef.current = true;
+      await onSave(path, content); // Assuming onSave is async and awaits the save operation
+      setLastSaved(new Date());
+      // Update git status after saving
+      updateGitStatus();
+      setTimeout(() => {
+        isSavingRef.current = false;
+      }, 100);
+    }, 1000);
   }
 
   // Load user preferences on mount
@@ -99,7 +89,7 @@ export function Editor({ file, onSave }: EditorProps) {
 
     // Update the content state
     if (file) {
-      setContent(file.content || "");
+      setContent(file.content || '');
       prevFileRef.current = file;
     }
 
@@ -113,11 +103,11 @@ export function Editor({ file, onSave }: EditorProps) {
   useEffect(() => {
     if (file && file.content) {
       try {
-        const { data } = matter(file.content || "");
-        setFileTitle(data.title || "");
+        const { data } = matter(file.content || '');
+        setFileTitle(data.title || '');
       } catch (error) {
-        console.error("Error parsing front matter:", error);
-        setFileTitle("");
+        console.error('Error parsing front matter:', error);
+        setFileTitle('');
       }
     }
   }, [file]);
@@ -142,10 +132,7 @@ export function Editor({ file, onSave }: EditorProps) {
 
     // Insert markdown image syntax at cursor position
     const imageMarkdown = `![Alt text](${url})`;
-    const newContent =
-      content.substring(0, startPos) +
-      imageMarkdown +
-      content.substring(endPos);
+    const newContent = content.substring(0, startPos) + imageMarkdown + content.substring(endPos);
 
     setContent(newContent);
 
@@ -169,18 +156,11 @@ export function Editor({ file, onSave }: EditorProps) {
   // Handle toolbar actions
   const handleToolbarActionClick = (action: string, value?: string) => {
     if (!textareaRef.current) {
-      console.error("Textarea ref is null");
+      console.error('Textarea ref is null');
       return;
     }
 
-    const newContent = handleToolbarAction(
-      action,
-      value,
-      textareaRef,
-      content,
-      cursorPosition,
-      handleContentChange,
-    );
+    const newContent = handleToolbarAction(action, value, textareaRef, content, cursorPosition, handleContentChange);
 
     // Auto-save the updated content
     if (!initialLoadRef.current && file && newContent !== content) {
@@ -211,20 +191,20 @@ export function Editor({ file, onSave }: EditorProps) {
 
   // Use the file operations hook
   const { handleRename } = useFileOperations({
-    type: "files", // Assuming editor only deals with 'files' type
-    currentPath: file?.path || "", // Pass the current file path
+    type: 'files', // Assuming editor only deals with 'files' type
+    currentPath: file?.path || '', // Pass the current file path
     fetchItems: async () => {
       // No need to fetch items in editor, provide a dummy function
     },
     setIsDeleteDialogOpen: () => {}, // Dummy function
-    setItemToAction: () => {}, // Dummy function
+    setItemToAction: () => {} // Dummy function
   });
 
   // Safely get the filename from the path
   const getFileName = () => {
-    if (!file || !file.path) return "Untitled";
-    const pathParts = file.path.split("/");
-    return pathParts[pathParts.length - 1] || "Untitled";
+    if (!file || !file.path) return 'Untitled';
+    const pathParts = file.path.split('/');
+    return pathParts[pathParts.length - 1] || 'Untitled';
   };
 
   return (
@@ -240,30 +220,23 @@ export function Editor({ file, onSave }: EditorProps) {
             >
               {getFileName()} <Edit2 className="h-3 w-3 ml-1 opacity-50" />
             </h2>
-            {fileTitle && (
-              <p className="text-xs text-muted-foreground truncate">
-                {fileTitle}
-              </p>
-            )}
+            {fileTitle && <p className="text-xs text-muted-foreground truncate">{fileTitle}</p>}
           </div>
           {/* Autosave notice as a link instead of a button */}
           <span className="flex items-center text-xs text-muted-foreground">
             <Clock className="h-3 w-3 mr-1" />
             {lastSaved
               ? `Auto-saved ${lastSaved.toLocaleTimeString([], {
-                  hour: "numeric",
-                  minute: "2-digit",
+                  hour: 'numeric',
+                  minute: '2-digit'
                 })}`
-              : "Auto-save enabled"}
+              : 'Auto-save enabled'}
           </span>
         </div>
 
         {/* Editor Toolbar */}
         <div className="px-2 pt-2">
-          <EditorToolbar
-            onAction={handleToolbarActionClick}
-            onImageClick={() => setIsMediaDialogOpen(true)}
-          />
+          <EditorToolbar onAction={handleToolbarActionClick} onImageClick={() => setIsMediaDialogOpen(true)} />
         </div>
 
         {/* Markdown Editor */}
@@ -275,18 +248,14 @@ export function Editor({ file, onSave }: EditorProps) {
       {/* Unified Sidebar - now with tabs for metadata and history */}
       <UnifiedSidebar
         content={content}
-        filePath={file?.path || ""}
+        filePath={file?.path || ''}
         isVisible={isSidebarVisible}
         onToggle={toggleSidebar}
         lastSaved={lastSaved}
       />
 
       {/* Media Dialog for Image Selection */}
-      <MediaDialog
-        open={isMediaDialogOpen}
-        onOpenChange={setIsMediaDialogOpen}
-        onSelect={handleMediaSelect}
-      />
+      <MediaDialog open={isMediaDialogOpen} onOpenChange={setIsMediaDialogOpen} onSelect={handleMediaSelect} />
 
       {/* Rename File Dialog */}
       {file && (
@@ -295,11 +264,9 @@ export function Editor({ file, onSave }: EditorProps) {
           onOpenChange={setIsRenameDialogOpen}
           item={{
             key: file.path,
-            type: "file",
+            type: 'file'
           }}
-          onRename={(newName) =>
-            handleRename({ key: file.path, type: "file" }, newName)
-          }
+          onRename={(newName) => handleRename({ key: file.path, type: 'file' }, newName)}
           isMarkdownFile={true}
         />
       )}

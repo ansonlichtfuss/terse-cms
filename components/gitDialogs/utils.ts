@@ -1,10 +1,8 @@
-export const buildTextFileTree = (
-  paths: string[],
-): Array<{ text: string; isFile: boolean; depth: number }> => {
+export const buildTextFileTree = (paths: string[]): Array<{ text: string; isFile: boolean; depth: number }> => {
   const tree: { [key: string]: any } = {};
 
   paths.forEach((path) => {
-    const parts = path.split("/");
+    const parts = path.split('/');
     let currentNode = tree;
 
     parts.forEach((part, index) => {
@@ -15,13 +13,10 @@ export const buildTextFileTree = (
     });
   });
 
-  const formatTree = (
-    node: any,
-    depth: number = 0,
-  ): Array<{ text: string; isFile: boolean; depth: number }> => {
+  const formatTree = (node: any, depth: number = 0): Array<{ text: string; isFile: boolean; depth: number }> => {
     const result: Array<{ text: string; isFile: boolean; depth: number }> = [];
     const keys = Object.keys(node)
-      .filter((key) => key !== "_is_file")
+      .filter((key) => key !== '_is_file')
       .sort();
 
     keys.forEach((key) => {
@@ -30,10 +25,7 @@ export const buildTextFileTree = (
 
       result.push({ text: displayedName, isFile: isFile, depth: depth }); // Include depth
 
-      if (
-        !isFile &&
-        Object.keys(node[key]).filter((k) => k !== "_is_file").length > 0
-      ) {
+      if (!isFile && Object.keys(node[key]).filter((k) => k !== '_is_file').length > 0) {
         result.push(...formatTree(node[key], depth + 1)); // Increase depth for children
       }
     });

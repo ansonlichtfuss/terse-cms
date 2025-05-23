@@ -1,14 +1,10 @@
-"use client";
+'use client';
 
-import type React from "react";
-import { useEffect, useRef, useState } from "react";
+import type React from 'react';
+import { useEffect, useRef, useState } from 'react';
 
-import {
-  insertTextAtCursor,
-  insertTextAtLineStart,
-  wrapSelectedText,
-} from "@/components/editor/utils";
-import { Textarea } from "@/components/ui/textarea";
+import { insertTextAtCursor, insertTextAtLineStart, wrapSelectedText } from '@/components/editor/utils';
+import { Textarea } from '@/components/ui/textarea';
 
 interface EditorContentProps {
   content: string;
@@ -30,7 +26,7 @@ export function EditorContent({ content, onChange }: EditorContentProps) {
     if (textareaRef.current) {
       setCursorPosition({
         start: textareaRef.current.selectionStart,
-        end: textareaRef.current.selectionEnd,
+        end: textareaRef.current.selectionEnd
       });
     }
   };
@@ -40,7 +36,7 @@ export function EditorContent({ content, onChange }: EditorContentProps) {
     if (textareaRef.current) {
       setCursorPosition({
         start: textareaRef.current.selectionStart,
-        end: textareaRef.current.selectionEnd,
+        end: textareaRef.current.selectionEnd
       });
     }
   };
@@ -55,7 +51,7 @@ export function EditorContent({ content, onChange }: EditorContentProps) {
 
       // Expose the method to the window for debugging
       // This is just for development and should be removed in production
-      if (typeof window !== "undefined") {
+      if (typeof window !== 'undefined') {
         (window as any).focusEditorTextarea = focusTextarea;
       }
     }
@@ -82,13 +78,9 @@ export function insertAtCursor(
   content: string,
   cursorPosition: CursorPosition,
   textToInsert: string,
-  onChange: (content: string) => void,
+  onChange: (content: string) => void
 ) {
-  const { newContent, newCursorPos } = insertTextAtCursor(
-    content,
-    cursorPosition,
-    textToInsert,
-  );
+  const { newContent, newCursorPos } = insertTextAtCursor(content, cursorPosition, textToInsert);
   onChange(newContent);
 
   // Set the new cursor position after state update
@@ -109,7 +101,7 @@ export function handleToolbarAction(
   textareaRef: React.RefObject<HTMLTextAreaElement | null>,
   content: string,
   cursorPosition: CursorPosition,
-  onChange: (content: string) => void,
+  onChange: (content: string) => void
 ) {
   if (!textareaRef.current) return content;
 
@@ -121,77 +113,104 @@ export function handleToolbarAction(
   let newCursorPos = end;
 
   switch (action) {
-    case "heading":
+    case 'heading':
       // Insert heading at the beginning of the line
-      const { newContent: headingContent, newCursorPos: headingPos } =
-        insertTextAtLineStart(content, { start }, value || "");
+      const { newContent: headingContent, newCursorPos: headingPos } = insertTextAtLineStart(
+        content,
+        { start },
+        value || ''
+      );
       newContent = headingContent;
       newCursorPos = headingPos;
       break;
 
-    case "bold":
-      const { newContent: boldContent, newCursorPos: boldPos } =
-        wrapSelectedText(content, { start, end }, "**", "**", "bold text");
+    case 'bold':
+      const { newContent: boldContent, newCursorPos: boldPos } = wrapSelectedText(
+        content,
+        { start, end },
+        '**',
+        '**',
+        'bold text'
+      );
       newContent = boldContent;
       newCursorPos = boldPos;
       break;
 
-    case "italic":
-      const { newContent: italicContent, newCursorPos: italicPos } =
-        wrapSelectedText(content, { start, end }, "*", "*", "italic text");
+    case 'italic':
+      const { newContent: italicContent, newCursorPos: italicPos } = wrapSelectedText(
+        content,
+        { start, end },
+        '*',
+        '*',
+        'italic text'
+      );
       newContent = italicContent;
       newCursorPos = italicPos;
       break;
 
-    case "list":
-      const { newContent: listContent, newCursorPos: listPos } =
-        wrapSelectedText(content, { start, end }, "- ", "", "List item");
+    case 'list':
+      const { newContent: listContent, newCursorPos: listPos } = wrapSelectedText(
+        content,
+        { start, end },
+        '- ',
+        '',
+        'List item'
+      );
       newContent = listContent;
       newCursorPos = listPos;
       break;
 
-    case "ordered-list":
+    case 'ordered-list':
       const { newContent: olContent, newCursorPos: olPos } = wrapSelectedText(
         content,
         { start, end },
-        "1. ",
-        "",
-        "List item",
+        '1. ',
+        '',
+        'List item'
       );
       newContent = olContent;
       newCursorPos = olPos;
       break;
 
-    case "link":
-      const { newContent: linkContent, newCursorPos: linkPos } =
-        wrapSelectedText(content, { start, end }, "[", "](url)", "Link text");
+    case 'link':
+      const { newContent: linkContent, newCursorPos: linkPos } = wrapSelectedText(
+        content,
+        { start, end },
+        '[',
+        '](url)',
+        'Link text'
+      );
       newContent = linkContent;
       newCursorPos = linkPos;
       break;
 
-    case "code":
-      const { newContent: codeContent, newCursorPos: codePos } =
-        wrapSelectedText(content, { start, end }, "```\n", "\n```", "code");
+    case 'code':
+      const { newContent: codeContent, newCursorPos: codePos } = wrapSelectedText(
+        content,
+        { start, end },
+        '```\n',
+        '\n```',
+        'code'
+      );
       newContent = codeContent;
       newCursorPos = codePos;
       break;
 
-    case "quote":
+    case 'quote':
       // Insert quote at the beginning of the line
-      const { newContent: quoteContent, newCursorPos: quotePos } =
-        insertTextAtLineStart(content, { start }, "> ");
+      const { newContent: quoteContent, newCursorPos: quotePos } = insertTextAtLineStart(content, { start }, '> ');
       newContent = quoteContent;
       newCursorPos = quotePos;
       break;
 
-    case "undo":
+    case 'undo':
       textarea.focus();
-      document.execCommand("undo");
+      document.execCommand('undo');
       return content;
 
-    case "redo":
+    case 'redo':
       textarea.focus();
-      document.execCommand("redo");
+      document.execCommand('redo');
       return content;
   }
 

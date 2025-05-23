@@ -1,12 +1,9 @@
-"use client";
+'use client';
 
-import React, { createContext, useContext } from "react"; // Remove useState and useEffect
+import React, { createContext, useContext } from 'react'; // Remove useState and useEffect
 
 // Import the new Tanstack Query hooks
-import {
-  useGitStatusQuery,
-  useStageGitChangesMutation,
-} from "@/hooks/query/useGitStatus";
+import { useGitStatusQuery, useStageGitChangesMutation } from '@/hooks/query/useGitStatus';
 
 interface GitStatusContextType {
   modifiedFiles: string[] | undefined; // Data can be undefined initially
@@ -15,13 +12,9 @@ interface GitStatusContextType {
   updateGitStatus: () => void; // Update signature to match mutation trigger
 }
 
-const GitStatusContext = createContext<GitStatusContextType | undefined>(
-  undefined,
-);
+const GitStatusContext = createContext<GitStatusContextType | undefined>(undefined);
 
-export const GitStatusProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+export const GitStatusProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   // Use the Tanstack Query hook to fetch git status
   const { data: modifiedFiles, isLoading, error } = useGitStatusQuery();
 
@@ -33,20 +26,16 @@ export const GitStatusProvider: React.FC<{ children: React.ReactNode }> = ({
     modifiedFiles,
     isLoading,
     error,
-    updateGitStatus: stageChanges, // Provide the mutation trigger as updateGitStatus
+    updateGitStatus: stageChanges // Provide the mutation trigger as updateGitStatus
   };
 
-  return (
-    <GitStatusContext.Provider value={contextValue}>
-      {children}
-    </GitStatusContext.Provider>
-  );
+  return <GitStatusContext.Provider value={contextValue}>{children}</GitStatusContext.Provider>;
 };
 
 export const useGitStatus = () => {
   const context = useContext(GitStatusContext);
   if (context === undefined) {
-    throw new Error("useGitStatus must be used within a GitStatusProvider");
+    throw new Error('useGitStatus must be used within a GitStatusProvider');
   }
   return context;
 };

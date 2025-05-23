@@ -1,12 +1,6 @@
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
-import { ModifiedFilesTree } from "./ModifiedFilesTree"; // Assuming ModifiedFilesTree can be reused
+import { ModifiedFilesTree } from './ModifiedFilesTree'; // Assuming ModifiedFilesTree can be reused
 
 interface FileTreeDialogProps {
   open: boolean;
@@ -17,14 +11,7 @@ interface FileTreeDialogProps {
   children?: React.ReactNode; // To include additional content above the file tree
 }
 
-export function FileTreeDialog({
-  open,
-  onOpenChange,
-  title,
-  files,
-  footerActions,
-  children,
-}: FileTreeDialogProps) {
+export function FileTreeDialog({ open, onOpenChange, title, files, footerActions, children }: FileTreeDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
@@ -32,7 +19,7 @@ export function FileTreeDialog({
           <DialogTitle>{title}</DialogTitle>
         </DialogHeader>
         <div className="content-area">
-          {" "}
+          {' '}
           {/* Add a class for styling */}
           {children} {/* Render additional content here */}
           <ModifiedFilesTree modifiedFiles={files} />

@@ -1,6 +1,6 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery } from '@tanstack/react-query';
 
-import type { FileData } from "@/types";
+import type { FileData } from '@/types';
 
 const fetchFileContent = async (path: string): Promise<FileData> => {
   const response = await fetch(`/api/files?path=${encodeURIComponent(path)}`);
@@ -11,14 +11,14 @@ const fetchFileContent = async (path: string): Promise<FileData> => {
   return {
     path,
     content: data.content,
-    isModified: false, // Assuming fetched file is not modified initially
+    isModified: false // Assuming fetched file is not modified initially
   };
 };
 
 export const useFileContentQuery = (filePath: string) => {
   return useQuery({
-    queryKey: ["fileContent", filePath],
+    queryKey: ['fileContent', filePath],
     queryFn: () => fetchFileContent(filePath),
-    enabled: !!filePath, // Only run the query if filePath is provided
+    enabled: !!filePath // Only run the query if filePath is provided
   });
 };

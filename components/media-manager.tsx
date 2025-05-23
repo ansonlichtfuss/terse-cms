@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { useState } from "react";
+import { useState } from 'react';
 
-import { FileBrowser } from "./file-browser/FileBrowser";
+import { FileBrowser } from './file-browser/FileBrowser';
 
 interface MediaManagerProps {
   onSelect: (url: string) => void;
   isMobile?: boolean;
-  onPathChange?: (path: string, type: "files" | "media") => void; // Update onPathChange prop signature
+  onPathChange?: (path: string, type: 'files' | 'media') => void; // Update onPathChange prop signature
   selectedPath?: string; // Add selectedPath prop
 }
 
@@ -15,7 +15,7 @@ export function MediaManager({
   onSelect,
   isMobile = false,
   onPathChange, // Receive onPathChange prop
-  selectedPath, // Receive selectedPath prop
+  selectedPath // Receive selectedPath prop
 }: MediaManagerProps) {
   const [selectedMediaUrl, setSelectedMediaUrl] = useState<string | null>(null);
 

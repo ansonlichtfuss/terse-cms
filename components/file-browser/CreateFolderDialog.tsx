@@ -1,15 +1,9 @@
-import type React from "react";
-import { useState } from "react";
+import type React from 'react';
+import { useState } from 'react';
 
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
 
 interface CreateFolderDialogProps {
   open: boolean;
@@ -24,20 +18,20 @@ export function CreateFolderDialog({
   onOpenChange,
   onCreate,
   isMobile = false,
-  isCreating,
+  isCreating
 }: CreateFolderDialogProps) {
-  const [newFolderName, setNewFolderName] = useState("");
+  const [newFolderName, setNewFolderName] = useState('');
   // isCreating state is now received as a prop
   // const [isCreating, setIsCreating] = useState(false);
 
   const handleCreate = async () => {
     try {
       await onCreate(newFolderName);
-      setNewFolderName(""); // Clear input on success
+      setNewFolderName(''); // Clear input on success
       onOpenChange(false); // Close dialog on success
     } catch (error) {
       // Error handling is done in useFileOperations, just prevent dialog close on error
-      console.error("Error creating folder:", error);
+      console.error('Error creating folder:', error);
     }
     // setIsCreating is now managed by the parent component
   };
@@ -47,14 +41,14 @@ export function CreateFolderDialog({
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" && newFolderName.trim() && !isCreating) {
+    if (e.key === 'Enter' && newFolderName.trim() && !isCreating) {
       handleCreate();
     }
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className={isMobile ? "w-[95vw] max-w-[95vw]" : ""}>
+      <DialogContent className={isMobile ? 'w-[95vw] max-w-[95vw]' : ''}>
         <DialogHeader>
           <DialogTitle>Create New Folder</DialogTitle>
         </DialogHeader>
@@ -68,18 +62,11 @@ export function CreateFolderDialog({
           />
         </div>
         <DialogFooter>
-          <Button
-            variant="outline"
-            onClick={() => onOpenChange(false)}
-            disabled={isCreating}
-          >
+          <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isCreating}>
             Cancel
           </Button>
-          <Button
-            onClick={handleCreate}
-            disabled={!newFolderName.trim() || isCreating}
-          >
-            {isCreating ? "Creating..." : "Create"}
+          <Button onClick={handleCreate} disabled={!newFolderName.trim() || isCreating}>
+            {isCreating ? 'Creating...' : 'Create'}
           </Button>
         </DialogFooter>
       </DialogContent>

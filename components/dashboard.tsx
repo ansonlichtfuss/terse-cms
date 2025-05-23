@@ -1,42 +1,35 @@
-"use client";
+'use client';
 
-import {
-  ChevronDown,
-  GitCommit,
-  Menu,
-  Moon,
-  RotateCcw,
-  Sun,
-} from "lucide-react";
-import { useTheme } from "next-themes";
-import type React from "react";
-import { useEffect, useState } from "react";
+import { ChevronDown, GitCommit, Menu, Moon, RotateCcw, Sun } from 'lucide-react';
+import { useTheme } from 'next-themes';
+import type React from 'react';
+import { useEffect, useState } from 'react';
 
-import { FileBrowser } from "@/components/file-browser/FileBrowser";
-import { GitBranchDisplay } from "@/components/git/GitBranchDisplay";
-import { Logo } from "@/components/logo";
-import { MediaManager } from "@/components/media-manager";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { FileBrowser } from '@/components/file-browser/FileBrowser';
+import { GitBranchDisplay } from '@/components/git/GitBranchDisplay';
+import { Logo } from '@/components/logo';
+import { MediaManager } from '@/components/media-manager';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { toast } from "@/components/ui/use-toast";
-import { useGitStatus } from "@/context/GitStatusContext";
-import { useCommitChangesMutation } from "@/hooks/query/useCommitChangesMutation";
-import { useRevertChangesMutation } from "@/hooks/query/useRevertChangesMutation";
-import { useMediaQuery } from "@/hooks/use-media-query";
-import { cn } from "@/lib/utils"; // Import cn utility
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { toast } from '@/components/ui/use-toast';
+import { useGitStatus } from '@/context/GitStatusContext';
+import { useCommitChangesMutation } from '@/hooks/query/useCommitChangesMutation';
+import { useRevertChangesMutation } from '@/hooks/query/useRevertChangesMutation';
+import { useMediaQuery } from '@/hooks/use-media-query';
+import { cn } from '@/lib/utils'; // Import cn utility
 
-import packageInfo from "../package.json";
-import containerStyles from "./file-browser/FileBrowserContainer.module.css"; // Import the container styles
-import { GitCommitDialog } from "./gitDialogs/GitCommitDialog";
-import { ReverseChangesDialog } from "./gitDialogs/ReverseChangesDialog";
+import packageInfo from '../package.json';
+import containerStyles from './file-browser/FileBrowserContainer.module.css'; // Import the container styles
+import { GitCommitDialog } from './gitDialogs/GitCommitDialog';
+import { ReverseChangesDialog } from './gitDialogs/ReverseChangesDialog';
 
 function ThemeToggle() {
   const { theme, setTheme } = useTheme();
@@ -45,7 +38,7 @@ function ThemeToggle() {
     <Button
       variant="ghost"
       size="sm"
-      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+      onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
       className="h-7 w-7 p-0 mr-2"
     >
       <Sun className="h-[1.1rem] w-[1.1rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
@@ -55,43 +48,29 @@ function ThemeToggle() {
   );
 }
 
-export function Dashboard({
-  selectedFilePath,
-  children,
-}: {
-  selectedFilePath?: string;
-  children?: React.ReactNode;
-}) {
-  const [selectedTab, setSelectedTab] = useState("files");
-  const [contentBrowserPath, setContentBrowserPath] = useState(""); // State for content file browser path
-  const [mediaBrowserPath, setMediaBrowserPath] = useState(""); // State for media file browser path
+export function Dashboard({ selectedFilePath, children }: { selectedFilePath?: string; children?: React.ReactNode }) {
+  const [selectedTab, setSelectedTab] = useState('files');
+  const [contentBrowserPath, setContentBrowserPath] = useState(''); // State for content file browser path
+  const [mediaBrowserPath, setMediaBrowserPath] = useState(''); // State for media file browser path
   const [isCommitDialogOpen, setIsCommitDialogOpen] = useState(false);
   const [isRevertDialogOpen, setIsRevertDialogOpen] = useState(false);
-  const isMobile = useMediaQuery("(max-width: 768px)");
+  const isMobile = useMediaQuery('(max-width: 768px)');
 
   // Use the context to get modified files
   const { modifiedFiles } = useGitStatus();
 
   // Use the new Tanstack Query mutation hooks
-  const {
-    mutate: commitChanges,
-    isPending: isCommitting,
-    error: commitError,
-  } = useCommitChangesMutation();
-  const {
-    mutate: revertChanges,
-    isPending: isReverting,
-    error: revertError,
-  } = useRevertChangesMutation();
+  const { mutate: commitChanges, isPending: isCommitting, error: commitError } = useCommitChangesMutation();
+  const { mutate: revertChanges, isPending: isReverting, error: revertError } = useRevertChangesMutation();
 
   // Handle commit success and error
   useEffect(() => {
     if (commitError) {
-      console.error("Failed to commit changes:", commitError);
+      console.error('Failed to commit changes:', commitError);
       toast({
-        title: "Error",
-        description: "Failed to commit changes",
-        variant: "destructive",
+        title: 'Error',
+        description: 'Failed to commit changes',
+        variant: 'destructive'
       });
     }
   }, [commitError]);
@@ -99,11 +78,11 @@ export function Dashboard({
   // Handle revert success and error
   useEffect(() => {
     if (revertError) {
-      console.error("Failed to revert changes:", revertError);
+      console.error('Failed to revert changes:', revertError);
       toast({
-        title: "Error",
-        description: "Failed to revert changes",
-        variant: "destructive",
+        title: 'Error',
+        description: 'Failed to revert changes',
+        variant: 'destructive'
       });
     }
   }, [revertError]);
@@ -113,10 +92,10 @@ export function Dashboard({
       onSuccess: () => {
         setIsCommitDialogOpen(false);
         toast({
-          title: "Success",
-          description: "Changes committed successfully",
+          title: 'Success',
+          description: 'Changes committed successfully'
         });
-      },
+      }
     });
   };
 
@@ -125,20 +104,16 @@ export function Dashboard({
       onSuccess: () => {
         setIsRevertDialogOpen(false);
         toast({
-          title: "Success",
-          description: "Changes reverted successfully",
+          title: 'Success',
+          description: 'Changes reverted successfully'
         });
-      },
+      }
     });
   };
 
   const renderSidebarContent = () => (
-    <div className={containerStyles["file-browser-container"]}>
-      <Tabs
-        defaultValue="files"
-        value={selectedTab}
-        onValueChange={setSelectedTab}
-      >
+    <div className={containerStyles['file-browser-container']}>
+      <Tabs defaultValue="files" value={selectedTab} onValueChange={setSelectedTab}>
         <div className="m-2">
           <TabsList className="inline-grid w-full grid-cols-2">
             <TabsTrigger value="files" className="text-sm">
@@ -165,10 +140,7 @@ export function Dashboard({
             onPathChange={(path, type) => {
               // Receive type parameter
               // Ensure media paths have a trailing slash for folders (except root)
-              const formattedPath =
-                path && type === "media" && !path.endsWith("/")
-                  ? `${path}/`
-                  : path;
+              const formattedPath = path && type === 'media' && !path.endsWith('/') ? `${path}/` : path;
               setMediaBrowserPath(formattedPath);
             }}
             onSelect={(url) => {
@@ -187,9 +159,7 @@ export function Dashboard({
       <header className="border-b flex items-center justify-between bg-dot-pattern">
         <div className="flex items-center gap-2 px-3 py-2">
           <Logo size="sm" withIcon={false} />
-          <span className="text-xs text-muted-foreground">
-            v{packageInfo.version}
-          </span>
+          <span className="text-xs text-muted-foreground">v{packageInfo.version}</span>
         </div>
         <div className="flex items-center gap-2 px-3 py-2">
           <ThemeToggle />
@@ -205,10 +175,7 @@ export function Dashboard({
               <GitCommit className="h-3 w-3 mr-1" />
               Commit
               {(modifiedFiles?.length || 0) > 0 && (
-                <Badge
-                  variant="secondary"
-                  className="ml-1 h-4 text-[10px] bg-background pointer-events-none"
-                >
+                <Badge variant="secondary" className="ml-1 h-4 text-[10px] bg-background pointer-events-none">
                   {modifiedFiles?.length || 0}
                 </Badge>
               )}
@@ -244,13 +211,9 @@ export function Dashboard({
           <div className="p-2">
             <Sheet>
               <SheetTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="mb-2 h-7 text-xs"
-                >
+                <Button variant="outline" size="sm" className="mb-2 h-7 text-xs">
                   <Menu className="h-3 w-3 mr-1" />
-                  {selectedTab === "files" ? "Files" : "Media"}
+                  {selectedTab === 'files' ? 'Files' : 'Media'}
                 </Button>
               </SheetTrigger>
               <SheetContent side="left" className="w-[280px] sm:w-[350px]">
@@ -268,12 +231,7 @@ export function Dashboard({
         </div>
       ) : (
         <div className="flex h-full">
-          <div
-            className={cn(
-              containerStyles["file-browser-container"],
-              "w-[280px] border-r max-h-full",
-            )}
-          >
+          <div className={cn(containerStyles['file-browser-container'], 'w-[280px] border-r max-h-full')}>
             {renderSidebarContent()}
           </div>
           <div className="flex-1 overflow-auto">

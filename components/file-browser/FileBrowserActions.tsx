@@ -1,34 +1,24 @@
-import type {
-  QueryObserverResult,
-  RefetchOptions,
-} from "@tanstack/react-query"; // Import necessary types
-import { FilePlus, FolderPlus, RefreshCw, Upload } from "lucide-react"; // Added FilePlus icon
-import { useRouter } from "next/navigation"; // Import useRouter
-import type React from "react";
+import type { QueryObserverResult, RefetchOptions } from '@tanstack/react-query'; // Import necessary types
+import { FilePlus, FolderPlus, RefreshCw, Upload } from 'lucide-react'; // Added FilePlus icon
+import { useRouter } from 'next/navigation'; // Import useRouter
+import type React from 'react';
 
-import { Button } from "@/components/ui/button";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
+import { Button } from '@/components/ui/button';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { cn } from '@/lib/utils';
 
-import type { FileItem } from "./FileBrowser"; // Import FileItem type
-import { useFileOperations } from "./useFileOperations"; // Import useFileOperations
+import type { FileItem } from './FileBrowser'; // Import FileItem type
+import { useFileOperations } from './useFileOperations'; // Import useFileOperations
 
 interface FileBrowserActionsProps {
-  type: "files" | "media";
+  type: 'files' | 'media';
   isUploading: boolean;
   onRefresh: () => void;
   onNewFolderClick: () => void;
   onOpenUploadDialog: () => void; // New prop to open the upload dialog
   currentPath: string; // Add currentPath prop
   isCreatingFolder: boolean; // Add isCreatingFolder prop
-  fetchItems: (
-    options?: RefetchOptions,
-  ) => Promise<QueryObserverResult<FileItem[], Error>>; // Add fetchItems prop
+  fetchItems: (options?: RefetchOptions) => Promise<QueryObserverResult<FileItem[], Error>>; // Add fetchItems prop
 }
 
 export function FileBrowserActions({
@@ -39,7 +29,7 @@ export function FileBrowserActions({
   onOpenUploadDialog, // Destructure the new prop
   currentPath, // Destructure currentPath
   isCreatingFolder, // Destructure isCreatingFolder
-  fetchItems, // Destructure fetchItems
+  fetchItems // Destructure fetchItems
 }: FileBrowserActionsProps) {
   const router = useRouter(); // Initialize useRouter
   // Remove useFileFetching and its usage
@@ -52,12 +42,12 @@ export function FileBrowserActions({
     type,
     fetchItems, // Pass fetchItems received as prop
     setIsDeleteDialogOpen: () => {}, // Dummy function
-    setItemToAction: () => {}, // Dummy function
+    setItemToAction: () => {} // Dummy function
   }); // Get handleCreateFile from useFileOperations
 
   const handleNewFileClick = async () => {
     // Make the function async
-    const baseFileName = "untitled.md";
+    const baseFileName = 'untitled.md';
     const newFileName = baseFileName;
     const counter = 1;
 
@@ -67,13 +57,13 @@ export function FileBrowserActions({
     // and pass down a function to check for existing files if needed.
     // As a temporary workaround, I'll skip the check for existing files.
 
-    const newFilePath = `${currentPath ? `${currentPath}/` : ""}${newFileName}`;
+    const newFilePath = `${currentPath ? `${currentPath}/` : ''}${newFileName}`;
 
     try {
-      await handleCreateFile(newFilePath, ""); // Create the file and await completion
+      await handleCreateFile(newFilePath, ''); // Create the file and await completion
       router.push(`/edit/${newFilePath}`); // Redirect after file creation and refresh
     } catch (error) {
-      console.error("Failed to create new file:", error);
+      console.error('Failed to create new file:', error);
       // The handleCreateFile function already shows a toast on error,
       // so no need to show another one here.
     }
@@ -81,22 +71,11 @@ export function FileBrowserActions({
 
   return (
     <TooltipProvider delayDuration={300}>
-      <div
-        className={cn(
-          "relative",
-          "mb-2 mx-3",
-          "p-1 border rounded-md bg-gradient-secondary",
-        )}
-      >
-        <div className={cn("flex", "gap-1", "justify-center")}>
+      <div className={cn('relative', 'mb-2 mx-3', 'p-1 border rounded-md bg-gradient-secondary')}>
+        <div className={cn('flex', 'gap-1', 'justify-center')}>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={onRefresh}
-                className="shrink-0 h-7 w-7"
-              >
+              <Button variant="ghost" size="icon" onClick={onRefresh} className="shrink-0 h-7 w-7">
                 <RefreshCw className="h-3 w-3" />
               </Button>
             </TooltipTrigger>
@@ -123,7 +102,7 @@ export function FileBrowserActions({
           </Tooltip>
         </div>
         <div className=" absolute right-1 top-1">
-          {type === "media" && (
+          {type === 'media' && (
             <Tooltip>
               <TooltipTrigger asChild>
                 <div className="relative shrink-0">
@@ -144,7 +123,7 @@ export function FileBrowserActions({
             </Tooltip>
           )}
 
-          {type === "files" && ( // Only show for file browser
+          {type === 'files' && ( // Only show for file browser
             <Tooltip>
               <TooltipTrigger asChild>
                 {/* Use a Button component for action */}

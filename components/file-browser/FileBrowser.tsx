@@ -1,33 +1,33 @@
-"use client";
+'use client';
 
-import { Home } from "lucide-react";
-import { useRouter } from "next/navigation";
-import React, { useState } from "react"; // Import React and useState
+import { Home } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import React, { useState } from 'react'; // Import React and useState
 
-import { PathBreadcrumbs } from "@/components/breadcrumbs/Breadcrumbs";
-import { ConfirmationDialog } from "@/components/confirmation-dialog";
-import { MoveFileDialog } from "@/components/move-file-dialog";
-import { RenameFileDialog } from "@/components/rename-file-dialog";
+import { PathBreadcrumbs } from '@/components/breadcrumbs/Breadcrumbs';
+import { ConfirmationDialog } from '@/components/confirmation-dialog';
+import { MoveFileDialog } from '@/components/move-file-dialog';
+import { RenameFileDialog } from '@/components/rename-file-dialog';
 // Import the new Tanstack Query hook
-import { useFilesQuery } from "@/hooks/query/useFilesQuery";
-import { cn } from "@/lib/utils";
+import { useFilesQuery } from '@/hooks/query/useFilesQuery';
+import { cn } from '@/lib/utils';
 
 // Import the new hooks and components
-import { CreateFolderDialog } from "./CreateFolderDialog"; // Assuming dialogs are also moved
-import styles from "./FileBrowser.module.css";
-import { FileBrowserActions } from "./FileBrowserActions";
-import { FileItemRow } from "./FileItemRow";
-import UploadDialog from "./UploadDialog"; // Import UploadDialog from the same directory
-import { useFileBrowserState } from "./useFileBrowserState";
-import { useFileOperations } from "./useFileOperations";
-import { getItemName, getItemPath } from "./utils"; // Import utility functions
+import { CreateFolderDialog } from './CreateFolderDialog'; // Assuming dialogs are also moved
+import styles from './FileBrowser.module.css';
+import { FileBrowserActions } from './FileBrowserActions';
+import { FileItemRow } from './FileItemRow';
+import UploadDialog from './UploadDialog'; // Import UploadDialog from the same directory
+import { useFileBrowserState } from './useFileBrowserState';
+import { useFileOperations } from './useFileOperations';
+import { getItemName, getItemPath } from './utils'; // Import utility functions
 
 // FileItem type definition remains here for now, as it's used by multiple components/hooks
 export interface FileItem {
   key: string;
   path?: string;
   name?: string;
-  type: "file" | "folder" | "directory";
+  type: 'file' | 'folder' | 'directory';
   children?: FileItem[];
   size?: number;
   lastModified?: string;
@@ -35,11 +35,11 @@ export interface FileItem {
 }
 
 interface FileBrowserProps {
-  type: "files" | "media";
+  type: 'files' | 'media';
   onSelect?: (path: string, url?: string) => void;
   selectedPath?: string;
   isMobile?: boolean;
-  onPathChange?: (path: string, type: "files" | "media") => void; // Modify onPathChange prop to include type
+  onPathChange?: (path: string, type: 'files' | 'media') => void; // Modify onPathChange prop to include type
 }
 
 export function FileBrowser({
@@ -47,7 +47,7 @@ export function FileBrowser({
   onSelect,
   selectedPath,
   isMobile = false,
-  onPathChange, // Receive onPathChange prop
+  onPathChange // Receive onPathChange prop
 }: FileBrowserProps) {
   // Use the custom state hook, passing selectedPath
   const {
@@ -71,7 +71,7 @@ export function FileBrowser({
     setIsCreateFolderDialogOpen,
     newFolderName,
     setNewFolderName,
-    mounted,
+    mounted
   } = useFileBrowserState({ isMobile, selectedPath });
 
   // Create a handler that calls both setCurrentPath and onPathChange
@@ -92,32 +92,30 @@ export function FileBrowser({
     data: items,
     isLoading,
     error,
-    refetch,
+    refetch
   } = useFilesQuery({
     currentPath,
-    type,
+    type
   });
 
   // Filter items to get current directory contents (logic moved from useFileFetching)
   const currentDirContents = React.useMemo(() => {
     if (!items) return [];
 
-    if (type === "files") {
-      if (currentPath === "") {
+    if (type === 'files') {
+      if (currentPath === '') {
         // At root level, show all top-level files and directories
-        return items.filter((item) => !item.path?.includes("/"));
+        return items.filter((item) => !item.path?.includes('/'));
       } else {
         // Find the directory node that matches the current path
-        const pathParts = currentPath.split("/").filter(Boolean);
+        const pathParts = currentPath.split('/').filter(Boolean);
         let currentDir: FileItem[] | undefined = items;
 
         for (let i = 0; i < pathParts.length; i++) {
           const part = pathParts[i];
           const nextDir: FileItem | undefined = currentDir?.find(
             // Explicitly type nextDir
-            (node) =>
-              node.name === part &&
-              (node.type === "directory" || node.type === "folder"),
+            (node) => node.name === part && (node.type === 'directory' || node.type === 'folder')
           );
 
           if (nextDir && nextDir.children) {
@@ -148,38 +146,38 @@ export function FileBrowser({
     isRenamingFile,
     isMovingFile,
     isDeletingS3,
-    isMovingS3,
+    isMovingS3
   } = useFileOperations({
     type,
     currentPath,
     fetchItems: refetch, // Pass refetch from Tanstack Query for refreshing after operations
     setIsDeleteDialogOpen, // Pass the state setter for the delete dialog
-    setItemToAction, // Pass the state setter for the item in action
+    setItemToAction // Pass the state setter for the item in action
   });
 
   // Local handler for item clicks
   const handleItemClick = (item: FileItem) => {
     const itemPath = getItemPath(item);
 
-    if (item.type === "folder" || item.type === "directory") {
-      if (type === "files") {
+    if (item.type === 'folder' || item.type === 'directory') {
+      if (type === 'files') {
         handlePathChange(itemPath);
       } else {
         // For S3, add trailing slash for folders
-        handlePathChange(itemPath.endsWith("/") ? itemPath : `${itemPath}/`);
+        handlePathChange(itemPath.endsWith('/') ? itemPath : `${itemPath}/`);
       }
     } else {
       setSelectedItem(itemPath);
-      if (type === "files") {
+      if (type === 'files') {
         // If using URL routing, the Link component in FileItemRow will handle navigation
         // Otherwise, use the callback
-        if (typeof onSelect === "function") {
+        if (typeof onSelect === 'function') {
           onSelect(itemPath);
         }
       } else {
         router.push(`/edit/${item.path}`);
         // For media items, always use the callback
-        if (typeof onSelect === "function") {
+        if (typeof onSelect === 'function') {
           onSelect(itemPath, item.path);
         }
       }
@@ -188,16 +186,16 @@ export function FileBrowser({
 
   // Local handler for breadcrumb navigation
   const handleBreadcrumbNavigation = (path: string) => {
-    if (type === "files") {
+    if (type === 'files') {
       handlePathChange(path);
     } else {
       // For S3, add trailing slash for folders
-      const formattedPath = path ? `${path}/` : "";
+      const formattedPath = path ? `${path}/` : '';
       handlePathChange(formattedPath);
     }
 
     // Reset expanded folders when navigating to root
-    if (path === "") {
+    if (path === '') {
       setExpandedFolders(new Set());
     } else {
       // Ensure this folder is expanded
@@ -243,7 +241,7 @@ export function FileBrowser({
   };
 
   return (
-    <div className={styles["file-browser"]}>
+    <div className={styles['file-browser']}>
       {/* Use the FileBrowserActions component */}
       <FileBrowserActions
         type={type}
@@ -257,7 +255,7 @@ export function FileBrowser({
       />
       <div className="px-4">
         <PathBreadcrumbs
-          currentPath={currentPath.replace(/\/$/, "")} // Remove trailing slash for display
+          currentPath={currentPath.replace(/\/$/, '')} // Remove trailing slash for display
           onNavigate={handleBreadcrumbNavigation}
           rootIcon={<Home size={12} />}
           type={type}
@@ -265,15 +263,9 @@ export function FileBrowser({
       </div>
 
       {/* Main content area with padding at the bottom to account for the action bar */}
-      <div
-        className={cn(
-          "px-4 pt-2 pb-8 overflow-y-auto max-h-[calc(100vh-180px)]",
-        )}
-      >
+      <div className={cn('px-4 pt-2 pb-8 overflow-y-auto max-h-[calc(100vh-180px)]')}>
         {isLoading && (
-          <div className="flex items-center justify-center h-20 text-muted-foreground text-xs">
-            Loading...
-          </div>
+          <div className="flex items-center justify-center h-20 text-muted-foreground text-xs">Loading...</div>
         )}
         {error && (
           <div className="flex items-center justify-center h-20 text-destructive text-xs">
@@ -301,9 +293,7 @@ export function FileBrowser({
           </div>
         )}
         {!isLoading && !error && currentDirContents.length === 0 && (
-          <div className="flex items-center justify-center h-20 text-muted-foreground text-xs">
-            No items found
-          </div>
+          <div className="flex items-center justify-center h-20 text-muted-foreground text-xs">No items found</div>
         )}
       </div>
 
@@ -323,22 +313,13 @@ export function FileBrowser({
           onOpenChange={setIsMoveDialogOpen}
           item={{
             key: getItemPath(itemToAction),
-            type:
-              itemToAction.type === "directory" ||
-              itemToAction.type === "folder"
-                ? "folder"
-                : "file",
+            type: itemToAction.type === 'directory' || itemToAction.type === 'folder' ? 'folder' : 'file'
           }}
           currentPath={
-            type === "files"
-              ? getItemPath(itemToAction).split("/").slice(0, -1).join("/") +
-                "/"
-              : currentPath
+            type === 'files' ? getItemPath(itemToAction).split('/').slice(0, -1).join('/') + '/' : currentPath
           }
-          onMove={(destinationPath) =>
-            handleMove(itemToAction, destinationPath)
-          } // Call handleMove from operations hook
-          isMarkdownFile={type === "files"}
+          onMove={(destinationPath) => handleMove(itemToAction, destinationPath)} // Call handleMove from operations hook
+          isMarkdownFile={type === 'files'}
           isMoving={isMovingFile || isMovingS3} // Pass combined loading state
         />
       )}
@@ -350,14 +331,10 @@ export function FileBrowser({
           onOpenChange={setIsRenameDialogOpen}
           item={{
             key: getItemPath(itemToAction),
-            type:
-              itemToAction.type === "directory" ||
-              itemToAction.type === "folder"
-                ? "folder"
-                : "file",
+            type: itemToAction.type === 'directory' || itemToAction.type === 'folder' ? 'folder' : 'file'
           }}
           onRename={(newName: string) => handleRename(itemToAction, newName)} // Call handleRename from operations hook
-          isMarkdownFile={type === "files"}
+          isMarkdownFile={type === 'files'}
           isRenaming={isRenamingFile} // Pass loading state
         />
       )}
@@ -367,14 +344,8 @@ export function FileBrowser({
         <ConfirmationDialog
           open={isDeleteDialogOpen}
           onOpenChange={setIsDeleteDialogOpen}
-          title={`Delete ${
-            itemToAction.type === "directory" || itemToAction.type === "folder"
-              ? "Folder"
-              : "File"
-          }`}
-          description={`Are you sure you want to delete ${getItemName(
-            itemToAction,
-          )}? This action cannot be undone.`}
+          title={`Delete ${itemToAction.type === 'directory' || itemToAction.type === 'folder' ? 'Folder' : 'File'}`}
+          description={`Are you sure you want to delete ${getItemName(itemToAction)}? This action cannot be undone.`}
           confirmLabel="Delete"
           onConfirm={() => handleDelete(itemToAction)} // Call handleDelete from operations hook
           destructive={true}

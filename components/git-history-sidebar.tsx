@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { format } from "date-fns";
-import { Clock, FileText, GitCommit, User } from "lucide-react";
-import { useEffect } from "react";
+import { format } from 'date-fns';
+import { Clock, FileText, GitCommit, User } from 'lucide-react';
+import { useEffect } from 'react';
 
 // Keep useState for other states
-import { useGitHistoryQuery } from "@/hooks/query/useGitHistoryQuery";
-import { formatRelativeTime } from "@/utils/date-utils";
+import { useGitHistoryQuery } from '@/hooks/query/useGitHistoryQuery';
+import { formatRelativeTime } from '@/utils/date-utils';
 
 interface Commit {
   hash: string;
@@ -28,22 +28,13 @@ interface GitHistorySidebarProps {
   lastSaved?: Date | null;
 }
 
-export function GitHistorySidebar({
-  filePath,
-  isVisible,
-  onClose,
-  lastSaved,
-}: GitHistorySidebarProps) {
-  const {
-    data: commits,
-    isLoading,
-    error,
-  } = useGitHistoryQuery(isVisible ? filePath : ""); // Only fetch if visible and filePath exists
+export function GitHistorySidebar({ filePath, isVisible, onClose, lastSaved }: GitHistorySidebarProps) {
+  const { data: commits, isLoading, error } = useGitHistoryQuery(isVisible ? filePath : ''); // Only fetch if visible and filePath exists
 
   // Handle error from fetching history
   useEffect(() => {
     if (error) {
-      console.error("Error fetching git history:", error);
+      console.error('Error fetching git history:', error);
       // Optionally show a toast or handle the error in the UI
     }
   }, [error]);
@@ -60,13 +51,13 @@ export function GitHistorySidebar({
       const diffDays = Math.round(diffMs / (1000 * 60 * 60 * 24));
 
       if (diffMins < 60) {
-        return `${diffMins} minute${diffMins !== 1 ? "s" : ""} ago`;
+        return `${diffMins} minute${diffMins !== 1 ? 's' : ''} ago`;
       } else if (diffHours < 24) {
-        return `${diffHours} hour${diffHours !== 1 ? "s" : ""} ago`;
+        return `${diffHours} hour${diffHours !== 1 ? 's' : ''} ago`;
       } else if (diffDays < 7) {
-        return `${diffDays} day${diffDays !== 1 ? "s" : ""} ago`;
+        return `${diffDays} day${diffDays !== 1 ? 's' : ''} ago`;
       } else {
-        return format(date, "MMM d, yyyy");
+        return format(date, 'MMM d, yyyy');
       }
     } catch (e) {
       return dateString;
@@ -86,17 +77,12 @@ export function GitHistorySidebar({
         <div className="space-y-2">
           {commits && commits.length > 0 ? (
             commits.map((commit) => (
-              <div
-                key={commit.hash}
-                className="space-y-2 p-3 rounded-md border bg-card transition-colors"
-              >
+              <div key={commit.hash} className="space-y-2 p-3 rounded-md border bg-card transition-colors">
                 <div className="flex items-start justify-between">
                   <div className="space-y-1">
                     <h4 className="text-xs font-medium">{commit.message}</h4>
                     <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                      <span className="font-mono text-xs">
-                        {commit.hash.substring(0, 7)}
-                      </span>
+                      <span className="font-mono text-xs">{commit.hash.substring(0, 7)}</span>
                       <span className="flex items-center gap-1">
                         <User className="h-3 w-3" />
                         {commit.author}
@@ -109,20 +95,11 @@ export function GitHistorySidebar({
                   </div>
                 </div>
                 <div className="flex items-center gap-2 text-xs">
-                  <span className="text-green-600">
-                    +{commit.changes.insertions}
-                  </span>
-                  <span className="text-red-600">
-                    -{commit.changes.deletions}
-                  </span>
+                  <span className="text-green-600">+{commit.changes.insertions}</span>
+                  <span className="text-red-600">-{commit.changes.deletions}</span>
                   <span className="text-muted-foreground ml-1">
-                    {commit.changes.totalFilesChanged ??
-                      commit.changes.files.length}{" "}
-                    file
-                    {(commit.changes.totalFilesChanged ??
-                      commit.changes.files.length) !== 1
-                      ? "s"
-                      : ""}
+                    {commit.changes.totalFilesChanged ?? commit.changes.files.length} file
+                    {(commit.changes.totalFilesChanged ?? commit.changes.files.length) !== 1 ? 's' : ''}
                   </span>
                 </div>
                 {commit.changes.files.length > 1 && (
@@ -138,9 +115,7 @@ export function GitHistorySidebar({
               </div>
             ))
           ) : (
-            <div className="text-xs text-muted-foreground">
-              No commit history found
-            </div>
+            <div className="text-xs text-muted-foreground">No commit history found</div>
           )}
         </div>
       )}

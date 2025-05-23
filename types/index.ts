@@ -1,9 +1,9 @@
-import type React from "react";
+import type React from 'react';
 // File-related types
 export interface FileNode {
   name: string;
   path: string;
-  type: "file" | "directory";
+  type: 'file' | 'directory';
   children?: FileNode[];
 }
 
@@ -16,7 +16,7 @@ export interface FileData {
 // S3/Media-related types
 export interface S3Item {
   key: string;
-  type: "file" | "folder";
+  type: 'file' | 'folder';
   size?: number;
   lastModified?: string;
   url?: string;
