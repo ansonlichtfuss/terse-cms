@@ -14,7 +14,7 @@ export async function GET(request: Request) {
   }
 
   // Always use mock data in browser or if mock mode is enabled
-  const useMock = isBrowser || request.headers.get('x-use-mock') === 'true' || process.env.USE_MOCK_API === 'true';
+  const useMock = isBrowser || process.env.USE_MOCK_API === 'true';
 
   // Dynamically import Node.js modules only on the server
   const fs = await import('fs');
@@ -71,7 +71,7 @@ export async function POST(request: Request) {
     }
 
     // Always use mock data in browser or if mock mode is enabled
-    const useMock = isBrowser || request.headers.get('x-use-mock') === 'true' || process.env.USE_MOCK_API === 'true';
+    const useMock = isBrowser || process.env.USE_MOCK_API === 'true';
 
     // Dynamically import Node.js modules only on the server
     const fs = await import('fs');
@@ -123,7 +123,7 @@ export async function DELETE(request: Request) {
     }
 
     // Always use mock data in browser or if mock mode is enabled
-    const useMock = isBrowser || request.headers.get('x-use-mock') === 'true' || process.env.USE_MOCK_API === 'true';
+    const useMock = isBrowser || process.env.USE_MOCK_API === 'true';
 
     // Dynamically import Node.js modules only on the server
     const fs = await import('fs');

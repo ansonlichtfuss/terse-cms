@@ -7,7 +7,7 @@ const isBrowser = typeof window !== 'undefined';
 
 export async function POST(request: Request) {
   // Always use mock data in browser or if mock mode is enabled
-  const useMock = isBrowser || request.headers.get('x-use-mock') === 'true' || process.env.USE_MOCK_API === 'true';
+  const useMock = isBrowser || process.env.USE_MOCK_API === 'true';
 
   try {
     const { operation, sourcePath, destinationPath, newName, type } = await request.json();

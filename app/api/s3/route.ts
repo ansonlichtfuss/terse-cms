@@ -8,7 +8,7 @@ export async function GET(request: Request) {
   const path = searchParams.get('path') || '';
 
   // Always use mock data in browser or if mock mode is enabled
-  const useMock = isBrowser || request.headers.get('x-use-mock') === 'true' || process.env.USE_MOCK_API === 'true';
+  const useMock = isBrowser || process.env.USE_MOCK_API === 'true';
 
   if (useMock) {
     // Dynamically import Node.js modules only on the server
@@ -91,7 +91,7 @@ export async function GET(request: Request) {
 
 export async function DELETE(request: Request) {
   // Always use mock data in browser or if mock mode is enabled
-  const useMock = isBrowser || request.headers.get('x-use-mock') === 'true' || process.env.USE_MOCK_API === 'true';
+  const useMock = isBrowser || process.env.USE_MOCK_API === 'true';
 
   if (useMock) {
     // Dynamically import Node.js modules only on the server
