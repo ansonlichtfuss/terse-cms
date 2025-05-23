@@ -19,7 +19,7 @@ export default function EditPage() {
   const { data: file, isLoading, error: fetchError } = useFileContentQuery(filePath);
 
   // Use the Tanstack Query mutation hook to save file content
-  const { mutate: saveFile, isPending: isSaving, error: saveError } = useSaveFileMutation();
+  const { mutate: saveFile, isPending: _isSaving, error: saveError } = useSaveFileMutation();
 
   // Handle fetch error
   useEffect(() => {

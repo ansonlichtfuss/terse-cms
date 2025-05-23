@@ -50,7 +50,7 @@ function ThemeToggle() {
 
 export function Dashboard({ selectedFilePath, children }: { selectedFilePath?: string; children?: React.ReactNode }) {
   const [selectedTab, setSelectedTab] = useState('files');
-  const [contentBrowserPath, setContentBrowserPath] = useState(''); // State for content file browser path
+  const [contentBrowserPath, setContentBrowserPath] = useState(selectedFilePath); // State for content file browser path
   const [mediaBrowserPath, setMediaBrowserPath] = useState(''); // State for media file browser path
   const [isCommitDialogOpen, setIsCommitDialogOpen] = useState(false);
   const [isRevertDialogOpen, setIsRevertDialogOpen] = useState(false);
@@ -127,7 +127,7 @@ export function Dashboard({ selectedFilePath, children }: { selectedFilePath?: s
         <TabsContent value="files">
           <FileBrowser
             selectedPath={contentBrowserPath} // Pass content path state
-            onPathChange={(path, type) => {
+            onPathChange={(path, _type) => {
               // Receive type parameter
               setContentBrowserPath(path);
             }}
@@ -143,7 +143,7 @@ export function Dashboard({ selectedFilePath, children }: { selectedFilePath?: s
               const formattedPath = path && type === 'media' && !path.endsWith('/') ? `${path}/` : path;
               setMediaBrowserPath(formattedPath);
             }}
-            onSelect={(url) => {
+            onSelect={(_url) => {
               // if (selectedFile) {
               // Logic to insert media URL into editor or YAML front matter
               // }
