@@ -4,7 +4,9 @@ import { NextResponse } from 'next/server';
 const isBrowser = typeof window !== 'undefined';
 
 // Get the root directory from environment variable or use a default
-const ROOT_DIR = process.env.MARKDOWN_ROOT_DIR || '/app/content';
+import { getMarkdownRootDir } from '@/lib/paths';
+
+const ROOT_DIR = getMarkdownRootDir();
 
 export async function GET(request: Request) {
   // Always use mock data in browser or if mock mode is enabled

@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 
+import { getMarkdownRootDir } from '@/lib/paths';
+
 // Check if we're in a browser environment
 const isBrowser = typeof window !== 'undefined';
 
@@ -38,7 +40,7 @@ export async function GET(request: Request) {
 
   try {
     // Get the root directory from environment variable or use a default
-    const ROOT_DIR = process.env.MARKDOWN_ROOT_DIR || '/app/content';
+    const ROOT_DIR = getMarkdownRootDir();
 
     const fullPath = path.join(ROOT_DIR, filePath);
 
@@ -92,7 +94,7 @@ export async function POST(request: Request) {
     }
 
     // Get the root directory from environment variable or use a default
-    const ROOT_DIR = process.env.MARKDOWN_ROOT_DIR || '/app/content';
+    const ROOT_DIR = getMarkdownRootDir();
 
     const fullPath = path.join(ROOT_DIR, filePath);
 
@@ -151,7 +153,7 @@ export async function DELETE(request: Request) {
     }
 
     // Get the root directory from environment variable or use a default
-    const ROOT_DIR = process.env.MARKDOWN_ROOT_DIR || '/app/content';
+    const ROOT_DIR = getMarkdownRootDir();
 
     const fullPath = path.join(ROOT_DIR, filePath);
 

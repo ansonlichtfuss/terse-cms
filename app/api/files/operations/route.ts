@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 
+import { getMarkdownRootDir } from '@/lib/paths';
+
 // Check if we're in a browser environment
 const isBrowser = typeof window !== 'undefined';
 
@@ -18,8 +20,7 @@ export async function POST(request: Request) {
     const fs = await import('fs');
     const path = await import('path');
 
-    // Get the root directory from environment variable or use a default
-    const ROOT_DIR = process.env.MARKDOWN_ROOT_DIR || 'mock-data/filesystem';
+    const ROOT_DIR = getMarkdownRootDir();
 
     const fullSourcePath = path.join(ROOT_DIR, sourcePath);
 

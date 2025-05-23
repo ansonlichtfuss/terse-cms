@@ -2,7 +2,9 @@ import { NextResponse } from 'next/server';
 import { simpleGit, SimpleGitOptions } from 'simple-git';
 
 // Get the root directory from environment variable or use a default
-const ROOT_DIR = process.env.MARKDOWN_ROOT_DIR || '/app/content';
+import { getMarkdownRootDir } from '@/lib/paths';
+
+const ROOT_DIR = getMarkdownRootDir();
 
 const options: Partial<SimpleGitOptions> = {
   baseDir: './mock-data',
