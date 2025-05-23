@@ -1,11 +1,10 @@
 import { NextResponse } from 'next/server';
-import { simpleGit } from 'simple-git';
 
-import { getMarkdownRootDir } from '@/lib/paths';
+import { getGitInstance } from '@/lib/git';
 
 export async function POST() {
   try {
-    const git = simpleGit(getMarkdownRootDir()); // Assuming the git repo is in mock-data as per status endpoint
+    const git = getGitInstance(); // Assuming the git repo is in mock-data as per status endpoint
 
     // Check if directory is a git repository
     const isRepo = await git.checkIsRepo();

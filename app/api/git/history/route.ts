@@ -1,15 +1,8 @@
 import { NextResponse } from 'next/server';
-import { simpleGit, SimpleGitOptions } from 'simple-git';
 
-import { getMarkdownRootDir } from '@/lib/paths';
+import { getGitInstance } from '@/lib/git';
 
-const options: Partial<SimpleGitOptions> = {
-  baseDir: getMarkdownRootDir(),
-  binary: 'git',
-  maxConcurrentProcesses: 6
-};
-
-const git = simpleGit(options);
+const git = getGitInstance();
 
 export async function GET(request: Request) {
   try {

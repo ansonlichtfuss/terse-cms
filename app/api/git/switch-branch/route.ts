@@ -1,9 +1,8 @@
 import { NextResponse } from 'next/server';
-import simpleGit from 'simple-git';
 
-import { getMarkdownRootDir } from '@/lib/paths';
+import { getGitInstance } from '@/lib/git';
 
-const git = simpleGit(getMarkdownRootDir());
+const git = getGitInstance();
 
 export async function POST(request: Request) {
   try {

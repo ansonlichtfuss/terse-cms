@@ -3,10 +3,9 @@ import { NextResponse } from 'next/server';
 export async function GET(_request: Request) {
   try {
     // Dynamically import simple-git only on the server
-    const { simpleGit } = await import('simple-git');
-    const { getMarkdownRootDir: getActualMarkdownRootDir } = await import('@/lib/paths');
+    const { getGitInstance } = await import('@/lib/git');
 
-    const git = simpleGit(getActualMarkdownRootDir());
+    const git = getGitInstance();
 
     // Check if directory is a git repository
     const isRepo = await git.checkIsRepo();
