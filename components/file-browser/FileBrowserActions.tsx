@@ -47,15 +47,21 @@ export function FileBrowserActions({
 
   const handleNewFileClick = async () => {
     // Make the function async
-    const baseFileName = 'untitled.md';
-    const newFileName = baseFileName;
-    const counter = 1;
+    let newFileName = 'untitled.md';
+    let counter = 0;
+    let fileExists = true;
 
-    // Need to get current directory contents to check for existing files
-    // This might require fetching the file tree here or passing it as a prop
-    // For now, I'll assume we can check against the fetched items in FileBrowser.tsx
-    // and pass down a function to check for existing files if needed.
-    // As a temporary workaround, I'll skip the check for existing files.
+    const currentFiles = (await fetchItems()).data; // Fetch current files
+
+    while (fileExists) {
+      const fileNameToCheck = counter === 0 ? 'untitled.md' : `untitled-${counter}.md`;
+      fileExists = !!currentFiles?.some((file) => file.name === fileNameToCheck);
+      if (fileExists) {
+        counter++;
+      } else {
+        newFileName = fileNameToCheck;
+      }
+    }
 
     const newFilePath = `${currentPath ? `${currentPath}/` : ''}${newFileName}`;
 
