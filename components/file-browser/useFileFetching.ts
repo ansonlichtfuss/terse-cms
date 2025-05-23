@@ -77,8 +77,7 @@ export const useFileFetching = ({ currentPath, type }: UseFileFetchingProps): Us
     } catch (error) {
       console.error(`Failed to fetch ${type}:`, error);
       toast({
-        title: 'Error',
-        description: `Failed to fetch ${type}`,
+        title: `Error fetching ${type}`,
         variant: 'destructive'
       });
     } finally {

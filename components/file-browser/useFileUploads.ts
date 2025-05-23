@@ -66,8 +66,7 @@ const useFileUploads = ({ uploadPath }: UseFileUploadsProps) => {
             )
           );
           toast({
-            title: 'Upload Failed',
-            description: `${file.name}: ${errorMessage}`,
+            title: `Upload Failed: ${file.name} - ${errorMessage}`,
             variant: 'destructive'
           });
         }
@@ -81,8 +80,7 @@ const useFileUploads = ({ uploadPath }: UseFileUploadsProps) => {
           )
         );
         toast({
-          title: 'Upload Failed',
-          description: `${file.name}: ${errorMessage}`,
+          title: `Upload Failed: ${file.name} - ${errorMessage}`,
           variant: 'destructive'
         });
       });
@@ -97,8 +95,7 @@ const useFileUploads = ({ uploadPath }: UseFileUploadsProps) => {
         )
       );
       toast({
-        title: 'Upload Failed',
-        description: `${file.name}: ${errorMessage}`,
+        title: `Upload Failed: ${file.name} - ${errorMessage}`,
         variant: 'destructive'
       });
     }

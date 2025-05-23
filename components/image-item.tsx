@@ -102,16 +102,14 @@ export function ImageItem({
             };
             onChange(`${path}[${index}]`, newItem);
             toast({
-              title: 'Alt text generated',
-              description: 'AI-generated alt text has been added to the image'
+              title: 'Alt text generated successfully'
             });
           }
         },
         onError: (error) => {
           console.error('Error generating alt text:', error);
           toast({
-            title: 'Error',
-            description: 'Failed to generate alt text',
+            title: 'Failed to generate alt text',
             variant: 'destructive'
           });
         }

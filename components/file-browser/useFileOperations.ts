@@ -83,14 +83,12 @@ export const useFileOperations = ({
       // Refresh the list using Tanstack Query's refetch
       await fetchItems();
       toast({
-        title: 'Success',
-        description: 'File uploaded successfully'
+        title: 'File uploaded successfully'
       });
     } catch (error) {
       console.error('Failed to upload file:', error);
       toast({
-        title: 'Error',
-        description: 'Failed to upload file',
+        title: 'Failed to upload file',
         variant: 'destructive'
       });
     } finally {
@@ -122,14 +120,12 @@ export const useFileOperations = ({
         }
         await fetchItems(); // Refresh after S3 folder creation
         toast({
-          title: 'Success',
-          description: 'Folder created successfully'
+          title: 'Folder created successfully'
         });
       } catch (error) {
         console.error('Failed to create folder:', error);
         toast({
-          title: 'Error',
-          description: 'Failed to create folder',
+          title: 'Failed to create folder',
           variant: 'destructive'
         });
       }
@@ -140,15 +136,13 @@ export const useFileOperations = ({
         {
           onSuccess: () => {
             toast({
-              title: 'Success',
-              description: 'Folder created successfully'
+              title: 'Folder created successfully'
             });
           },
           onError: (error) => {
             console.error('Failed to create folder:', error);
             toast({
-              title: 'Error',
-              description: 'Failed to create folder',
+              title: 'Failed to create folder',
               variant: 'destructive'
             });
           }
@@ -169,17 +163,13 @@ export const useFileOperations = ({
               setIsDeleteDialogOpen(false);
               setItemToAction(null);
               toast({
-                title: 'Success',
-                description: `${
-                  item.type === 'directory' || item.type === 'folder' ? 'Folder' : 'File'
-                } deleted successfully`
+                title: `${item.type === 'directory' || item.type === 'folder' ? 'Folder' : 'File'} deleted successfully`
               });
             },
             onError: (error) => {
               console.error('Failed to delete item:', error);
               toast({
-                title: 'Error',
-                description: 'Failed to delete item',
+                title: 'Failed to delete item',
                 variant: 'destructive'
               });
             }
@@ -195,17 +185,13 @@ export const useFileOperations = ({
               setIsDeleteDialogOpen(false);
               setItemToAction(null);
               toast({
-                title: 'Success',
-                description: `${
-                  item.type === 'directory' || item.type === 'folder' ? 'Folder' : 'File'
-                } deleted successfully`
+                title: `${item.type === 'directory' || item.type === 'folder' ? 'Folder' : 'File'} deleted successfully`
               });
             },
             onError: (error) => {
               console.error('Failed to delete item:', error);
               toast({
-                title: 'Error',
-                description: 'Failed to delete item',
+                title: 'Failed to delete item',
                 variant: 'destructive'
               });
             }
@@ -215,8 +201,7 @@ export const useFileOperations = ({
     } catch (error) {
       console.error('Failed to initiate delete operation:', error);
       toast({
-        title: 'Error',
-        description: 'Failed to initiate delete operation',
+        title: 'Failed to initiate delete operation',
         variant: 'destructive'
       });
     }
@@ -236,10 +221,7 @@ export const useFileOperations = ({
         {
           onSuccess: () => {
             toast({
-              title: 'Success',
-              description: `${
-                item.type === 'directory' || item.type === 'folder' ? 'Folder' : 'File'
-              } renamed successfully`
+              title: `${item.type === 'directory' || item.type === 'folder' ? 'Folder' : 'File'} renamed successfully`
             });
             // Construct the new path and navigate
             const sourcePath = getItemPath(item);
@@ -251,8 +233,7 @@ export const useFileOperations = ({
           onError: (error) => {
             console.error('Failed to rename item:', error);
             toast({
-              title: 'Error',
-              description: `Failed to rename item: ${error instanceof Error ? error.message : String(error)}`,
+              title: `Failed to rename item: ${error instanceof Error ? error.message : String(error)}`,
               variant: 'destructive'
             });
           }
@@ -262,8 +243,7 @@ export const useFileOperations = ({
       // For media, implement rename API call or mutation
       // This would need to be implemented in the backend
       toast({
-        title: 'Not implemented',
-        description: 'Rename for media is not implemented yet'
+        title: 'Rename for media is not implemented yet'
       });
     }
   };
@@ -283,10 +263,7 @@ export const useFileOperations = ({
           {
             onSuccess: () => {
               toast({
-                title: 'Success',
-                description: `${
-                  item.type === 'directory' || item.type === 'folder' ? 'Folder' : 'File'
-                } moved successfully`
+                title: `${item.type === 'directory' || item.type === 'folder' ? 'Folder' : 'File'} moved successfully`
               });
               // Assuming state updates for dialog closing are handled elsewhere
               // setIsMoveDialogOpen(false);
@@ -295,8 +272,7 @@ export const useFileOperations = ({
             onError: (error) => {
               console.error('Failed to move item:', error);
               toast({
-                title: 'Error',
-                description: 'Failed to move item',
+                title: 'Failed to move item',
                 variant: 'destructive'
               });
             }
@@ -309,10 +285,7 @@ export const useFileOperations = ({
           {
             onSuccess: () => {
               toast({
-                title: 'Success',
-                description: `${
-                  item.type === 'directory' || item.type === 'folder' ? 'Folder' : 'File'
-                } moved successfully`
+                title: `${item.type === 'directory' || item.type === 'folder' ? 'Folder' : 'File'} moved successfully`
               });
               // Assuming state updates for dialog closing are handled elsewhere
               // setIsMoveDialogOpen(false);
@@ -321,8 +294,7 @@ export const useFileOperations = ({
             onError: (error) => {
               console.error('Failed to move item:', error);
               toast({
-                title: 'Error',
-                description: 'Failed to move item',
+                title: 'Failed to move item',
                 variant: 'destructive'
               });
             }
@@ -332,8 +304,7 @@ export const useFileOperations = ({
     } catch (error) {
       console.error('Failed to initiate move operation:', error);
       toast({
-        title: 'Error',
-        description: 'Failed to initiate move operation',
+        title: 'Failed to initiate move operation',
         variant: 'destructive'
       });
     }
@@ -346,14 +317,12 @@ export const useFileOperations = ({
       {
         onSuccess: () => {
           toast({
-            title: 'Success',
-            description: 'File created successfully'
+            title: 'File created successfully'
           });
         },
         onError: (error) => {
           toast({
-            title: 'Error',
-            description: 'Failed to create file',
+            title: 'Failed to create file',
             variant: 'destructive'
           });
           // Re-throw to allow calling component to handle errors

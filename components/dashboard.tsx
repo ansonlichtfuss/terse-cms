@@ -68,8 +68,7 @@ export function Dashboard({ selectedFilePath, children }: { selectedFilePath?: s
     if (commitError) {
       console.error('Failed to commit changes:', commitError);
       toast({
-        title: 'Error',
-        description: 'Failed to commit changes',
+        title: 'Failed to commit changes',
         variant: 'destructive'
       });
     }
@@ -80,8 +79,7 @@ export function Dashboard({ selectedFilePath, children }: { selectedFilePath?: s
     if (revertError) {
       console.error('Failed to revert changes:', revertError);
       toast({
-        title: 'Error',
-        description: 'Failed to revert changes',
+        title: 'Failed to revert changes',
         variant: 'destructive'
       });
     }
@@ -92,8 +90,7 @@ export function Dashboard({ selectedFilePath, children }: { selectedFilePath?: s
       onSuccess: () => {
         setIsCommitDialogOpen(false);
         toast({
-          title: 'Success',
-          description: 'Changes committed successfully'
+          title: 'Changes committed successfully'
         });
       }
     });
@@ -104,8 +101,7 @@ export function Dashboard({ selectedFilePath, children }: { selectedFilePath?: s
       onSuccess: () => {
         setIsRevertDialogOpen(false);
         toast({
-          title: 'Success',
-          description: 'Changes reverted successfully'
+          title: 'Changes reverted successfully'
         });
       }
     });
