@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "postinstall": "git apply patches/gray-matter-casing-fix.patch || true"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.820.0",
@@ -76,6 +77,7 @@
     "eslint-plugin-simple-import-sort": "^12.1.1",
     "eslint-plugin-unused-imports": "^4.1.4",
     "globals": "^16.2.0",
+    "patch-package": "^8.0.0",
     "postcss": "^8.5.4",
     "prettier": "^3.5.3",
     "tailwindcss": "^4.1.8",
