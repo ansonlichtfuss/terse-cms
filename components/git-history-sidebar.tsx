@@ -5,7 +5,7 @@ import { Clock, FileText, GitCommit, User } from 'lucide-react';
 import { useEffect } from 'react';
 
 // Keep useState for other states
-import { useGitHistoryQuery } from '@/hooks/query/useGitHistoryQuery';
+import { useGitHistoryQuery } from '@/hooks/query/use-git-history-query';
 import { formatRelativeTime } from '@/utils/date-utils';
 
 interface Commit {

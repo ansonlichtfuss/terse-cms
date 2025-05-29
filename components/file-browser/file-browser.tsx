@@ -9,7 +9,7 @@ import { ConfirmationDialog } from '@/components/confirmation-dialog';
 import { MoveFileDialog } from '@/components/move-file-dialog';
 import { RenameFileDialog } from '@/components/rename-file-dialog';
 // Import the new Tanstack Query hook
-import { useFilesQuery } from '@/hooks/query/useFilesQuery';
+import { useFilesQuery } from '@/hooks/query/use-files-query';
 import { cn } from '@/lib/utils';
 
 // Import the new hooks and components
