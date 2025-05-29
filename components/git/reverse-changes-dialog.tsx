@@ -1,9 +1,9 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { useGitStatus } from '@/context/GitStatusContext';
+import { useGitStatus } from '@/context/git-status-context';
 
-import { FileTreeDialog } from './FileTreeDialog';
+import { FileTreeDialog } from './file-tree-dialog';
 
 interface ReverseChangesDialogProps {
   open: boolean;

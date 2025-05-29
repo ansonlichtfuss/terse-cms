@@ -7,8 +7,8 @@ import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 
-import type { FileItem } from './FileBrowser'; // Import FileItem type
-import { useFileOperations } from './useFileOperations'; // Import useFileOperations
+import type { FileItem } from './file-browser'; // Import FileItem type
+import { useFileOperations } from './use-file-operations'; // Import useFileOperations
 
 interface FileBrowserActionsProps {
   type: 'files' | 'media';

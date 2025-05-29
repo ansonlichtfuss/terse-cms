@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
-import type { FileItem } from '@/components/file-browser/FileBrowser'; // Assuming FileItem type is accessible
+import type { FileItem } from '@/components/file-browser/file-browser'; // Assuming FileItem type is accessible
 import { fileNodeToFileItem } from '@/components/file-browser/utils'; // Import the utility function
 
 interface UseFilesQueryProps {

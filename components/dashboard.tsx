@@ -5,8 +5,8 @@ import { useTheme } from 'next-themes';
 import type React from 'react';
 import { useEffect, useState } from 'react';
 
-import { FileBrowser } from '@/components/file-browser/FileBrowser';
-import { GitBranchDisplay } from '@/components/git/GitBranchDisplay';
+import { FileBrowser } from '@/components/file-browser/file-browser';
+import { GitBranchDisplay } from '@/components/git/git-branch-display';
 import { Logo } from '@/components/logo';
 import { MediaManager } from '@/components/media-manager';
 import { Badge } from '@/components/ui/badge';
@@ -20,16 +20,16 @@ import {
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from '@/components/ui/use-toast';
-import { useGitStatus } from '@/context/GitStatusContext';
+import { useGitStatus } from '@/context/git-status-context';
 import { useCommitChangesMutation } from '@/hooks/query/useCommitChangesMutation';
 import { useRevertChangesMutation } from '@/hooks/query/useRevertChangesMutation';
 import { useMediaQuery } from '@/hooks/use-media-query';
 import { cn } from '@/lib/utils'; // Import cn utility
 
 import packageInfo from '../package.json';
-import containerStyles from './file-browser/FileBrowserContainer.module.css'; // Import the container styles
-import { GitCommitDialog } from './gitDialogs/GitCommitDialog';
-import { ReverseChangesDialog } from './gitDialogs/ReverseChangesDialog';
+import containerStyles from './file-browser/file-browser-container.module.css'; // Import the container styles
+import { GitCommitDialog } from './git/git-commit-dialog';
+import { ReverseChangesDialog } from './git/reverse-changes-dialog';
 
 function ThemeToggle() {
   const { theme, setTheme } = useTheme();

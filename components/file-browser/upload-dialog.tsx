@@ -10,11 +10,11 @@ import {
   DialogTitle
 } from '@/components/ui/dialog';
 
-import { PathBreadcrumbs } from '../breadcrumbs/Breadcrumbs';
-import { FileUploadItem } from './FileUploadItem'; // Import FileUploadItem component
-import { useDragAndDrop } from './useDragAndDrop'; // Import useDragAndDrop hook
-import { useFileUploads } from './useFileUploads'; // Import useFileUploads hook
-import { type FileUploadState } from './useFileUploads'; // Import FileUploadState type
+import { PathBreadcrumbs } from '../breadcrumbs/breadcrumbs';
+import { FileUploadItem } from './file-upload-item'; // Import FileUploadItem component
+import { useDragAndDrop } from './use-drag-and-drop'; // Import useDragAndDrop hook
+import { useFileUploads } from './use-file-uploads'; // Import useFileUploads hook
+import { type FileUploadState } from './use-file-uploads'; // Import FileUploadState type
 
 interface UploadDialogProps {
   isOpen: boolean;

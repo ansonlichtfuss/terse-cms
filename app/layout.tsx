@@ -4,10 +4,10 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import type React from 'react';
 
-import { ReactQueryClientProvider } from '@/components/ReactQueryClientProvider';
+import { ReactQueryClientProvider } from '@/components/react-query-client-provider';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Toaster } from '@/components/ui/toaster';
-import { GitStatusProvider } from '@/context/GitStatusContext';
+import { GitStatusProvider } from '@/context/git-status-context';
 
 const inter = Inter({ subsets: ['latin'] });
 

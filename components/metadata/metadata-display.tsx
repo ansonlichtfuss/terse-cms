@@ -1,6 +1,6 @@
 'use client';
 
-import { MetadataItem } from './metadataItem';
+import { MetadataItem } from './metadata-item';
 
 interface MetadataDisplayProps {
   frontMatter: Record<string, any>;

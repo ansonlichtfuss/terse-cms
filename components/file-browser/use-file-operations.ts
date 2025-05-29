@@ -2,7 +2,7 @@ import type { QueryObserverResult, RefetchOptions } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'; // Import useRouter
 
 import { toast } from '@/components/ui/use-toast';
-import { useGitStatus } from '@/context/GitStatusContext';
+import { useGitStatus } from '@/context/git-status-context';
 // Import the new file operation mutation hooks
 import { useCreateFileMutation } from '@/hooks/query/useCreateFileMutation';
 import { useCreateFolderMutation } from '@/hooks/query/useCreateFolderMutation';
@@ -12,7 +12,7 @@ import { useRenameFileMutation } from '@/hooks/query/useRenameFileMutation';
 // Import the new S3 mutation hooks
 import { useDeleteS3ItemMutation, useMoveS3ItemMutation } from '@/hooks/query/useS3Operations';
 
-import type { FileItem } from './FileBrowser'; // Assuming FileItem type remains in the main file for now
+import type { FileItem } from './file-browser'; // Assuming FileItem type remains in the main file for now
 import { getItemPath } from './utils'; // Import utility function
 
 interface UseFileOperationsProps {

@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from '@/components/ui/use-toast';
 import { useGenerateAltTextMutation } from '@/hooks/query/useGenerateAltTextMutation';
-import { getProcessedImageUrl } from '@/utils/getProcessedImageUrl';
+import { getProcessedImageUrl } from '@/utils/get-processed-image-url';
 import { getImageField } from '@/utils/media-utils';
 
 interface ImageItemProps {

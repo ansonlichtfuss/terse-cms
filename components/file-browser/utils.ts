@@ -1,6 +1,6 @@
 import type { FileNode } from '@/types';
 
-import type { FileItem } from './FileBrowser'; // Assuming FileItem type remains in the main file for now
+import type { FileItem } from './file-browser'; // Assuming FileItem type remains in the main file for now
 
 // Convert FileNode to FileItem
 export const fileNodeToFileItem = (node: FileNode): FileItem => {

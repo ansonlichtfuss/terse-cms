@@ -4,7 +4,7 @@ import { Home } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react'; // Import React and useState
 
-import { PathBreadcrumbs } from '@/components/breadcrumbs/Breadcrumbs';
+import { PathBreadcrumbs } from '@/components/breadcrumbs/breadcrumbs';
 import { ConfirmationDialog } from '@/components/confirmation-dialog';
 import { MoveFileDialog } from '@/components/move-file-dialog';
 import { RenameFileDialog } from '@/components/rename-file-dialog';
@@ -13,13 +13,13 @@ import { useFilesQuery } from '@/hooks/query/useFilesQuery';
 import { cn } from '@/lib/utils';
 
 // Import the new hooks and components
-import { CreateFolderDialog } from './CreateFolderDialog'; // Assuming dialogs are also moved
-import styles from './FileBrowser.module.css';
-import { FileBrowserActions } from './FileBrowserActions';
-import { FileItemRow } from './FileItemRow';
-import UploadDialog from './UploadDialog'; // Import UploadDialog from the same directory
-import { useFileBrowserState } from './useFileBrowserState';
-import { useFileOperations } from './useFileOperations';
+import { CreateFolderDialog } from './create-folder-dialog'; // Assuming dialogs are also moved
+import styles from './file-browser.module.css';
+import { FileBrowserActions } from './file-browser-actions';
+import { FileItemRow } from './file-item-row';
+import UploadDialog from './upload-dialog'; // Import UploadDialog from the same directory
+import { useFileBrowserState } from './use-file-browser-state';
+import { useFileOperations } from './use-file-operations';
 import { getItemName, getItemPath } from './utils'; // Import utility functions
 
 // FileItem type definition remains here for now, as it's used by multiple components/hooks

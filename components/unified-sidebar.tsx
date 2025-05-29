@@ -5,7 +5,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 import { GitHistorySidebar } from '@/components/git-history-sidebar';
-import { MetadataDisplay } from '@/components/metadata/metadataDisplay';
+import { MetadataDisplay } from '@/components/metadata/metadata-display';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 

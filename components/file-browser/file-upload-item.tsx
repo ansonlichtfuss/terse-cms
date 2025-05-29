@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { type FileUploadState } from './useFileUploads'; // Import FileUploadState type
+import { type FileUploadState } from './use-file-uploads'; // Import FileUploadState type
 
 interface FileUploadItemProps {
   upload: FileUploadState;

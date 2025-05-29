@@ -5,9 +5,9 @@ import type React from 'react';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 import { cn } from '@/lib/utils';
 
-import type { FileItem } from './FileBrowser'; // Assuming FileItem type remains in the main file for now
-import { FileItemDropdown } from './FileItemDropdown';
-import styles from './FileItemRow.module.css';
+import type { FileItem } from './file-browser'; // Assuming FileItem type remains in the main file for now
+import { FileItemDropdown } from './file-item-dropdown';
+import styles from './file-item-row.module.css';
 import { getItemName, getItemPath } from './utils'; // Import utility functions
 
 interface FileItemRowProps {
@@ -38,7 +38,7 @@ export function FileItemRow({
   const itemPath = getItemPath(item);
   const itemName = getItemName(item);
   const isFolder = item.type === 'folder' || item.type === 'directory';
-  const isMarkdownFile = type === 'files' && !isFolder;
+  // const isMarkdownFile = type === 'files' && !isFolder;
 
   // Render Link for files when using URL routing
   const isTextFile = itemName.toLowerCase().endsWith('.md') || itemName.toLowerCase().endsWith('.txt');
@@ -146,12 +146,12 @@ export function FileItemRow({
 }
 
 // Helper function to trigger file download
-function downloadFile(item: FileItem) {
-  console.log('Attempting to download item:', item); // Log the item object
-  const link = document.createElement('a');
-  link.href = item.url || getItemPath(item); // Use item.url if available, otherwise use itemPath
-  link.download = getItemName(item);
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-}
+// function downloadFile(item: FileItem) {
+//   console.log('Attempting to download item:', item); // Log the item object
+//   const link = document.createElement('a');
+//   link.href = item.url || getItemPath(item); // Use item.url if available, otherwise use itemPath
+//   link.download = getItemName(item);
+//   document.body.appendChild(link);
+//   link.click();
+//   document.body.removeChild(link);
+// }

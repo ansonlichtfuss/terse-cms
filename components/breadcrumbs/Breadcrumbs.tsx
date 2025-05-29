@@ -5,10 +5,10 @@ import React from 'react';
 
 import { cn } from '@/lib/utils';
 
-import { BreadcrumbItem } from './BreadcrumbItem';
+import { BreadcrumbItem } from './breadcrumb-item';
+import { BreadcrumbSeparator } from './breadcrumb-separator';
 import styles from './breadcrumbs.module.css';
-import { BreadcrumbsContainer } from './BreadcrumbsContainer';
-import { BreadcrumbSeparator } from './BreadcrumbSeparator';
+import { BreadcrumbsContainer } from './breadcrumbs-container';
 
 interface PathBreadcrumbsProps {
   currentPath: string;

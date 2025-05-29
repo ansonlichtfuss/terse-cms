@@ -11,11 +11,11 @@ import { EditorToolbar } from '@/components/editor/editor-toolbar';
 import { MediaDialog } from '@/components/media-dialog';
 import { RenameFileDialog } from '@/components/rename-file-dialog';
 import { UnifiedSidebar } from '@/components/unified-sidebar';
-import { useGitStatus } from '@/context/GitStatusContext';
+import { useGitStatus } from '@/context/git-status-context';
 import { getUserPreferences, saveUserPreferences } from '@/lib/user-preferences';
 import type { FileData } from '@/types';
 
-import { useFileOperations } from '../file-browser/useFileOperations';
+import { useFileOperations } from '../file-browser/use-file-operations';
 
 interface EditorProps {
   file: FileData;

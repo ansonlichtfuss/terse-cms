@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-import { FileBrowser } from './file-browser/FileBrowser';
+import { FileBrowser } from './file-browser/file-browser';
 
 interface MediaManagerProps {
   onSelect: (url: string) => void;

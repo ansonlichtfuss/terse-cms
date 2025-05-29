@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 
-import type { FileItem } from './FileBrowser';
+import type { FileItem } from './file-browser';
 
 interface FileItemDropdownProps {
   item: FileItem;

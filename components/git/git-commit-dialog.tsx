@@ -5,10 +5,10 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {} from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { useGitStatus } from '@/context/GitStatusContext';
+import { useGitStatus } from '@/context/git-status-context';
 
-import { FileTreeDialog } from './FileTreeDialog';
-import styles from './gitCommitDialog.module.css';
+import { FileTreeDialog } from './file-tree-dialog';
+import styles from './git-commit-dialog.module.css';
 
 interface GitCommitDialogProps {
   open: boolean;
