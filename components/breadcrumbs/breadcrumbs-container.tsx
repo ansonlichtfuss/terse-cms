@@ -38,7 +38,7 @@ export function BreadcrumbsContainer({ children, currentPath }: BreadcrumbsConta
   }, [currentPath]);
 
   return (
-    <div className={cn(styles.breadcrumbsContainer, 'flex', 'items-center', 'w-full', 'max-w-full', 'relative')}>
+    <div className={cn(styles['breadcrumbs-container'], 'flex', 'items-center', 'w-full', 'max-w-full', 'relative')}>
       {/* Left Gradient */}
       <div
         className={cn('absolute', 'top-0', 'left-0', 'bottom-0', 'w-8', 'pointer-events-none', 'z-10')}
@@ -59,7 +59,7 @@ export function BreadcrumbsContainer({ children, currentPath }: BreadcrumbsConta
         }}
       ></div>
 
-      <div ref={scrollContainerRef} className={cn('flex', 'items-center', 'flex-1', styles.breadcrumbsScrollable)}>
+      <div ref={scrollContainerRef} className={cn('flex', 'items-center', 'flex-1', styles['breadcrumbs-scrollable'])}>
         {children}
       </div>
     </div>

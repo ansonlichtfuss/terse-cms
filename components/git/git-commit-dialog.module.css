@@ -1,12 +1,12 @@
-.dialogContent {
+.dialog-content {
   max-width: md; /* This will likely be handled by the DialogContent component, but including for completeness */
 }
 
-.dialogTitle {
+.dialog-title {
   font-size: 0.875rem; /* text-sm */
 }
 
-.contentArea {
+.content-area {
   padding-top: 0.5rem; /* py-2 */
   padding-bottom: 0.5rem; /* py-2 */
   display: flex;
@@ -14,18 +14,18 @@
   gap: 0.5rem; /* space-y-2 */
 }
 
-.labelText {
+.label-text {
   font-size: 0.75rem; /* text-xs */
   font-weight: 500; /* font-medium */
 }
 
-.commitMessageInput {
+.commit-message-input {
   margin-top: 0.25rem; /* mt-1 */
   height: 1.75rem; /* h-7 */
   font-size: 0.75rem; /* text-xs */
 }
 
-.modifiedFilesTree {
+.modified-files-tree {
   height: 150px; /* h-[150px] */
   margin-top: 0.25rem; /* mt-1 */
   border: 1px solid #e5e7eb; /* border */

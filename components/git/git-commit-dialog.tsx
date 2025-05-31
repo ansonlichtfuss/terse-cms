@@ -43,11 +43,11 @@ export function GitCommitDialog({ open, onOpenChange, onCommit, isCommitting }: 
       }
     >
       <div>
-        <label className={styles.labelText}>Commit Message</label>
+        <label className={styles['label-text']}>Commit Message</label>
         <Input
           value={commitMessage}
           onChange={(e) => setCommitMessage(e.target.value)}
-          className={styles.commitMessageInput}
+          className={styles['commit-message-input']}
         />
       </div>
     </FileTreeDialog>

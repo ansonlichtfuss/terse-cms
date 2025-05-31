@@ -1,4 +1,4 @@
-.breadcrumbsContainer {
+.breadcrumbs-container {
   display: flex;
   align-items: center;
   padding: 2px 6px;
@@ -8,18 +8,18 @@
   max-width: 100%;
 }
 
-.breadcrumbsScrollable {
+.breadcrumbs-scrollable {
   overflow-x: auto;
   white-space: nowrap;
   scrollbar-width: none; /* Hide scrollbar for Firefox */
   -ms-overflow-style: none; /* Hide scrollbar for IE and Edge */
 }
 
-.breadcrumbsScrollable::-webkit-scrollbar {
+.breadcrumbs-scrollable::-webkit-scrollbar {
   display: none; /* Hide scrollbar for Chrome, Safari, and Opera */
 }
 
-.breadcrumbItem {
+.breadcrumb-item {
   align-items: center;
   font-size: 0.7rem;
   height: 1.2rem;
@@ -29,12 +29,12 @@
   min-width: 1px;
 }
 
-.breadcrumbItemClickable:hover {
+.breadcrumb-item-clickable:hover {
   color: var(--foreground);
   background: var(--muted);
 }
 
-.breadcrumbSeparator {
+.breadcrumb-separator {
   margin: 0 1px;
   color: var(--muted-foreground);
   display: flex;
@@ -42,7 +42,7 @@
   flex-shrink: 0;
 }
 
-.breadcrumbCurrent {
+.breadcrumb-current {
   display: block;
   font-weight: 500;
   color: var(--foreground);

@@ -27,9 +27,9 @@ export function BreadcrumbItem({
   };
 
   const itemClassName = cn(
-    isClickable && styles.breadcrumbItemClickable,
-    styles.breadcrumbItem,
-    isLast && styles.breadcrumbCurrent,
+    isClickable && styles['breadcrumb-item-clickable'],
+    styles['breadcrumb-item'],
+    isLast && styles['breadcrumb-current'],
     isClickable ? 'max-w-20 truncate' : '',
     isClickable ? 'cursor-pointer' : 'cursor-default'
   );

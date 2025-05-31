@@ -56,7 +56,7 @@ export function MoveFileDialog({
   const [selectedFolder, setSelectedFolder] = useState('');
   const [localFolderTree, setLocalFolderTree] = useState<FolderNode | null>(null);
 
-  const { data: folderTree, isLoading, error } = useFileTreeQuery();
+  const { data: folderTree, isLoading } = useFileTreeQuery();
 
   useEffect(() => {
     if (open && folderTree) {
@@ -160,7 +160,7 @@ export function MoveFileDialog({
             <div className="w-5 mr-1" />
           )}
           <Folder className="h-4 w-4 mr-2 text-muted-foreground shrink-0" />
-          <span className={`text-xs ${styles.folderName}`}>{node.name}</span>
+          <span className={`text-xs ${styles['folder-name']}`}>{node.name}</span>
         </div>
 
         {node.isExpanded && node.children.length > 0 && (

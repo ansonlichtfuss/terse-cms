@@ -73,9 +73,9 @@ export function PathBreadcrumbs({
       {isClickable ? (
         <span
           className={cn(
-            isClickable && styles.breadcrumbItemClickable,
+            isClickable && styles['breadcrumb-item-clickable'],
             'inline-flex',
-            styles.breadcrumbItem,
+            styles['breadcrumb-item'],
             'shrink-0',
             isClickable ? 'max-w-20 truncate' : '',
             isClickable ? 'cursor-pointer' : 'cursor-default'
@@ -87,9 +87,9 @@ export function PathBreadcrumbs({
       ) : (
         <span
           className={cn(
-            isClickable && styles.breadcrumbItemClickable,
+            isClickable && styles['breadcrumb-item-clickable'],
             'inline-flex',
-            styles.breadcrumbItem,
+            styles['breadcrumb-item'],
             'shrink-0',
             isClickable ? 'max-w-20 truncate' : '',
             isClickable ? 'cursor-pointer' : 'cursor-default'
