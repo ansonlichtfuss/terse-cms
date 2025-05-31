@@ -49,26 +49,6 @@ export interface EditorToolbarGroup {
   items: EditorToolbarAction[];
 }
 
-// Dynamic field types
-export interface DynamicFieldProps {
-  name: string;
-  value: any;
-  path?: string;
-  onChange: (path: string, value: any) => void;
-  onAddItem?: (path: string) => void;
-  onRemoveItem?: (path: string, index: number) => void;
-  level?: number;
-}
-
-export interface ImageArrayFieldProps {
-  name: string;
-  value: any[];
-  path: string;
-  onChange: (path: string, value: any) => void;
-  onAddItem: (path: string) => void;
-  onRemoveItem: (path: string, index: number) => void;
-}
-
 // Thumbnail Service types
 export interface ImageServiceConfig {
   matcher: (url: string) => boolean;

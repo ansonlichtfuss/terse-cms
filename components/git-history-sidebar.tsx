@@ -8,19 +8,6 @@ import { useEffect } from 'react';
 import { useGitHistoryQuery } from '@/hooks/api/use-git-history-query';
 import { formatRelativeTime } from '@/utils/date-utils';
 
-interface Commit {
-  hash: string;
-  message: string;
-  author: string;
-  date: string;
-  changes: {
-    files: string[];
-    insertions: number;
-    deletions: number;
-    totalFilesChanged?: number; // Add totalFilesChanged
-  };
-}
-
 interface GitHistorySidebarProps {
   filePath: string;
   isVisible: boolean;

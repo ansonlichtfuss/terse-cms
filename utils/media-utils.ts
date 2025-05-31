@@ -30,23 +30,6 @@ export function isImageArray(arr: any[]): boolean {
   });
 }
 
-// Helper to get the image field from an object
-export function getImageField(item: any): string {
-  if (item.url && typeof item.url === 'string') return 'url';
-
-  // Fallbacks if url doesn't exist
-  const possibleFields = ['src', 'source', 'image', 'thumbnail'];
-  for (const field of possibleFields) {
-    if (item[field] && typeof item[field] === 'string') {
-      return field;
-    }
-  }
-
-  // If no specific image field is found, return the first string field
-  const firstStringField = Object.entries(item).find(([_, val]) => typeof val === 'string')?.[0];
-  return firstStringField || '';
-}
-
 // Helper to get item name from key
 export function getItemName(key: string, isMarkdownFile = false): string {
   if (isMarkdownFile) {

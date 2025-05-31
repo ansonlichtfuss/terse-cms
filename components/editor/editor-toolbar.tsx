@@ -1,6 +1,6 @@
 'use client';
 
-import { getToolbarItems } from '@/components/editor/editor-toolbar-items';
+import { getToolbarItems } from '@/components/editor/get-toolbar-items';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';

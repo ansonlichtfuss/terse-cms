@@ -5,9 +5,9 @@ import { useRouter } from 'next/navigation';
 import React, { useState } from 'react'; // Import React and useState
 
 import { Breadcrumbs } from '@/components/breadcrumbs/breadcrumbs';
-import { ConfirmationDialog } from '@/components/confirmation-dialog';
-import { MoveFileDialog } from '@/components/move-file-dialog';
+import { MoveFileDialog } from '@/components/file-browser/move-file-dialog';
 import { RenameFileDialog } from '@/components/rename-file-dialog';
+import { ConfirmationDialog } from '@/components/ui/confirmation-dialog';
 // Import the new Tanstack Query hook
 import { useFilesQuery } from '@/hooks/api/use-files-query';
 import { cn } from '@/lib/utils';
