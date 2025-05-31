@@ -10,7 +10,7 @@ import { BreadcrumbSeparator } from './breadcrumb-separator';
 import styles from './breadcrumbs.module.css';
 import { BreadcrumbsContainer } from './breadcrumbs-container';
 
-interface PathBreadcrumbsProps {
+interface BreadcrumbsProps {
   currentPath: string;
   onNavigate: (path: string) => void;
   rootIcon?: React.ReactNode;
@@ -18,13 +18,13 @@ interface PathBreadcrumbsProps {
   isClickable?: boolean;
 }
 
-export function PathBreadcrumbs({
+export function Breadcrumbs({
   currentPath,
   onNavigate,
   rootIcon = <Home size={12} />,
   type = 'files',
   isClickable = true
-}: PathBreadcrumbsProps) {
+}: BreadcrumbsProps) {
   // Handle root navigation
   const handleRootClick = (e: React.MouseEvent) => {
     if (isClickable) {

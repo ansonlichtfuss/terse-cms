@@ -4,13 +4,13 @@ import { useRouter } from 'next/navigation'; // Import useRouter
 import { toast } from '@/components/ui/use-toast';
 import { useGitStatus } from '@/context/git-status-context';
 // Import the new file operation mutation hooks
-import { useCreateFileMutation } from '@/hooks/query/use-create-file-mutation';
-import { useCreateFolderMutation } from '@/hooks/query/use-create-folder-mutation';
-import { useDeleteFileMutation } from '@/hooks/query/use-delete-file-mutation';
-import { useMoveFileMutation } from '@/hooks/query/use-move-file-mutation';
-import { useRenameFileMutation } from '@/hooks/query/use-rename-file-mutation';
+import { useCreateFileMutation } from '@/hooks/api/use-create-file-mutation';
+import { useCreateFolderMutation } from '@/hooks/api/use-create-folder-mutation';
+import { useDeleteFileMutation } from '@/hooks/api/use-delete-file-mutation';
+import { useMoveFileMutation } from '@/hooks/api/use-move-file-mutation';
+import { useRenameFileMutation } from '@/hooks/api/use-rename-file-mutation';
 // Import the new S3 mutation hooks
-import { useDeleteS3ItemMutation, useMoveS3ItemMutation } from '@/hooks/query/use-s3-operations';
+import { useDeleteS3ItemMutation, useMoveS3ItemMutation } from '@/hooks/api/use-s3-operations';
 
 import type { FileItem } from './file-browser'; // Assuming FileItem type remains in the main file for now
 import { getItemPath } from './utils'; // Import utility function

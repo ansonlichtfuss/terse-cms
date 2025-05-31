@@ -9,7 +9,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from '@/components/ui/use-toast';
-import { useGenerateAltTextMutation } from '@/hooks/query/use-generate-alt-text-mutation';
+import { useGenerateAltTextMutation } from '@/hooks/api/use-generate-alt-text-mutation';
 import { getProcessedImageUrl } from '@/utils/get-processed-image-url';
 import { getImageField } from '@/utils/media-utils';
 

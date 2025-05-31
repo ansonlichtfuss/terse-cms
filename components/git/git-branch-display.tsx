@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 // Import the new Tanstack Query hooks
-import { useGitBranchesQuery, useSwitchGitBranchMutation } from '@/hooks/query/use-git-branches';
+import { useGitBranchesQuery, useSwitchGitBranchMutation } from '@/hooks/api/use-git-branches';
 import { cn } from '@/lib/utils';
 
 interface Branch {

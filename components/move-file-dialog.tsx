@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { useFileTreeQuery } from '@/hooks/query/use-file-tree-query';
+import { useFileTreeQuery } from '@/hooks/api/use-file-tree-query';
 import { cn } from '@/lib/utils';
 
 import styles from './move-file-dialog.module.css';

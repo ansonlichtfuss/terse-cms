@@ -10,7 +10,7 @@ import {
   DialogTitle
 } from '@/components/ui/dialog';
 
-import { PathBreadcrumbs } from '../breadcrumbs/breadcrumbs';
+import { Breadcrumbs } from '../breadcrumbs/breadcrumbs';
 import { FileUploadItem } from './file-upload-item'; // Import FileUploadItem component
 import { useDragAndDrop } from './use-drag-and-drop'; // Import useDragAndDrop hook
 import { useFileUploads } from './use-file-uploads'; // Import useFileUploads hook
@@ -54,7 +54,7 @@ const UploadDialog: React.FC<UploadDialogProps> = ({ isOpen, onClose, uploadPath
       <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Upload Files</DialogTitle>
-          <PathBreadcrumbs currentPath={uploadPath} onNavigate={() => {}} isClickable={false} />
+          <Breadcrumbs currentPath={uploadPath} onNavigate={() => {}} isClickable={false} />
         </DialogHeader>
         <div
           className={`border-1 border-dashed rounded-md p-6 text-center cursor-pointer mb-4 text-gray-500 hover:text-gray-800 ${

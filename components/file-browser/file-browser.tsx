@@ -4,12 +4,12 @@ import { Home } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react'; // Import React and useState
 
-import { PathBreadcrumbs } from '@/components/breadcrumbs/breadcrumbs';
+import { Breadcrumbs } from '@/components/breadcrumbs/breadcrumbs';
 import { ConfirmationDialog } from '@/components/confirmation-dialog';
 import { MoveFileDialog } from '@/components/move-file-dialog';
 import { RenameFileDialog } from '@/components/rename-file-dialog';
 // Import the new Tanstack Query hook
-import { useFilesQuery } from '@/hooks/query/use-files-query';
+import { useFilesQuery } from '@/hooks/api/use-files-query';
 import { cn } from '@/lib/utils';
 
 // Import the new hooks and components
@@ -254,7 +254,7 @@ export function FileBrowser({
         fetchItems={refetch} // Pass the refetch function from useFilesQuery
       />
       <div className="px-4">
-        <PathBreadcrumbs
+        <Breadcrumbs
           currentPath={currentPath.replace(/\/$/, '')} // Remove trailing slash for display
           onNavigate={handleBreadcrumbNavigation}
           rootIcon={<Home size={12} />}

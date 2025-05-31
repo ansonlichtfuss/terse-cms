@@ -21,8 +21,8 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from '@/components/ui/use-toast';
 import { useGitStatus } from '@/context/git-status-context';
-import { useCommitChangesMutation } from '@/hooks/query/use-commit-changes-mutation';
-import { useRevertChangesMutation } from '@/hooks/query/use-revert-changes-mutation';
+import { useCommitChangesMutation } from '@/hooks/api/use-commit-changes-mutation';
+import { useRevertChangesMutation } from '@/hooks/api/use-revert-changes-mutation';
 import { useMediaQuery } from '@/hooks/use-media-query';
 import { cn } from '@/lib/utils'; // Import cn utility
 

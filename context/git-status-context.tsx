@@ -3,7 +3,7 @@
 import React, { createContext, useContext } from 'react'; // Remove useState and useEffect
 
 // Import the new Tanstack Query hooks
-import { useGitStatusQuery, useStageGitChangesMutation } from '@/hooks/query/use-git-status';
+import { useGitStatusQuery, useStageGitChangesMutation } from '@/hooks/api/use-git-status';
 
 interface GitStatusContextType {
   modifiedFiles: string[] | undefined; // Data can be undefined initially

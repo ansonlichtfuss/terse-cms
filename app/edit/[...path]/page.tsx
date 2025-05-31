@@ -5,8 +5,8 @@ import { useEffect } from 'react'; // Keep useEffect for error handling
 
 import { Dashboard } from '@/components/dashboard';
 import { Editor } from '@/components/editor/editor'; // Corrected import path
-import { useFileContentQuery } from '@/hooks/query/use-file-content-query';
-import { useSaveFileMutation } from '@/hooks/query/use-save-file-mutation';
+import { useFileContentQuery } from '@/hooks/api/use-file-content-query';
+import { useSaveFileMutation } from '@/hooks/api/use-save-file-mutation';
 
 export default function EditPage() {
   const params = useParams();
