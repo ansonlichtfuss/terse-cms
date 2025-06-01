@@ -6,7 +6,7 @@ import { Clock, Edit2 } from 'lucide-react';
 import { useRouter } from 'next/navigation'; // Keep useRouter for other purposes if needed
 import { useEffect, useRef, useState } from 'react';
 
-import { type CursorPosition, EditorContent, handleToolbarAction } from '@/components/editor/editor-content';
+import { EditorContent, handleToolbarAction } from '@/components/editor/editor-content';
 import { EditorToolbar } from '@/components/editor/editor-toolbar';
 import { MediaDialog } from '@/components/media-dialog';
 import { RenameFileDialog } from '@/components/rename-file-dialog';
@@ -32,12 +32,6 @@ export function Editor({ file, onSave }: EditorProps) {
 
   // Reference to the textarea element
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-
-  // Track cursor position for inserting at cursor
-  const [cursorPosition, setCursorPosition] = useState<CursorPosition>({
-    start: 0,
-    end: 0
-  });
 
   // Use refs to track the previous file and whether we're currently saving
   const prevFileRef = useRef<FileData | null>(null);
@@ -154,13 +148,17 @@ export function Editor({ file, onSave }: EditorProps) {
   };
 
   // Handle toolbar actions
-  const handleToolbarActionClick = (action: string, value?: string) => {
-    if (!textareaRef.current) {
+  const handleToolbarActionClick = (
+    action: string,
+    value?: string,
+    toolbarTextareaRef?: React.RefObject<HTMLTextAreaElement | null>
+  ) => {
+    if (!toolbarTextareaRef?.current) {
       console.error('Textarea ref is null');
       return;
     }
 
-    const newContent = handleToolbarAction(action, value, textareaRef, content, cursorPosition, handleContentChange);
+    const newContent = handleToolbarAction(action, value, toolbarTextareaRef, content, handleContentChange);
 
     // Auto-save the updated content
     if (!initialLoadRef.current && file && newContent !== content) {
@@ -236,12 +234,16 @@ export function Editor({ file, onSave }: EditorProps) {
 
         {/* Editor Toolbar */}
         <div className="px-2 pt-2">
-          <EditorToolbar onAction={handleToolbarActionClick} onImageClick={() => setIsMediaDialogOpen(true)} />
+          <EditorToolbar
+            onAction={handleToolbarActionClick}
+            onImageClick={() => setIsMediaDialogOpen(true)}
+            textareaRef={textareaRef}
+          />
         </div>
 
         {/* Markdown Editor */}
         <div className="flex-1 p-2 m-0">
-          <EditorContent content={content} onChange={handleContentChange} />
+          <EditorContent content={content} onChange={handleContentChange} textareaRef={textareaRef} />
         </div>
       </div>
 

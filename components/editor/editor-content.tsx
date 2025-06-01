@@ -1,7 +1,6 @@
 'use client';
 
 import type React from 'react';
-import { useEffect, useRef, useState } from 'react';
 
 import { insertTextAtCursor, insertTextAtLineStart, wrapSelectedText } from '@/components/editor/utils';
 import { Textarea } from '@/components/ui/textarea';
@@ -9,53 +8,14 @@ import { Textarea } from '@/components/ui/textarea';
 interface EditorContentProps {
   content: string;
   onChange: (content: string) => void;
+  textareaRef: React.RefObject<HTMLTextAreaElement | null>;
 }
 
-export function EditorContent({ content, onChange }: EditorContentProps) {
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const [cursorPosition, setCursorPosition] = useState<{
-    start: number;
-    end: number;
-  }>({ start: 0, end: 0 });
-
+export function EditorContent({ content, onChange, textareaRef }: EditorContentProps) {
   // Handle content changes from user input
   const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     onChange(e.target.value);
-
-    // Save cursor position
-    if (textareaRef.current) {
-      setCursorPosition({
-        start: textareaRef.current.selectionStart,
-        end: textareaRef.current.selectionEnd
-      });
-    }
   };
-
-  // Update cursor position when selection changes
-  const handleSelectionChange = () => {
-    if (textareaRef.current) {
-      setCursorPosition({
-        start: textareaRef.current.selectionStart,
-        end: textareaRef.current.selectionEnd
-      });
-    }
-  };
-
-  // Expose methods to parent component via ref
-  useEffect(() => {
-    if (textareaRef.current) {
-      // Make sure the textarea is focused when needed
-      const focusTextarea = () => {
-        textareaRef.current?.focus();
-      };
-
-      // Expose the method to the window for debugging
-      // This is just for development and should be removed in production
-      if (typeof window !== 'undefined') {
-        (window as any).focusEditorTextarea = focusTextarea;
-      }
-    }
-  }, []);
 
   return (
     <Textarea
@@ -64,7 +24,6 @@ export function EditorContent({ content, onChange }: EditorContentProps) {
       onChange={handleContentChange}
       className="w-full h-full min-h-[calc(100vh-12rem)] font-mono resize-none p-2 text-xs"
       placeholder="# Start writing your markdown here..."
-      onSelect={handleSelectionChange}
     />
   );
 }
@@ -76,18 +35,22 @@ export type CursorPosition = { start: number; end: number };
 export function insertAtCursor(
   textareaRef: React.RefObject<HTMLTextAreaElement>,
   content: string,
-  cursorPosition: CursorPosition,
   textToInsert: string,
   onChange: (content: string) => void
 ) {
+  if (!textareaRef.current) return content;
+
+  const textarea = textareaRef.current;
+  const cursorPosition = { start: textarea.selectionStart, end: textarea.selectionEnd };
+
   const { newContent, newCursorPos } = insertTextAtCursor(content, cursorPosition, textToInsert);
   onChange(newContent);
 
   // Set the new cursor position after state update
   setTimeout(() => {
     if (textareaRef.current) {
-      textareaRef.current.focus();
-      textareaRef.current.setSelectionRange(newCursorPos, newCursorPos);
+      textarea.focus();
+      textarea.setSelectionRange(newCursorPos, newCursorPos);
     }
   }, 0);
 
@@ -100,13 +63,13 @@ export function handleToolbarAction(
   value: string | undefined,
   textareaRef: React.RefObject<HTMLTextAreaElement | null>,
   content: string,
-  cursorPosition: CursorPosition,
   onChange: (content: string) => void
 ) {
   if (!textareaRef.current) return content;
 
   const textarea = textareaRef.current;
-  const { start, end } = cursorPosition;
+  const start = textarea.selectionStart;
+  const end = textarea.selectionEnd;
   const selectedText = content.substring(start, end);
 
   let newContent = content;

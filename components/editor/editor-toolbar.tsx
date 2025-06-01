@@ -6,11 +6,12 @@ import { Separator } from '@/components/ui/separator';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface EditorToolbarProps {
-  onAction: (action: string, value?: string) => void;
+  onAction: (action: string, value?: string, textareaRef?: React.RefObject<HTMLTextAreaElement | null>) => void;
   onImageClick: () => void;
+  textareaRef?: React.RefObject<HTMLTextAreaElement | null>;
 }
 
-export function EditorToolbar({ onAction, onImageClick }: EditorToolbarProps) {
+export function EditorToolbar({ onAction, onImageClick, textareaRef }: EditorToolbarProps) {
   const toolbarItems = getToolbarItems(onImageClick);
 
   return (
@@ -31,7 +32,7 @@ export function EditorToolbar({ onAction, onImageClick }: EditorToolbarProps) {
                         if (item.onClick) {
                           item.onClick();
                         } else {
-                          onAction(item.action, item.value);
+                          onAction(item.action, item.value, textareaRef);
                         }
                       }}
                     >
