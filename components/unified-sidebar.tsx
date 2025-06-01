@@ -20,15 +20,18 @@ interface UnifiedSidebarProps {
 export function UnifiedSidebar({ content, filePath, isVisible, onToggle, lastSaved }: UnifiedSidebarProps) {
   const [activeTab, setActiveTab] = useState<string>('metadata');
   const [frontMatter, setFrontMatter] = useState<Record<string, any>>({});
+  const [frontMatterError, setFrontMatterError] = useState<string | null>(null);
 
   // Parse front matter whenever content changes
   useEffect(() => {
     try {
       const { data } = matter(content || '');
       setFrontMatter(data || {});
+      setFrontMatterError(null); // Clear error on successful parse
     } catch (error) {
       console.error('Error parsing front matter:', error);
       setFrontMatter({});
+      setFrontMatterError('Invalid characters in frontmatter. Please check the syntax.');
     }
   }, [content]);
 
@@ -83,7 +86,7 @@ export function UnifiedSidebar({ content, filePath, isVisible, onToggle, lastSav
           <TabsContent value="metadata" className="m-0 p-0">
             <div className="h-full overflow-y-auto">
               <div className="px-4 pt-1">
-                <MetadataDisplay frontMatter={frontMatter} />
+                <MetadataDisplay frontMatter={frontMatter} errorMessage={frontMatterError} />
               </div>
             </div>
           </TabsContent>
