@@ -1,10 +1,9 @@
 'use client';
 
 import matter from 'gray-matter';
-import { debounce } from 'lodash';
 import { Clock, Edit2 } from 'lucide-react';
-import { useRouter } from 'next/navigation'; // Keep useRouter for other purposes if needed
 import { useEffect, useRef, useState } from 'react';
+import { useDebounce } from 'use-debounce';
 
 import { EditorContent, handleToolbarAction } from '@/components/editor/editor-content';
 import { EditorToolbar } from '@/components/editor/editor-toolbar';
@@ -39,19 +38,16 @@ export function Editor({ file, onSave }: EditorProps) {
   const initialLoadRef = useRef(true);
 
   // Create a stable debounced save function
-  const debouncedSaveRef = useRef<any>(null);
-  if (!debouncedSaveRef.current) {
-    debouncedSaveRef.current = debounce(async (path: string, content: string) => {
-      isSavingRef.current = true;
-      await onSave(path, content); // Assuming onSave is async and awaits the save operation
-      setLastSaved(new Date());
-      // Update git status after saving
-      updateGitStatus();
-      setTimeout(() => {
-        isSavingRef.current = false;
-      }, 100);
-    }, 1000);
-  }
+  const [debouncedSave] = useDebounce(async (path: string, content: string) => {
+    isSavingRef.current = true;
+    await onSave(path, content); // Assuming onSave is async and awaits the save operation
+    setLastSaved(new Date());
+    // Update git status after saving
+    updateGitStatus();
+    setTimeout(() => {
+      isSavingRef.current = false;
+    }, 100);
+  }, 1000);
 
   // Load user preferences on mount
   useEffect(() => {
@@ -112,7 +108,7 @@ export function Editor({ file, onSave }: EditorProps) {
 
     // Only auto-save if we're past the initial load
     if (!initialLoadRef.current && file) {
-      debouncedSaveRef.current(file.path, newContent);
+      debouncedSave(file.path, newContent);
     }
   };
 
@@ -141,7 +137,7 @@ export function Editor({ file, onSave }: EditorProps) {
 
     // Auto-save the updated content
     if (!initialLoadRef.current && file) {
-      debouncedSaveRef.current(file.path, newContent);
+      debouncedSave(file.path, newContent);
     }
 
     setIsMediaDialogOpen(false);
@@ -162,7 +158,7 @@ export function Editor({ file, onSave }: EditorProps) {
 
     // Auto-save the updated content
     if (!initialLoadRef.current && file && newContent !== content) {
-      debouncedSaveRef.current(file.path, newContent);
+      debouncedSave(file.path, newContent);
     }
   };
 
@@ -174,26 +170,18 @@ export function Editor({ file, onSave }: EditorProps) {
   // Clean up the debounced function on unmount
   useEffect(() => {
     return () => {
-      if (debouncedSaveRef.current) {
-        debouncedSaveRef.current.cancel();
-      }
+      // use-debounce does not require explicit cancel on unmount
     };
   }, []);
-
-  // Add router to the component
-  // Add router to the component
-  const router = useRouter();
 
   // Use the git status context
   const { updateGitStatus } = useGitStatus();
 
   // Use the file operations hook
-  const { handleRename } = useFileOperations({
+  const { handleRename, isRenamingFile } = useFileOperations({
     type: 'files', // Assuming editor only deals with 'files' type
     currentPath: file?.path || '', // Pass the current file path
-    fetchItems: async () => {
-      // No need to fetch items in editor, provide a dummy function
-    },
+
     setIsDeleteDialogOpen: () => {}, // Dummy function
     setItemToAction: () => {} // Dummy function
   });
@@ -270,6 +258,7 @@ export function Editor({ file, onSave }: EditorProps) {
           }}
           onRename={(newName) => handleRename({ key: file.path, type: 'file' }, newName)}
           isMarkdownFile={true}
+          isRenaming={isRenamingFile}
         />
       )}
     </div>
