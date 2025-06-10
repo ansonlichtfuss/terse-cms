@@ -6,18 +6,16 @@ import { isImageArray, isImageUrl } from '@/utils/media-utils';
 
 interface MetadataItemProps {
   keyName: string;
-  value: any;
+  value: string;
 }
 
 // Helper function to check if a value is a date object
-const isDateObject = (value: any): boolean => {
-  return (
-    value instanceof Date || (typeof value === 'object' && value !== null && typeof value.toISOString === 'function')
-  );
+const isDateObject = (value: string | Date): boolean => {
+  return value instanceof Date;
 };
 
 // Render different types of values
-const renderValue = (key: string, value: any) => {
+const renderValue = (key: string, value: string | Date) => {
   if (value === null || value === undefined || value === '') {
     return <span className="text-muted-foreground italic">Empty</span>;
   }
@@ -116,7 +114,7 @@ const renderValue = (key: string, value: any) => {
     // Try to stringify the object for display
     try {
       return <span className="text-xs font-mono">{JSON.stringify(value)}</span>;
-    } catch (e) {
+    } catch {
       return <Badge>Object</Badge>;
     }
   }

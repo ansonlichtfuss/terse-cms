@@ -107,10 +107,7 @@ export async function DELETE(request: Request) {
         // Find the parent folder key
         const parentFolder = pathModule.dirname(key);
         if (s3Data[parentFolder]) {
-          s3Data[parentFolder] = s3Data[parentFolder].filter(
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            (item: any) => item.key !== key
-          );
+          s3Data[parentFolder] = s3Data[parentFolder].filter((item: { key: string }) => item.key !== key);
         }
       } else if (type === 'folder') {
         // Remove the folder and all items within it
@@ -120,10 +117,7 @@ export async function DELETE(request: Request) {
           if (dataKey.startsWith(folderKey)) {
             delete s3Data[dataKey];
           } else {
-            s3Data[dataKey] = s3Data[dataKey].filter(
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              (item: any) => !item.key.startsWith(folderKey)
-            );
+            s3Data[dataKey] = s3Data[dataKey].filter((item: { key: string }) => !item.key.startsWith(folderKey));
           }
         }
       }

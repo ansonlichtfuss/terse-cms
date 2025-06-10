@@ -37,8 +37,8 @@ export async function POST(request: Request) {
         }
       }
     );
-  } catch (error: any) {
+  } catch (error) {
     console.error('Failed to switch branch:', error);
-    return NextResponse.json({ error: error.message || 'Failed to switch branch' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to switch branch' }, { status: 500 });
   }
 }

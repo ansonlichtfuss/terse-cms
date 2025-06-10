@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { ResetMode } from 'simple-git';
 
 export async function POST(_request: Request) {
   try {
@@ -15,7 +16,7 @@ export async function POST(_request: Request) {
     }
 
     // Discard all changes
-    await git.reset('hard' as any);
+    await git.reset('hard' as ResetMode);
     await git.clean('f', ['-d']);
 
     return NextResponse.json({

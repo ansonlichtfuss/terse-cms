@@ -7,7 +7,7 @@ export function isImageUrl(value: string): boolean {
 }
 
 // Helper to check if an array contains image objects
-export function isImageArray(arr: any[]): boolean {
+export function isImageArray(arr: Record<string, string>[]): boolean {
   if (!Array.isArray(arr) || arr.length === 0 || typeof arr[0] !== 'object') return false;
 
   // Check if the array name suggests images
