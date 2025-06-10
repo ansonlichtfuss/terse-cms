@@ -31,7 +31,7 @@ export function Logo({ size = 'md', withText = true, withIcon = false }: LogoPro
       )}
       {withText && (
         <div className="font-semibold tracking-tight leading-none">
-          <span className={`${textSizeClasses[size]} gradient-underline`}>Branch</span>
+          <span className={`${textSizeClasses[size]} gradient-underline`}>Terse</span>
           <span className={`${textSizeClasses[size]} ml-1`}>CMS</span>
         </div>
       )}
