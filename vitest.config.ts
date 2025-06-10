@@ -17,7 +17,8 @@ export default defineConfig({
     },
     // Override environment for specific test files
     environmentMatchGlobs: [
-      ['app/api/**', 'node'] // Run API tests in Node.js environment
+      ['app/api/**', 'node'], // Run API tests in Node.js environment
+      ['lib/api/**', 'node'] // Run lib API tests in Node.js environment
     ],
     alias: {
       // Configure path aliases to match your tsconfig.json

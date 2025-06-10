@@ -1,11 +1,7 @@
 import type React from 'react';
-// File-related types
-export interface FileNode {
-  name: string;
-  path: string;
-  type: 'file' | 'directory';
-  children?: FileNode[];
-}
+
+// Re-export file operation types for convenience
+export type { FileNode, FileOperationResult, FileContent, ExistenceInfo } from '@/lib/api/files/file-operations-types';
 
 export interface FileData {
   path: string;

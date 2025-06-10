@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 
-import { FileOperations } from '@/lib/file-operations';
+import { FileOperations } from '@/lib/api/files/file-operations';
 
 interface MoveFileRequest {
   sourcePath: string;

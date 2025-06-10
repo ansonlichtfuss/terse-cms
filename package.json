@@ -89,6 +89,7 @@
     "eslint-plugin-unused-imports": "^4.1.4",
     "globals": "^16.2.0",
     "jsdom": "^26.1.0",
+    "memfs": "^4.17.2",
     "patch-package": "^8.0.0",
     "postcss": "^8.5.4",
     "prettier": "^3.5.3",
