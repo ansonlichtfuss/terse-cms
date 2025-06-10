@@ -7,13 +7,12 @@ interface MoveFileArgs {
 }
 
 const moveFile = async ({ sourcePath, destinationPath, type }: MoveFileArgs): Promise<void> => {
-  const response = await fetch('/api/files/operations', {
+  const response = await fetch('/api/files/move', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      operation: 'move',
       sourcePath,
       destinationPath,
       type

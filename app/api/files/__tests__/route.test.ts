@@ -28,11 +28,11 @@ describe('/api/files GET', () => {
     expect(jsonResponse).toHaveProperty('error', 'Path parameter is required');
   });
 
-  it('should return 404 if file not found in mock filesystem', async () => {
+  it('should return 404 if file not found', async () => {
     const request = new NextRequest('http://localhost/api/files?path=nonexistent-file.md');
     const response = await GET(request);
     expect(response.status).toBe(404);
     const jsonResponse = await response.json();
-    expect(jsonResponse).toHaveProperty('error', 'File not found in mock filesystem');
+    expect(jsonResponse).toHaveProperty('error', 'File not found');
   });
 });

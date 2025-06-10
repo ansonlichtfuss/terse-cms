@@ -7,13 +7,12 @@ interface RenameFileArgs {
 }
 
 const renameFile = async ({ sourcePath, newName, type }: RenameFileArgs): Promise<void> => {
-  const response = await fetch('/api/files/operations', {
+  const response = await fetch('/api/files/rename', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      operation: 'rename',
       sourcePath,
       newName,
       type
