@@ -87,8 +87,8 @@ const useFileUploads = ({ uploadPath }: UseFileUploadsProps) => {
 
       xhr.open('POST', '/api/s3/upload');
       xhr.send(formData);
-    } catch (error: any) {
-      const errorMessage = error.message || 'An error occurred';
+    } catch {
+      const errorMessage = 'An error occurred';
       setFileUploads((prevUploads) =>
         prevUploads.map((upload) =>
           upload.file.name === file.name ? { ...upload, status: 'error', error: errorMessage } : upload

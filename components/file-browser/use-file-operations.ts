@@ -18,7 +18,7 @@ import { getItemPath } from './utils'; // Import utility function
 interface UseFileOperationsProps {
   type: 'files' | 'media';
   currentPath: string; // Needed for refreshing after operations
-  fetchItems: (options?: RefetchOptions) => Promise<QueryObserverResult<FileItem[], Error>>; // Function to refresh the file list using Tanstack Query's refetch signature
+  fetchItems?: (options?: RefetchOptions) => Promise<QueryObserverResult<FileItem[], Error>>; // Function to refresh the file list using Tanstack Query's refetch signature
   setIsDeleteDialogOpen: (isOpen: boolean) => void; // Function to close the delete dialog
   setItemToAction: (item: FileItem | null) => void; // Function to clear the item in action
 }
@@ -81,7 +81,7 @@ export const useFileOperations = ({
       }
 
       // Refresh the list using Tanstack Query's refetch
-      await fetchItems();
+      await fetchItems?.();
       toast({
         title: 'File uploaded'
       });
@@ -118,7 +118,7 @@ export const useFileOperations = ({
         if (!response.ok) {
           throw new Error('Failed to create folder');
         }
-        await fetchItems(); // Refresh after S3 folder creation
+        await fetchItems?.(); // Refresh after S3 folder creation
         toast({
           title: 'Folder created'
         });

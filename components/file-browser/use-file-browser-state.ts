@@ -15,8 +15,8 @@ interface UseFileBrowserStateResult {
   setIsRenameDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
   isDeleteDialogOpen: boolean;
   setIsDeleteDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  itemToAction: any | null; // TODO: Define a more specific type for itemToAction
-  setItemToAction: React.Dispatch<React.SetStateAction<any | null>>; // TODO: Define a more specific type for itemToAction
+  itemToAction: string | null;
+  setItemToAction: React.Dispatch<React.SetStateAction<string | null>>;
   currentPath: string;
   setCurrentPath: React.Dispatch<React.SetStateAction<string>>;
   expandedFolders: Set<string>;
@@ -32,14 +32,13 @@ interface UseFileBrowserStateResult {
 
 export const useFileBrowserState = ({
   isMobile = false,
-  inSidebar = false,
   selectedPath
 }: UseFileBrowserStateProps): UseFileBrowserStateResult => {
   const [selectedItem, setSelectedItem] = useState<string | null>(null);
   const [isMoveDialogOpen, setIsMoveDialogOpen] = useState(false);
   const [isRenameDialogOpen, setIsRenameDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [itemToAction, setItemToAction] = useState<any | null>(null); // TODO: Define a more specific type
+  const [itemToAction, setItemToAction] = useState<string | null>(null); // TODO: Define a more specific type
   const [currentPath, setCurrentPath] = useState<string>(() => {
     // Initialize currentPath based on selectedPath
     if (selectedPath) {
