@@ -1,14 +1,13 @@
 import { NextResponse } from 'next/server';
 
-// Check if we're in a browser environment
-const isBrowser = typeof window !== 'undefined';
+import { shouldUseMockApi } from '@/lib/env';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const path = searchParams.get('path') || '';
 
   // Always use mock data in browser or if mock mode is enabled
-  const useMock = isBrowser || process.env.USE_MOCK_API === 'true';
+  const useMock = shouldUseMockApi();
 
   if (useMock) {
     // Dynamically import Node.js modules only on the server
@@ -91,7 +90,7 @@ export async function GET(request: Request) {
 
 export async function DELETE(request: Request) {
   // Always use mock data in browser or if mock mode is enabled
-  const useMock = isBrowser || process.env.USE_MOCK_API === 'true';
+  const useMock = shouldUseMockApi();
 
   if (useMock) {
     // Dynamically import Node.js modules only on the server

@@ -1,9 +1,7 @@
 import { NextResponse } from 'next/server';
 
+import { shouldUseMockApi } from '@/lib/env';
 import { getMarkdownRootDir } from '@/lib/paths';
-
-// Check if we're in a browser environment
-const isBrowser = typeof window !== 'undefined';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -14,7 +12,7 @@ export async function GET(request: Request) {
   }
 
   // Always use mock data in browser or if mock mode is enabled
-  const useMock = isBrowser || process.env.USE_MOCK_API === 'true';
+  const useMock = shouldUseMockApi();
 
   // Dynamically import Node.js modules only on the server
   const fs = await import('fs');
@@ -71,7 +69,7 @@ export async function POST(request: Request) {
     }
 
     // Always use mock data in browser or if mock mode is enabled
-    const useMock = isBrowser || process.env.USE_MOCK_API === 'true';
+    const useMock = shouldUseMockApi();
 
     // Dynamically import Node.js modules only on the server
     const fs = await import('fs');
@@ -123,7 +121,7 @@ export async function DELETE(request: Request) {
     }
 
     // Always use mock data in browser or if mock mode is enabled
-    const useMock = isBrowser || process.env.USE_MOCK_API === 'true';
+    const useMock = shouldUseMockApi();
 
     // Dynamically import Node.js modules only on the server
     const fs = await import('fs');

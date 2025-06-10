@@ -1,9 +1,7 @@
 import { NextResponse } from 'next/server';
 
+import { shouldUseMockApi } from '@/lib/env';
 import { getMarkdownRootDir } from '@/lib/paths';
-
-// Check if we're in a browser environment
-const isBrowser = typeof window !== 'undefined';
 
 interface FileNode {
   name: string;
@@ -14,7 +12,7 @@ interface FileNode {
 
 export async function GET(_request: Request) {
   // Always use mock data in browser or if mock mode is enabled
-  const useMock = isBrowser || process.env.USE_MOCK_API === 'true';
+  const useMock = shouldUseMockApi();
 
   // Dynamically import Node.js modules only on the server
   const fs = await import('fs');

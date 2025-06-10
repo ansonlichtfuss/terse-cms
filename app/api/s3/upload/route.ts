@@ -1,11 +1,10 @@
 import { NextResponse } from 'next/server';
 
-// Check if we're in a browser environment
-const isBrowser = typeof window !== 'undefined';
+import { shouldUseMockApi } from '@/lib/env';
 
 export async function POST(request: Request) {
   // Always use mock data in browser or if mock mode is enabled
-  const useMock = isBrowser || process.env.USE_MOCK_API === 'true';
+  const useMock = shouldUseMockApi();
 
   if (useMock) {
     // In mock mode, generate a fake URL and return success
