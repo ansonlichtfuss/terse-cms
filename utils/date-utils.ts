@@ -38,7 +38,7 @@ export function isDateString(value: string): boolean {
     if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
       return isValid(new Date(value));
     }
-  } catch (e) {
+  } catch {
     return false;
   }
 
@@ -46,10 +46,8 @@ export function isDateString(value: string): boolean {
 }
 
 // Helper to check if a value is a date object
-export function isDateObject(value: any): boolean {
-  return (
-    value instanceof Date || (typeof value === 'object' && value !== null && typeof value.toISOString === 'function')
-  );
+export function isDateObject(value: string | Date): value is Date {
+  return value instanceof Date;
 }
 
 // Format relative time for git history
@@ -71,7 +69,7 @@ export function formatRelativeTime(dateString: string): string {
     } else {
       return format(date, 'MMM d');
     }
-  } catch (e) {
+  } catch {
     return dateString;
   }
 }

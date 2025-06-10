@@ -1,18 +1,13 @@
 import { CalendarIcon, CheckIcon, FileIcon, XIcon } from 'lucide-react';
 
 import { Badge } from '@/components/ui/badge';
-import { formatDate, isDateString } from '@/utils/date-utils';
+import { formatDate, isDateObject, isDateString } from '@/utils/date-utils';
 import { isImageArray, isImageUrl } from '@/utils/media-utils';
 
 interface MetadataItemProps {
   keyName: string;
   value: string;
 }
-
-// Helper function to check if a value is a date object
-const isDateObject = (value: string | Date): boolean => {
-  return value instanceof Date;
-};
 
 // Render different types of values
 const renderValue = (key: string, value: string | Date) => {

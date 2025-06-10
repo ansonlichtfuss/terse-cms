@@ -3,8 +3,8 @@
 import { Check, GitBranch } from 'lucide-react';
 import { useState } from 'react'; // Import useState
 
-import { ConfirmationDialog } from '@/components/ui/confirmation-dialog'; // Import ConfirmationDialog
 import { Button } from '@/components/ui/button';
+import { ConfirmationDialog } from '@/components/ui/confirmation-dialog'; // Import ConfirmationDialog
 import {
   DropdownMenu,
   DropdownMenuContent,

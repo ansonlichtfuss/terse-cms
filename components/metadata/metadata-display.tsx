@@ -3,7 +3,7 @@
 import { MetadataItem } from './metadata-item';
 
 interface MetadataDisplayProps {
-  frontMatter: Record<string, any>;
+  frontMatter: Record<string, string>;
   errorMessage?: string | null;
 }
 

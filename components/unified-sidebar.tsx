@@ -19,7 +19,7 @@ interface UnifiedSidebarProps {
 
 export function UnifiedSidebar({ content, filePath, isVisible, onToggle, lastSaved }: UnifiedSidebarProps) {
   const [activeTab, setActiveTab] = useState<string>('metadata');
-  const [frontMatter, setFrontMatter] = useState<Record<string, any>>({});
+  const [frontMatter, setFrontMatter] = useState<Record<string, string>>({});
   const [frontMatterError, setFrontMatterError] = useState<string | null>(null);
 
   // Parse front matter whenever content changes
