@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
+
 import type { FileNode, FileOperationResult } from './file-operations-types';
 
 /**
@@ -19,7 +20,6 @@ export class FileTreeBuilder {
    */
   static async buildFileTree(rootDir: string): Promise<FileOperationResult<{ files: FileNode[] }>> {
     try {
-
       // Function to build the file tree recursively
       const buildTree = (dir: string, basePath = ''): FileNode[] => {
         const entries = fs.readdirSync(dir, { withFileTypes: true });
@@ -38,18 +38,30 @@ export class FileTreeBuilder {
             const relativePath = path.join(basePath, entry.name);
             const fullPath = path.join(dir, entry.name);
 
+            // Get file modification time with error handling
+            let lastModified: string | undefined;
+            try {
+              const stats = fs.statSync(fullPath);
+              lastModified = stats.mtime.toISOString();
+            } catch (error) {
+              // If stat fails, leave lastModified undefined
+              console.warn(`Failed to get modification time for ${fullPath}:`, error);
+            }
+
             if (entry.isDirectory()) {
               return {
                 name: entry.name,
                 path: relativePath,
                 type: 'directory',
-                children: buildTree(fullPath, relativePath)
+                children: buildTree(fullPath, relativePath),
+                lastModified
               } as FileNode;
             } else {
               return {
                 name: entry.name,
                 path: relativePath,
-                type: 'file'
+                type: 'file',
+                lastModified
               } as FileNode;
             }
           })

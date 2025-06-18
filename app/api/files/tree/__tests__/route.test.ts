@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { vi, describe, it, expect, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { GET } from '../route';
 
@@ -10,8 +10,8 @@ const mockGetFileTree = vi.fn();
 vi.mock('@/lib/api/files/file-operations', () => {
   return {
     FileOperations: vi.fn().mockImplementation(() => ({
-      getFileTree: mockGetFileTree,
-    })),
+      getFileTree: mockGetFileTree
+    }))
   };
 });
 
@@ -26,10 +26,16 @@ describe('/api/files/tree', () => {
         success: true,
         data: {
           files: [
-            { name: 'file1.md', type: 'file' },
-            { name: 'folder1', type: 'directory', children: [] },
-          ],
-        },
+            { name: 'file1.md', type: 'file', path: 'file1.md', lastModified: '2023-01-01T10:30:00.000Z' },
+            {
+              name: 'folder1',
+              type: 'directory',
+              path: 'folder1',
+              children: [],
+              lastModified: '2023-01-01T10:30:00.000Z'
+            }
+          ]
+        }
       };
       mockGetFileTree.mockResolvedValue(mockResult);
 
@@ -46,7 +52,7 @@ describe('/api/files/tree', () => {
       const mockResult = {
         success: false,
         error: 'Failed to read directory',
-        statusCode: 500,
+        statusCode: 500
       };
       mockGetFileTree.mockResolvedValue(mockResult);
 
@@ -63,8 +69,8 @@ describe('/api/files/tree', () => {
       const mockResult = {
         success: true,
         data: {
-          files: [],
-        },
+          files: []
+        }
       };
       mockGetFileTree.mockResolvedValue(mockResult);
 
@@ -81,10 +87,8 @@ describe('/api/files/tree', () => {
       const mockResult = {
         success: true,
         data: {
-          files: [
-            { name: 'file1.md', type: 'file' },
-          ],
-        },
+          files: [{ name: 'file1.md', type: 'file', path: 'file1.md', lastModified: '2023-01-01T10:30:00.000Z' }]
+        }
       };
       mockGetFileTree.mockResolvedValue(mockResult);
 

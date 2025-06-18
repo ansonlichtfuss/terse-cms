@@ -47,8 +47,20 @@ describe('FileTreeBuilder', () => {
       expect(dirNode!.children).toHaveLength(1);
       expect(dirNode!.children![0].name).toBe('nested.md');
 
+      // Check that lastModified is present
+      expect(dirNode!.lastModified).toBeDefined();
+      expect(dirNode!.lastModified).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/);
+      expect(dirNode!.children![0].lastModified).toBeDefined();
+      expect(dirNode!.children![0].lastModified).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/);
+
       expect(fileNodes).toHaveLength(2);
       expect(fileNodes.map((f) => f.name).sort()).toEqual(['file1.md', 'file2.md']);
+
+      // Check that all files have lastModified
+      fileNodes.forEach((file) => {
+        expect(file.lastModified).toBeDefined();
+        expect(file.lastModified).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/);
+      });
     });
 
     it('should handle empty directory', async () => {
@@ -230,6 +242,71 @@ describe('FileTreeBuilder', () => {
       // Should only include .md files, not .MD, .markdown, .mdx, or .txt
       expect(files).toHaveLength(1);
       expect(files[0].name).toBe('file.md');
+    });
+
+    it('should include lastModified timestamp for files and directories', async () => {
+      vol.fromJSON({
+        '/timestamp-test/file.md': 'content',
+        '/timestamp-test/folder/nested.md': 'nested content'
+      });
+
+      const result = await FileTreeBuilder.buildFileTree('/timestamp-test');
+
+      expect(result.success).toBe(true);
+      const files = result.data!.files;
+
+      // Check directory has lastModified
+      const folder = files.find((f) => f.type === 'directory');
+      expect(folder).toBeDefined();
+      expect(folder!.lastModified).toBeDefined();
+      expect(folder!.lastModified).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/);
+
+      // Check file has lastModified
+      const file = files.find((f) => f.type === 'file');
+      expect(file).toBeDefined();
+      expect(file!.lastModified).toBeDefined();
+      expect(file!.lastModified).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/);
+
+      // Check nested file has lastModified
+      const nestedFile = folder!.children![0];
+      expect(nestedFile.lastModified).toBeDefined();
+      expect(nestedFile.lastModified).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/);
+
+      // Verify lastModified can be parsed as valid Date
+      expect(new Date(folder!.lastModified!).getTime()).toBeGreaterThan(0);
+      expect(new Date(file!.lastModified!).getTime()).toBeGreaterThan(0);
+      expect(new Date(nestedFile.lastModified!).getTime()).toBeGreaterThan(0);
+    });
+
+    it('should handle stat errors gracefully and continue processing', async () => {
+      vol.fromJSON({
+        '/error-test/good-file.md': 'content',
+        '/error-test/folder/nested.md': 'nested content'
+      });
+
+      // Mock fs.statSync to throw an error for testing error handling
+      const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      const _statSyncSpy = vi.spyOn(vol, 'statSync').mockImplementation(() => {
+        throw new Error('Permission denied');
+      });
+
+      const result = await FileTreeBuilder.buildFileTree('/error-test');
+
+      expect(result.success).toBe(true);
+      const files = result.data!.files;
+
+      // Should still process all files even with stat errors
+      expect(files).toHaveLength(2); // folder and good-file.md
+
+      // All files should not have lastModified due to stat errors
+      files.forEach((file) => {
+        expect(file.lastModified).toBeUndefined();
+      });
+
+      // Should have logged warnings
+      expect(consoleSpy).toHaveBeenCalled();
+
+      vi.restoreAllMocks();
     });
   });
 });

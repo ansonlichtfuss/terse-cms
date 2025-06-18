@@ -47,4 +47,6 @@ export interface FileNode {
   type: 'file' | 'directory';
   /** Child nodes (only present for directories) */
   children?: FileNode[];
+  /** ISO date string of when the file/directory was last modified */
+  lastModified?: string;
 }

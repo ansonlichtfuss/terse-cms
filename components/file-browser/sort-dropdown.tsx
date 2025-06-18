@@ -35,8 +35,8 @@ export function SortDropdown({ sortConfig, onSortChange, type: _type, className 
     onSortChange?.({ ...sortConfig, field: value as SortField });
   };
 
-  const handleDirectionChange = (direction: 'asc' | 'desc') => {
-    onSortChange?.({ ...sortConfig, direction });
+  const handleSortChange = (field: SortField, direction: 'asc' | 'desc') => {
+    onSortChange?.({ ...sortConfig, field, direction });
   };
 
   const handleFoldersFirstChange = (foldersFirst: boolean) => {
@@ -68,7 +68,7 @@ export function SortDropdown({ sortConfig, onSortChange, type: _type, className 
       <DropdownMenuContent align="end" className="w-56" role="menu" aria-label="Sort options menu">
         <DropdownMenuLabel>Sort by</DropdownMenuLabel>
 
-        <DropdownMenuRadioGroup value={sortConfig.field} onValueChange={handleFieldChange}>
+        <DropdownMenuRadioGroup value={sortConfig.field} onValueChange={handleFieldChange} className="list-none">
           {SORT_FIELDS.map(({ value, label }) => (
             <DropdownMenuRadioItem key={value} value={value} className="flex items-center justify-between">
               <span>{label}</span>
@@ -79,8 +79,7 @@ export function SortDropdown({ sortConfig, onSortChange, type: _type, className 
                   className="h-6 w-6 p-0"
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleFieldChange(value);
-                    handleDirectionChange('asc');
+                    handleSortChange(value as SortField, 'asc');
                   }}
                   aria-label={`Sort ${label.toLowerCase()} ascending`}
                 >
@@ -92,8 +91,7 @@ export function SortDropdown({ sortConfig, onSortChange, type: _type, className 
                   className="h-6 w-6 p-0"
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleFieldChange(value);
-                    handleDirectionChange('desc');
+                    handleSortChange(value as SortField, 'desc');
                   }}
                   aria-label={`Sort ${label.toLowerCase()} descending`}
                 >
