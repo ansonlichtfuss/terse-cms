@@ -30,7 +30,7 @@ describe('persistence utilities', () => {
     it('should save preferences to localStorage', () => {
       const preferences: SortPreferences = {
         files: { field: 'name', direction: 'asc', foldersFirst: true },
-        media: { field: 'size', direction: 'desc', foldersFirst: false }
+        media: { field: 'lastModified', direction: 'desc', foldersFirst: false }
       };
 
       saveSortPreferences(preferences);
@@ -81,7 +81,7 @@ describe('persistence utilities', () => {
     it('should use defaults for invalid saved preferences', () => {
       const invalidPreferences = {
         files: { field: 'invalid', direction: 'asc', foldersFirst: true },
-        media: { field: 'size', direction: 'invalid', foldersFirst: false }
+        media: { field: 'lastModified', direction: 'invalid', foldersFirst: false }
       };
 
       localStorageMock.getItem.mockReturnValue(JSON.stringify(invalidPreferences));
@@ -123,7 +123,7 @@ describe('persistence utilities', () => {
     it('should return files config for files type', () => {
       const preferences: SortPreferences = {
         files: { field: 'name', direction: 'asc', foldersFirst: true },
-        media: { field: 'size', direction: 'desc', foldersFirst: false }
+        media: { field: 'lastModified', direction: 'desc', foldersFirst: false }
       };
 
       const result = getSortConfigForType(preferences, 'files');
@@ -134,7 +134,7 @@ describe('persistence utilities', () => {
     it('should return media config for media type', () => {
       const preferences: SortPreferences = {
         files: { field: 'name', direction: 'asc', foldersFirst: true },
-        media: { field: 'size', direction: 'desc', foldersFirst: false }
+        media: { field: 'lastModified', direction: 'desc', foldersFirst: false }
       };
 
       const result = getSortConfigForType(preferences, 'media');
@@ -147,10 +147,10 @@ describe('persistence utilities', () => {
     it('should update files config', () => {
       const preferences: SortPreferences = {
         files: { field: 'name', direction: 'asc', foldersFirst: true },
-        media: { field: 'size', direction: 'desc', foldersFirst: false }
+        media: { field: 'lastModified', direction: 'desc', foldersFirst: false }
       };
 
-      const newConfig: SortConfig = { field: 'type', direction: 'desc', foldersFirst: false };
+      const newConfig: SortConfig = { field: 'lastModified', direction: 'desc', foldersFirst: false };
 
       const result = updateSortPreferences(preferences, 'files', newConfig);
 
@@ -161,7 +161,7 @@ describe('persistence utilities', () => {
     it('should update media config', () => {
       const preferences: SortPreferences = {
         files: { field: 'name', direction: 'asc', foldersFirst: true },
-        media: { field: 'size', direction: 'desc', foldersFirst: false }
+        media: { field: 'lastModified', direction: 'desc', foldersFirst: false }
       };
 
       const newConfig: SortConfig = { field: 'name', direction: 'asc', foldersFirst: true };
@@ -175,11 +175,11 @@ describe('persistence utilities', () => {
     it('should not mutate original preferences', () => {
       const preferences: SortPreferences = {
         files: { field: 'name', direction: 'asc', foldersFirst: true },
-        media: { field: 'size', direction: 'desc', foldersFirst: false }
+        media: { field: 'lastModified', direction: 'desc', foldersFirst: false }
       };
 
       const originalPreferences = JSON.parse(JSON.stringify(preferences));
-      const newConfig: SortConfig = { field: 'type', direction: 'desc', foldersFirst: false };
+      const newConfig: SortConfig = { field: 'lastModified', direction: 'desc', foldersFirst: false };
 
       updateSortPreferences(preferences, 'files', newConfig);
 

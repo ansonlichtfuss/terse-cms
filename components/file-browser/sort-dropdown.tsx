@@ -25,8 +25,6 @@ interface SortDropdownProps {
 
 const SORT_FIELDS: { value: SortField; label: string }[] = [
   { value: 'name', label: 'Name' },
-  { value: 'type', label: 'Type' },
-  { value: 'size', label: 'Size' },
   { value: 'lastModified', label: 'Date Modified' }
 ];
 

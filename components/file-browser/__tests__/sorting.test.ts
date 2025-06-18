@@ -42,40 +42,6 @@ describe('sortItems', () => {
     expect(result[3].type).toBe('file');
   });
 
-  it('should sort by size ascending', () => {
-    const config: SortConfig = { field: 'size', direction: 'asc', foldersFirst: false };
-    const result = sortItems(mockItems, config);
-
-    const fileSizes = result.filter((item) => item.type === 'file').map((item) => item.size);
-    expect(fileSizes).toEqual([100, 200]);
-  });
-
-  it('should sort by size descending', () => {
-    const config: SortConfig = { field: 'size', direction: 'desc', foldersFirst: false };
-    const result = sortItems(mockItems, config);
-
-    const fileSizes = result.filter((item) => item.type === 'file').map((item) => item.size);
-    expect(fileSizes).toEqual([200, 100]);
-  });
-
-  it('should sort by type', () => {
-    const mixedItems: FileItem[] = [
-      { key: 'file.txt', name: 'file.txt', type: 'file' },
-      { key: 'file.md', name: 'file.md', type: 'file' },
-      { key: 'folder1', name: 'folder1', type: 'folder' },
-      { key: 'file.js', name: 'file.js', type: 'file' }
-    ];
-
-    const config: SortConfig = { field: 'type', direction: 'asc', foldersFirst: false };
-    const result = sortItems(mixedItems, config);
-
-    // Should group by file extension
-    expect(result[0].name).toBe('folder1'); // folder type comes first alphabetically
-    expect(result[1].name).toBe('file.js'); // .js extension
-    expect(result[2].name).toBe('file.md'); // .md extension
-    expect(result[3].name).toBe('file.txt'); // .txt extension
-  });
-
   it('should sort by lastModified date', () => {
     const config: SortConfig = { field: 'lastModified', direction: 'asc', foldersFirst: false };
     const result = sortItems(mockItems, config);
@@ -96,20 +62,6 @@ describe('sortItems', () => {
 
     expect(result[0].key).toBe('alpha.txt');
     expect(result[1].key).toBe('zebra.txt');
-  });
-
-  it('should handle items without size', () => {
-    const itemsWithoutSize: FileItem[] = [
-      { key: 'file1.txt', name: 'file1.txt', type: 'file' },
-      { key: 'file2.txt', name: 'file2.txt', type: 'file', size: 100 }
-    ];
-
-    const config: SortConfig = { field: 'size', direction: 'asc', foldersFirst: false };
-    const result = sortItems(itemsWithoutSize, config);
-
-    // Items without size should be treated as size 0
-    expect(result[0].name).toBe('file1.txt');
-    expect(result[1].name).toBe('file2.txt');
   });
 
   it('should handle items without lastModified date', () => {

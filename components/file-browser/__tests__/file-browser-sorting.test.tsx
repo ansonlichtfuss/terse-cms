@@ -203,7 +203,7 @@ describe('File Browser Sorting Integration', () => {
 
     it('should display current sort configuration', () => {
       const customSortConfig: SortConfig = {
-        field: 'size' as SortField,
+        field: 'lastModified' as SortField,
         direction: 'desc' as SortDirection,
         foldersFirst: true
       };
@@ -223,7 +223,7 @@ describe('File Browser Sorting Integration', () => {
         />
       );
 
-      expect(screen.getByText('Sort: size desc')).toBeInTheDocument();
+      expect(screen.getByText('Sort: lastModified desc')).toBeInTheDocument();
       expect(screen.getByText('Folders First: On')).toBeInTheDocument();
     });
   });

@@ -128,11 +128,11 @@ describe('useSort', () => {
       );
 
       act(() => {
-        result.current.toggleSort('size' as SortField);
+        result.current.toggleSort('lastModified' as SortField);
       });
 
       expect(mockOnSortChange).toHaveBeenCalledWith({
-        field: 'size',
+        field: 'lastModified',
         direction: 'asc',
         foldersFirst: false
       });
@@ -162,7 +162,7 @@ describe('useSort', () => {
 
     it('should preserve other config properties', () => {
       const customSortConfig: SortConfig = {
-        field: 'size' as SortField,
+        field: 'lastModified' as SortField,
         direction: 'asc' as SortDirection,
         foldersFirst: true
       };
@@ -180,7 +180,7 @@ describe('useSort', () => {
       });
 
       expect(mockOnSortChange).toHaveBeenCalledWith({
-        field: 'size',
+        field: 'lastModified',
         direction: 'desc',
         foldersFirst: true
       });
@@ -257,7 +257,7 @@ describe('useSort', () => {
         })
       );
 
-      expect(result.current.isSortedBy('size' as SortField)).toBe(false);
+      expect(result.current.isSortedBy('lastModified' as SortField)).toBe(false);
     });
   });
 
@@ -283,7 +283,7 @@ describe('useSort', () => {
         })
       );
 
-      expect(result.current.getSortDirection('size' as SortField)).toBeNull();
+      expect(result.current.getSortDirection('lastModified' as SortField)).toBeNull();
     });
 
     it('should return correct direction for desc sorting', () => {
@@ -337,7 +337,7 @@ describe('useSort', () => {
       expect(result.current.sortedItems).toHaveLength(2);
       expect(() => {
         act(() => {
-          result.current.toggleSort('size' as SortField);
+          result.current.toggleSort('lastModified' as SortField);
         });
       }).not.toThrow();
     });

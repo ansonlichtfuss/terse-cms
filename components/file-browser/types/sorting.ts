@@ -1,5 +1,5 @@
 // Sort field options
-export type SortField = 'name' | 'type' | 'size' | 'lastModified';
+export type SortField = 'name' | 'lastModified';
 
 // Sort direction options
 export type SortDirection = 'asc' | 'desc';

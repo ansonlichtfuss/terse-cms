@@ -56,12 +56,10 @@ describe('Sorting Performance Tests', () => {
   const sortConfigs: SortConfig[] = [
     { field: 'name' as SortField, direction: 'asc' as SortDirection, foldersFirst: false },
     { field: 'name' as SortField, direction: 'desc' as SortDirection, foldersFirst: false },
-    { field: 'size' as SortField, direction: 'asc' as SortDirection, foldersFirst: false },
-    { field: 'size' as SortField, direction: 'desc' as SortDirection, foldersFirst: false },
-    { field: 'type' as SortField, direction: 'asc' as SortDirection, foldersFirst: false },
     { field: 'lastModified' as SortField, direction: 'asc' as SortDirection, foldersFirst: false },
+    { field: 'lastModified' as SortField, direction: 'desc' as SortDirection, foldersFirst: false },
     { field: 'name' as SortField, direction: 'asc' as SortDirection, foldersFirst: true },
-    { field: 'size' as SortField, direction: 'desc' as SortDirection, foldersFirst: true }
+    { field: 'lastModified' as SortField, direction: 'desc' as SortDirection, foldersFirst: true }
   ];
 
   beforeEach(() => {

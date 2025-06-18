@@ -21,12 +21,6 @@ export const sortItems = (items: FileItem[], config: SortConfig): FileItem[] => 
       case 'name':
         comparison = compareNames(a, b);
         break;
-      case 'type':
-        comparison = compareTypes(a, b);
-        break;
-      case 'size':
-        comparison = compareSizes(a, b);
-        break;
       case 'lastModified':
         comparison = compareDates(a, b);
         break;
@@ -43,27 +37,6 @@ const compareNames = (a: FileItem, b: FileItem): number => {
   return nameA.localeCompare(nameB);
 };
 
-// Type comparison
-const compareTypes = (a: FileItem, b: FileItem): number => {
-  const getFileExtension = (item: FileItem): string => {
-    const name = item.name || item.key || '';
-    const lastDot = name.lastIndexOf('.');
-    return lastDot > 0 ? name.substring(lastDot + 1).toLowerCase() : '';
-  };
-
-  const typeA = a.type === 'folder' || a.type === 'directory' ? 'folder' : getFileExtension(a);
-  const typeB = b.type === 'folder' || b.type === 'directory' ? 'folder' : getFileExtension(b);
-
-  return typeA.localeCompare(typeB);
-};
-
-// Size comparison
-const compareSizes = (a: FileItem, b: FileItem): number => {
-  const sizeA = a.size || 0;
-  const sizeB = b.size || 0;
-  return sizeA - sizeB;
-};
-
 // Date comparison
 const compareDates = (a: FileItem, b: FileItem): number => {
   const dateA = a.lastModified ? new Date(a.lastModified).getTime() : 0;
@@ -77,7 +50,7 @@ export const validateSortConfig = (config: unknown): SortConfig | null => {
 
   const { field, direction, foldersFirst } = config as Record<string, unknown>;
 
-  const validFields: SortField[] = ['name', 'type', 'size', 'lastModified'];
+  const validFields: SortField[] = ['name', 'lastModified'];
   const validDirections: SortDirection[] = ['asc', 'desc'];
 
   if (!validFields.includes(field as SortField) || !validDirections.includes(direction as SortDirection)) {

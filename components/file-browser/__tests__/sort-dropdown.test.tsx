@@ -148,8 +148,6 @@ describe('SortDropdown', () => {
       render(<SortDropdown sortConfig={defaultSortConfig} onSortChange={mockOnSortChange} type="files" />);
 
       expect(screen.getByTestId('radio-item-name')).toBeInTheDocument();
-      expect(screen.getByTestId('radio-item-type')).toBeInTheDocument();
-      expect(screen.getByTestId('radio-item-size')).toBeInTheDocument();
       expect(screen.getByTestId('radio-item-lastModified')).toBeInTheDocument();
     });
 
@@ -165,11 +163,11 @@ describe('SortDropdown', () => {
     it('should call onSortChange when sort field is selected', () => {
       render(<SortDropdown sortConfig={defaultSortConfig} onSortChange={mockOnSortChange} type="files" />);
 
-      const typeOption = screen.getByTestId('radio-item-type');
-      fireEvent.click(typeOption);
+      const lastModifiedOption = screen.getByTestId('radio-item-lastModified');
+      fireEvent.click(lastModifiedOption);
 
       expect(mockOnSortChange).toHaveBeenCalledWith({
-        field: 'type',
+        field: 'lastModified',
         direction: 'asc',
         foldersFirst: false
       });
@@ -177,7 +175,7 @@ describe('SortDropdown', () => {
 
     it('should highlight currently selected sort field', () => {
       const sortConfig: SortConfig = {
-        field: 'size',
+        field: 'lastModified',
         direction: 'desc',
         foldersFirst: true
       };
@@ -185,7 +183,7 @@ describe('SortDropdown', () => {
       render(<SortDropdown sortConfig={sortConfig} onSortChange={mockOnSortChange} type="files" />);
 
       const radioGroup = screen.getByTestId('radio-group');
-      expect(radioGroup).toHaveAttribute('data-value', 'size');
+      expect(radioGroup).toHaveAttribute('data-value', 'lastModified');
     });
   });
 
@@ -196,8 +194,8 @@ describe('SortDropdown', () => {
       const upIcons = screen.getAllByTestId('chevron-up-icon');
       const downIcons = screen.getAllByTestId('chevron-down-icon');
 
-      expect(upIcons).toHaveLength(4);
-      expect(downIcons).toHaveLength(4);
+      expect(upIcons).toHaveLength(2);
+      expect(downIcons).toHaveLength(2);
     });
 
     it('should call onSortChange when ascending button is clicked', () => {
@@ -278,8 +276,8 @@ describe('SortDropdown', () => {
 
       expect(screen.getByLabelText('Sort name ascending')).toBeInTheDocument();
       expect(screen.getByLabelText('Sort name descending')).toBeInTheDocument();
-      expect(screen.getByLabelText('Sort type ascending')).toBeInTheDocument();
-      expect(screen.getByLabelText('Sort type descending')).toBeInTheDocument();
+      expect(screen.getByLabelText('Sort date modified ascending')).toBeInTheDocument();
+      expect(screen.getByLabelText('Sort date modified descending')).toBeInTheDocument();
     });
   });
 
@@ -300,8 +298,8 @@ describe('SortDropdown', () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       render(<SortDropdown sortConfig={defaultSortConfig} onSortChange={undefined as any} type="files" />);
 
-      const typeOption = screen.getByTestId('radio-item-type');
-      expect(() => fireEvent.click(typeOption)).not.toThrow();
+      const lastModifiedOption = screen.getByTestId('radio-item-lastModified');
+      expect(() => fireEvent.click(lastModifiedOption)).not.toThrow();
     });
 
     it('should handle invalid sort config gracefully', () => {
