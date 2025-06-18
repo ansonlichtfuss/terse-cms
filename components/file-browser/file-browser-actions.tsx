@@ -8,6 +8,8 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { cn } from '@/lib/utils';
 
 import type { FileItem } from './file-browser'; // Import FileItem type
+import { SortDropdown } from './sort-dropdown';
+import type { SortConfig } from './types/sorting';
 import { useFileOperations } from './use-file-operations'; // Import useFileOperations
 
 interface FileBrowserActionsProps {
@@ -19,6 +21,8 @@ interface FileBrowserActionsProps {
   currentPath: string; // Add currentPath prop
   isCreatingFolder: boolean; // Add isCreatingFolder prop
   fetchItems: (options?: RefetchOptions) => Promise<QueryObserverResult<FileItem[], Error>>; // Add fetchItems prop
+  sortConfig: SortConfig;
+  onSortChange: (config: SortConfig) => void;
 }
 
 export function FileBrowserActions({
@@ -29,7 +33,9 @@ export function FileBrowserActions({
   onOpenUploadDialog, // Destructure the new prop
   currentPath, // Destructure currentPath
   isCreatingFolder, // Destructure isCreatingFolder
-  fetchItems // Destructure fetchItems
+  fetchItems, // Destructure fetchItems
+  sortConfig,
+  onSortChange
 }: FileBrowserActionsProps) {
   const router = useRouter(); // Initialize useRouter
   // Remove useFileFetching and its usage
@@ -106,6 +112,8 @@ export function FileBrowserActions({
               <p>New Folder</p>
             </TooltipContent>
           </Tooltip>
+
+          <SortDropdown sortConfig={sortConfig} onSortChange={onSortChange} type={type} />
         </div>
         <div className=" absolute right-1 top-1">
           {type === 'media' && (

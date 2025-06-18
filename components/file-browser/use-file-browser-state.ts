@@ -1,9 +1,19 @@
 import { useEffect, useState } from 'react';
 
+import type { FileItem } from './types/file-item';
+import type { SortConfig, SortPreferences } from './types/sorting';
+import {
+  getSortConfigForType,
+  loadSortPreferences,
+  saveSortPreferences,
+  updateSortPreferences
+} from './utils/persistence';
+
 interface UseFileBrowserStateProps {
   isMobile?: boolean;
   inSidebar?: boolean;
   selectedPath?: string; // Keep selectedPath
+  type?: 'files' | 'media';
 }
 
 interface UseFileBrowserStateResult {
@@ -15,8 +25,8 @@ interface UseFileBrowserStateResult {
   setIsRenameDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
   isDeleteDialogOpen: boolean;
   setIsDeleteDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  itemToAction: string | null;
-  setItemToAction: React.Dispatch<React.SetStateAction<string | null>>;
+  itemToAction: FileItem | null;
+  setItemToAction: React.Dispatch<React.SetStateAction<FileItem | null>>;
   currentPath: string;
   setCurrentPath: React.Dispatch<React.SetStateAction<string>>;
   expandedFolders: Set<string>;
@@ -28,17 +38,23 @@ interface UseFileBrowserStateResult {
   isCreateFolderDialogOpen: boolean;
   setIsCreateFolderDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
   mounted: boolean;
+  // Sorting-related state
+  sortConfig: SortConfig;
+  setSortConfig: React.Dispatch<React.SetStateAction<SortConfig>>;
+  sortPreferences: SortPreferences;
+  updateSort: (config: SortConfig) => void;
 }
 
 export const useFileBrowserState = ({
   isMobile = false,
-  selectedPath
+  selectedPath,
+  type = 'files'
 }: UseFileBrowserStateProps): UseFileBrowserStateResult => {
   const [selectedItem, setSelectedItem] = useState<string | null>(null);
   const [isMoveDialogOpen, setIsMoveDialogOpen] = useState(false);
   const [isRenameDialogOpen, setIsRenameDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [itemToAction, setItemToAction] = useState<string | null>(null); // TODO: Define a more specific type
+  const [itemToAction, setItemToAction] = useState<FileItem | null>(null);
   const [currentPath, setCurrentPath] = useState<string>(() => {
     // Initialize currentPath based on selectedPath
     if (selectedPath) {
@@ -76,6 +92,32 @@ export const useFileBrowserState = ({
   const [isCreateFolderDialogOpen, setIsCreateFolderDialogOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
 
+  // Sorting state
+  const [sortPreferences, setSortPreferences] = useState<SortPreferences>(() => {
+    // Load saved preferences on initialization
+    return loadSortPreferences();
+  });
+
+  const [sortConfig, setSortConfig] = useState<SortConfig>(() => {
+    // Initialize with the appropriate config for the current type
+    const preferences = loadSortPreferences();
+    return getSortConfigForType(preferences, type);
+  });
+
+  // Update sort config when type changes
+  useEffect(() => {
+    const newConfig = getSortConfigForType(sortPreferences, type);
+    setSortConfig(newConfig);
+  }, [type, sortPreferences]);
+
+  // Function to update sort configuration and persist preferences
+  const updateSort = (config: SortConfig) => {
+    setSortConfig(config);
+    const updatedPreferences = updateSortPreferences(sortPreferences, type, config);
+    setSortPreferences(updatedPreferences);
+    saveSortPreferences(updatedPreferences);
+  };
+
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -109,6 +151,11 @@ export const useFileBrowserState = ({
     setNewFolderName,
     isCreateFolderDialogOpen,
     setIsCreateFolderDialogOpen,
-    mounted
+    mounted,
+    // Sorting properties
+    sortConfig,
+    setSortConfig,
+    sortPreferences,
+    updateSort
   };
 };

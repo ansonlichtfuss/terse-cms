@@ -17,22 +17,14 @@ import { CreateFolderDialog } from './create-folder-dialog'; // Assuming dialogs
 import styles from './file-browser.module.css';
 import { FileBrowserActions } from './file-browser-actions';
 import { FileItemRow } from './file-item-row';
+// Import and re-export FileItem type from types file for backward compatibility
+import type { FileItem } from './types/file-item';
 import UploadDialog from './upload-dialog'; // Import UploadDialog from the same directory
 import { useFileBrowserState } from './use-file-browser-state';
 import { useFileOperations } from './use-file-operations';
+import { useSort } from './use-sort';
 import { getItemName, getItemPath } from './utils'; // Import utility functions
-
-// FileItem type definition remains here for now, as it's used by multiple components/hooks
-export interface FileItem {
-  key: string;
-  path?: string;
-  name?: string;
-  type: 'file' | 'folder' | 'directory';
-  children?: FileItem[];
-  size?: number;
-  lastModified?: string;
-  url?: string;
-}
+export type { FileItem } from './types/file-item';
 
 interface FileBrowserProps {
   type: 'files' | 'media';
@@ -49,7 +41,7 @@ export function FileBrowser({
   isMobile = false,
   onPathChange // Receive onPathChange prop
 }: FileBrowserProps) {
-  // Use the custom state hook, passing selectedPath
+  // Use the custom state hook, passing selectedPath and type
   const {
     selectedItem,
     setSelectedItem,
@@ -63,16 +55,18 @@ export function FileBrowser({
     setItemToAction,
     currentPath,
     setCurrentPath,
-    expandedFolders,
+    expandedFolders: _expandedFolders,
     setExpandedFolders,
     isUploading,
-    setIsUploading,
+    setIsUploading: _setIsUploading,
     isCreateFolderDialogOpen,
     setIsCreateFolderDialogOpen,
-    newFolderName,
-    setNewFolderName,
-    mounted
-  } = useFileBrowserState({ isMobile, selectedPath });
+    newFolderName: _newFolderName,
+    setNewFolderName: _setNewFolderName,
+    mounted: _mounted,
+    sortConfig,
+    updateSort
+  } = useFileBrowserState({ isMobile, selectedPath, type });
 
   // Create a handler that calls both setCurrentPath and onPathChange
   const handlePathChange = (path: string) => {
@@ -133,14 +127,26 @@ export function FileBrowser({
     }
   }, [items, currentPath, type]);
 
+  // Use sort hook
+  const { sortedItems } = useSort({
+    items: currentDirContents,
+    sortConfig,
+    onSortChange: updateSort
+  });
+
+  // Update currentDirContents to use sorted items
+  const displayItems = React.useMemo(() => {
+    return sortedItems;
+  }, [sortedItems]);
+
   // Use the custom operations hook
   const {
-    handleUpload,
+    handleUpload: _handleUpload,
     handleCreateFolder,
     handleDelete,
     handleRename,
     handleMove,
-    isCreatingFile,
+    isCreatingFile: _isCreatingFile,
     isCreatingFolder,
     isDeletingFile,
     isRenamingFile,
@@ -252,6 +258,8 @@ export function FileBrowser({
         currentPath={currentPath} // Pass the currentPath prop
         isCreatingFolder={isCreatingFolder} // Pass loading state (This is the loading state from useFileOperations)
         fetchItems={refetch} // Pass the refetch function from useFilesQuery
+        sortConfig={sortConfig}
+        onSortChange={updateSort}
       />
       <div className="px-4">
         <Breadcrumbs
@@ -272,10 +280,10 @@ export function FileBrowser({
             Error loading files: {error.message}
           </div>
         )}
-        {!isLoading && !error && currentDirContents.length > 0 && (
+        {!isLoading && !error && displayItems.length > 0 && (
           // Render list view using FileItemRow component
           <div className="space-y-1 px-0 max-h-full">
-            {currentDirContents.map((item) => (
+            {displayItems.map((item) => (
               <FileItemRow
                 key={getItemPath(item)}
                 item={item}
@@ -292,7 +300,7 @@ export function FileBrowser({
             ))}
           </div>
         )}
-        {!isLoading && !error && currentDirContents.length === 0 && (
+        {!isLoading && !error && displayItems.length === 0 && (
           <div className="flex items-center justify-center h-20 text-muted-foreground text-xs">No items found</div>
         )}
       </div>
