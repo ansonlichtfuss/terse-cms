@@ -1,12 +1,13 @@
 import type React from 'react';
 
 // Re-export file operation types for convenience
-export type { FileNode, FileOperationResult, FileContent, ExistenceInfo } from '@/lib/api/files/file-operations-types';
+export type { ExistenceInfo, FileContent, FileNode, FileOperationResult } from '@/lib/api/files/file-operations-types';
 
 export interface FileData {
   path: string;
   content: string;
   isModified: boolean;
+  lastModified?: string;
 }
 
 // S3/Media-related types

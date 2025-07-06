@@ -73,3 +73,24 @@ export function formatRelativeTime(dateString: string): string {
     return dateString;
   }
 }
+
+// Format modification timestamp for editor display
+export function formatModificationTime(dateString: string): string {
+  try {
+    const date = new Date(dateString);
+    const now = new Date();
+
+    // Check if it's today
+    const isToday = date.toDateString() === now.toDateString();
+
+    if (isToday) {
+      // Show time only for today
+      return `Modified ${format(date, 'h:mm a')}`;
+    } else {
+      // Show date and time for other days
+      return `Modified ${format(date, 'MMM d, h:mm a')}`;
+    }
+  } catch {
+    return 'Modified recently';
+  }
+}

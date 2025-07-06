@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
+
 import type { ExistenceInfo, FileContent, FileOperationResult } from './file-operations-types';
 import { FilePathValidator } from './file-path-validator';
 
@@ -60,7 +61,8 @@ export class FileReadWriteOperations {
         success: true,
         data: {
           path: filePath,
-          content
+          content,
+          lastModified: stats.mtime.toISOString()
         },
         statusCode: 200
       };

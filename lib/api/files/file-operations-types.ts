@@ -22,6 +22,8 @@ export interface FileContent {
   path: string;
   /** The UTF-8 content of the file */
   content: string;
+  /** ISO date string of when the file was last modified */
+  lastModified: string;
 }
 
 /**

@@ -11,7 +11,8 @@ const fetchFileContent = async (path: string): Promise<FileData> => {
   return {
     path,
     content: data.content,
-    isModified: false // Assuming fetched file is not modified initially
+    isModified: false, // Assuming fetched file is not modified initially
+    lastModified: data.lastModified
   };
 };
 

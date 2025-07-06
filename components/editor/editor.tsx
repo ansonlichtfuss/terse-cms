@@ -13,6 +13,7 @@ import { UnifiedSidebar } from '@/components/unified-sidebar';
 import { useGitStatus } from '@/context/git-status-context';
 import { getUserPreferences, saveUserPreferences } from '@/lib/user-preferences';
 import type { FileData } from '@/types';
+import { formatModificationTime } from '@/utils/date-utils';
 
 import { useFileOperations } from '../file-browser/use-file-operations';
 
@@ -23,7 +24,7 @@ interface EditorProps {
 
 export function Editor({ file, onSave }: EditorProps) {
   const [content, setContent] = useState('');
-  const [lastSaved, setLastSaved] = useState<Date | null>(null);
+  const [fileModificationTime, setFileModificationTime] = useState<string | null>(null);
   const [isMediaDialogOpen, setIsMediaDialogOpen] = useState(false);
   const [isSidebarVisible, setIsSidebarVisible] = useState(true);
   const [fileTitle, setFileTitle] = useState('');
@@ -41,7 +42,7 @@ export function Editor({ file, onSave }: EditorProps) {
   const [debouncedSave] = useDebounce(async (path: string, content: string) => {
     isSavingRef.current = true;
     await onSave(path, content); // Assuming onSave is async and awaits the save operation
-    setLastSaved(new Date());
+    setFileModificationTime(new Date().toISOString());
     // Update git status after saving
     updateGitStatus();
     setTimeout(() => {
@@ -80,6 +81,7 @@ export function Editor({ file, onSave }: EditorProps) {
     // Update the content state
     if (file) {
       setContent(file.content || '');
+      setFileModificationTime(file.lastModified || null);
       prevFileRef.current = file;
     }
 
@@ -208,15 +210,10 @@ export function Editor({ file, onSave }: EditorProps) {
             </h2>
             {fileTitle && <p className="text-xs text-muted-foreground truncate">{fileTitle}</p>}
           </div>
-          {/* Autosave notice as a link instead of a button */}
+          {/* File modification timestamp */}
           <span className="flex items-center text-xs text-muted-foreground">
             <Clock className="h-3 w-3 mr-1" />
-            {lastSaved
-              ? `Auto-saved ${lastSaved.toLocaleTimeString([], {
-                  hour: 'numeric',
-                  minute: '2-digit'
-                })}`
-              : 'Auto-save enabled'}
+            {fileModificationTime ? formatModificationTime(fileModificationTime) : 'No modification time'}
           </span>
         </div>
 
@@ -241,7 +238,7 @@ export function Editor({ file, onSave }: EditorProps) {
         filePath={file?.path || ''}
         isVisible={isSidebarVisible}
         onToggle={toggleSidebar}
-        lastSaved={lastSaved}
+        lastSaved={fileModificationTime ? new Date(fileModificationTime) : null}
       />
 
       {/* Media Dialog for Image Selection */}
