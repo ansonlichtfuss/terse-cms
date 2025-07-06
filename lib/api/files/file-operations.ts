@@ -1,5 +1,5 @@
 import { shouldUseMockApi } from '@/lib/env';
-import { getMarkdownRootDir, getRepositoryPath } from '@/lib/paths';
+import { getRepositoryPath } from '@/lib/paths';
 
 import type { ExistenceInfo, FileContent, FileNode, FileOperationResult } from './file-operations-types';
 import { FileSystemOperations } from './file-system-operations';
@@ -41,17 +41,18 @@ export class FileOperations {
    * Automatically determines whether to use mock data or real file system
    * based on the environment configuration.
    *
-   * @param repositoryId - Optional repository ID. If provided, operations will be scoped to that repository
+   * @param repositoryId - Repository ID. Required when not using mock API
    */
   constructor(repositoryId?: string) {
     this.repositoryId = repositoryId;
 
     if (shouldUseMockApi()) {
       this.rootDir = 'mock-data/filesystem';
-    } else if (repositoryId) {
-      this.rootDir = getRepositoryPath(repositoryId);
     } else {
-      this.rootDir = getMarkdownRootDir();
+      if (!repositoryId) {
+        throw new Error('Repository ID is required when not using mock API');
+      }
+      this.rootDir = getRepositoryPath(repositoryId);
     }
 
     this.fileSystemOps = new FileSystemOperations(this.rootDir);
@@ -60,7 +61,7 @@ export class FileOperations {
   /**
    * Gets the repository ID associated with this FileOperations instance.
    *
-   * @returns The repository ID, or undefined if using the default repository
+   * @returns The repository ID, or undefined if using mock API
    */
   getRepositoryId(): string | undefined {
     return this.repositoryId;

@@ -3,6 +3,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import { ConfigErrorDialog } from '@/components/config-error-dialog';
 
 interface Repository {
   id: string;
@@ -35,6 +36,7 @@ export const RepositoryProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [currentRepositoryId, setCurrentRepositoryId] = useState<string | null>(null);
+  const [configError, setConfigError] = useState<string | null>(null);
 
   // Fetch repositories using React Query
   const {
@@ -43,25 +45,44 @@ export const RepositoryProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     error
   } = useQuery<Repository[], Error>({
     queryKey: ['repositories'],
-    queryFn: fetchRepositories
+    queryFn: fetchRepositories,
+    retry: (failureCount, error) => {
+      // Don't retry on configuration errors
+      if (error.message.includes('No repositories configured')) {
+        setConfigError(error.message);
+        return false;
+      }
+      return failureCount < 3;
+    }
   });
 
-  // Get current repository from URL params
+  // Handle configuration errors
+  useEffect(() => {
+    if (error && error.message.includes('No repositories configured')) {
+      setConfigError(error.message);
+    }
+  }, [error]);
+
+  // Get current repository from URL params and auto-fill if needed
   useEffect(() => {
     const repoParam = searchParams.get('repo');
-    setCurrentRepositoryId(repoParam);
-  }, [searchParams]);
+    
+    if (!repoParam && repositories && repositories.length > 0) {
+      // Auto-fill with first repository if no repo parameter
+      const firstRepo = repositories[0];
+      router.replace(`${pathname}?repo=${firstRepo.id}`);
+      setCurrentRepositoryId(firstRepo.id);
+    } else {
+      setCurrentRepositoryId(repoParam);
+    }
+  }, [searchParams, repositories, router, pathname]);
 
   // Find current repository object
   const currentRepository = repositories?.find((repo) => repo.id === currentRepositoryId);
 
   // Handle repository switching
   const switchRepository = (repositoryId: string) => {
-    if (repositoryId && repositoryId !== 'default') {
-      router.push(`${pathname}?repo=${repositoryId}`);
-    } else {
-      router.push(pathname);
-    }
+    router.push(`${pathname}?repo=${repositoryId}`);
   };
 
   // Validate repository ID and redirect if invalid
@@ -69,11 +90,17 @@ export const RepositoryProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     if (repositories && currentRepositoryId) {
       const isValidRepo = repositories.some((repo) => repo.id === currentRepositoryId);
       if (!isValidRepo) {
-        // Invalid repository ID, redirect to default (no repo param)
-        router.replace(pathname);
+        // Invalid repository ID, redirect to first repository
+        const firstRepo = repositories[0];
+        router.replace(`${pathname}?repo=${firstRepo.id}`);
       }
     }
   }, [repositories, currentRepositoryId, router, pathname]);
+
+  // Show configuration error dialog if repositories are not configured
+  if (configError) {
+    return <ConfigErrorDialog error={configError} />;
+  }
 
   const contextValue: RepositoryContextType = {
     repositories,

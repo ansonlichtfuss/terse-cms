@@ -1,33 +1,18 @@
 import simpleGit, { SimpleGitOptions } from 'simple-git';
 
-import { getMarkdownRootDir, getRepositoryPath } from './paths';
-
-const options: Partial<SimpleGitOptions> = {
-  baseDir: getMarkdownRootDir()
-};
-
-/**
- * Gets a git instance for the default repository (backward compatibility).
- * This function maintains compatibility with existing code that doesn't specify a repository.
- *
- * @returns SimpleGit instance configured for the default repository
- */
-export function getGitInstance() {
-  return simpleGit(options);
-}
+import { getRepositoryPath } from './paths';
 
 /**
  * Gets a git instance for a specific repository.
  * This function enables git operations on multiple repositories.
  *
- * @param repoId - Optional repository ID. If not provided, uses the default repository
+ * @param repoId - Repository ID. Required for all git operations
  * @returns SimpleGit instance configured for the specified repository
- * @throws Error if the repository ID is not found
+ * @throws Error if the repository ID is not found or not provided
  */
-export function getGitInstanceForRepository(repoId?: string) {
+export function getGitInstanceForRepository(repoId: string) {
   if (!repoId) {
-    // Fall back to default behavior for backward compatibility
-    return getGitInstance();
+    throw new Error('Repository ID is required for git operations');
   }
 
   const repositoryPath = getRepositoryPath(repoId);
@@ -36,4 +21,17 @@ export function getGitInstanceForRepository(repoId?: string) {
   };
 
   return simpleGit(repositoryOptions);
+}
+
+/**
+ * @deprecated Use getGitInstanceForRepository() instead
+ * Gets a git instance for the default repository (backward compatibility).
+ * This function is deprecated and will be removed in a future version.
+ *
+ * @returns SimpleGit instance configured for the first available repository
+ */
+export function getGitInstance() {
+  throw new Error(
+    'Legacy git instance is no longer supported. Use getGitInstanceForRepository() with a repository ID.'
+  );
 }

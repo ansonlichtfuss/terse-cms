@@ -11,22 +11,8 @@ export interface RepositoryConfig {
 }
 
 /**
- * Gets the markdown root directory for backward compatibility.
- * This function maintains compatibility with existing single-repository setups.
- *
- * @returns The root directory path for markdown files
- */
-export function getMarkdownRootDir(): string {
-  const USE_MOCK_API = process.env.USE_MOCK_API === 'true';
-  const MOCK_ROOT_DIR = './mock-data/filesystem';
-  const MARKDOWN_ROOT_DIR = process.env.MARKDOWN_ROOT_DIR || '/';
-
-  return USE_MOCK_API ? MOCK_ROOT_DIR : MARKDOWN_ROOT_DIR;
-}
-
-/**
  * Parses environment variables to extract repository configurations.
- * Supports both legacy single repository and new multi-repository formats.
+ * Requires multi-repository format with numbered environment variables.
  *
  * Environment variable format:
  * - MARKDOWN_ROOT_DIR_1=/path/to/repo1
@@ -35,6 +21,7 @@ export function getMarkdownRootDir(): string {
  * - MARKDOWN_ROOT_LABEL_2=Repository 2
  *
  * @returns Array of repository configurations
+ * @throws Error if no repositories are configured
  */
 export function getRepositoryConfig(): RepositoryConfig[] {
   const USE_MOCK_API = process.env.USE_MOCK_API === 'true';
@@ -82,14 +69,11 @@ export function getRepositoryConfig(): RepositoryConfig[] {
     index++;
   }
 
-  // If no multi-repository configuration found, fall back to legacy single repository
+  // Throw error if no repositories are configured
   if (repositories.length === 0) {
-    const legacyPath = process.env.MARKDOWN_ROOT_DIR || '/';
-    repositories.push({
-      id: 'default',
-      label: 'Default Repository',
-      path: legacyPath
-    });
+    throw new Error(
+      'No repositories configured. Please set environment variables: MARKDOWN_ROOT_DIR_1, MARKDOWN_ROOT_LABEL_1, etc.'
+    );
   }
 
   return repositories;
@@ -140,14 +124,10 @@ export function getRepositoryLabel(repoId: string): string {
  * This is used when no specific repository is requested.
  *
  * @returns The ID of the default repository
+ * @throws Error if no repositories are configured
  */
 export function getDefaultRepositoryId(): string {
   const repositories = getRepositoryConfig();
-
-  if (repositories.length === 0) {
-    throw new Error('No repositories configured');
-  }
-
-  // Return the first repository as the default
+  // getRepositoryConfig() now throws if no repositories, so this is safe
   return repositories[0].id;
 }

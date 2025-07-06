@@ -16,30 +16,43 @@ export function getGitInstanceForRequest(request: Request): GitInstanceResult {
   const { searchParams } = new URL(request.url);
   const repoId = searchParams.get('repo');
 
-  if (repoId) {
-    try {
-      const repositories = getRepositoryConfig();
-      const repository = repositories.find((r) => r.id === repoId);
-      if (!repository) {
-        const availableIds = repositories.map((r) => r.id).join(', ');
-        return {
-          error: NextResponse.json(
-            { error: `Invalid repository ID '${repoId}'. Available repositories: ${availableIds}` },
-            { status: 404 }
-          )
-        };
-      }
-    } catch {
-      return {
-        error: NextResponse.json({ error: 'Failed to validate repository configuration' }, { status: 500 })
-      };
-    }
+  if (!repoId) {
+    return {
+      error: NextResponse.json(
+        { error: 'Repository ID is required. Please provide a "repo" query parameter.' },
+        { status: 400 }
+      )
+    };
   }
 
-  return { repoId: repoId || undefined };
+  try {
+    const repositories = getRepositoryConfig();
+    const repository = repositories.find((r) => r.id === repoId);
+    if (!repository) {
+      const availableIds = repositories.map((r) => r.id).join(', ');
+      return {
+        error: NextResponse.json(
+          { error: `Invalid repository ID '${repoId}'. Available repositories: ${availableIds}` },
+          { status: 404 }
+        )
+      };
+    }
+  } catch {
+    return {
+      error: NextResponse.json(
+        {
+          error:
+            'No repositories configured. Please set environment variables: MARKDOWN_ROOT_DIR_1, MARKDOWN_ROOT_LABEL_1, etc.'
+        },
+        { status: 500 }
+      )
+    };
+  }
+
+  return { repoId };
 }
 
-export async function validateGitRepository(git: any): Promise<GitValidationResult> {
+export async function validateGitRepository(git: unknown): Promise<GitValidationResult> {
   try {
     const isRepo = await git.checkIsRepo();
 
