@@ -131,9 +131,7 @@ describe('paths', () => {
     });
 
     it('should throw error for invalid repository ID', () => {
-      expect(() => getRepositoryPath('invalid')).toThrow(
-        "Repository with ID 'invalid' not found. Available repositories: 1, 2"
-      );
+      expect(() => getRepositoryPath('invalid')).toThrow("Repository with ID 'invalid' not found.");
     });
   });
 
@@ -152,9 +150,7 @@ describe('paths', () => {
     });
 
     it('should throw error for invalid repository ID', () => {
-      expect(() => getRepositoryLabel('invalid')).toThrow(
-        "Repository with ID 'invalid' not found. Available repositories: 1, 2"
-      );
+      expect(() => getRepositoryLabel('invalid')).toThrow("Repository with ID 'invalid' not found.");
     });
   });
 

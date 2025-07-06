@@ -91,9 +91,7 @@ export function getRepositoryPath(repoId: string): string {
   const repository = repositories.find((repo) => repo.id === repoId);
 
   if (!repository) {
-    throw new Error(
-      `Repository with ID '${repoId}' not found. Available repositories: ${repositories.map((r) => r.id).join(', ')}`
-    );
+    throw new Error(`Repository with ID '${repoId}' not found.`);
   }
 
   return repository.path;
@@ -111,9 +109,7 @@ export function getRepositoryLabel(repoId: string): string {
   const repository = repositories.find((repo) => repo.id === repoId);
 
   if (!repository) {
-    throw new Error(
-      `Repository with ID '${repoId}' not found. Available repositories: ${repositories.map((r) => r.id).join(', ')}`
-    );
+    throw new Error(`Repository with ID '${repoId}' not found.`);
   }
 
   return repository.label;

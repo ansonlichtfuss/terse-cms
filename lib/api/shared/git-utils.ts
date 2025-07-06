@@ -29,12 +29,8 @@ export function getGitInstanceForRequest(request: Request): GitInstanceResult {
     const repositories = getRepositoryConfig();
     const repository = repositories.find((r) => r.id === repoId);
     if (!repository) {
-      const availableIds = repositories.map((r) => r.id).join(', ');
       return {
-        error: NextResponse.json(
-          { error: `Invalid repository ID '${repoId}'. Available repositories: ${availableIds}` },
-          { status: 404 }
-        )
+        error: NextResponse.json({ error: `Invalid repository ID '${repoId}'.` }, { status: 404 })
       };
     }
   } catch {

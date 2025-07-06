@@ -142,12 +142,8 @@ describe('Multi-Repository Integration', () => {
     process.env.MARKDOWN_ROOT_DIR_1 = '/repo1';
     process.env.MARKDOWN_ROOT_DIR_2 = '/repo2';
 
-    expect(() => getRepositoryPath('invalid')).toThrow(
-      "Repository with ID 'invalid' not found. Available repositories: 1, 2"
-    );
+    expect(() => getRepositoryPath('invalid')).toThrow("Repository with ID 'invalid' not found.");
 
-    expect(() => getRepositoryLabel('nonexistent')).toThrow(
-      "Repository with ID 'nonexistent' not found. Available repositories: 1, 2"
-    );
+    expect(() => getRepositoryLabel('nonexistent')).toThrow("Repository with ID 'nonexistent' not found.");
   });
 });
