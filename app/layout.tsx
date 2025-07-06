@@ -3,6 +3,7 @@ import './globals.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import type React from 'react';
+import { Suspense } from 'react';
 
 import { ReactQueryClientProvider } from '@/components/react-query-client-provider';
 import { ThemeProvider } from '@/components/theme-provider';
@@ -23,9 +24,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <html lang="en" suppressHydrationWarning>
         <body className={inter.className}>
           <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
-            <RepositoryProvider>
-              <GitStatusProvider>{children}</GitStatusProvider>
-            </RepositoryProvider>
+            <Suspense>
+              <RepositoryProvider>
+                <GitStatusProvider>{children}</GitStatusProvider>
+              </RepositoryProvider>
+            </Suspense>
           </ThemeProvider>
           <Toaster />
         </body>

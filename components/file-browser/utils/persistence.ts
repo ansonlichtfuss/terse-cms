@@ -5,16 +5,20 @@ import { validateSortConfig } from './sorting';
 const STORAGE_KEY = 'file-browser-sort-preferences';
 
 export const saveSortPreferences = (preferences: SortPreferences): void => {
+  if (typeof localStorage === 'undefined') return;
+
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(preferences));
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(preferences));
   } catch (error) {
     console.warn('Failed to save sort preferences:', error);
   }
 };
 
 export const loadSortPreferences = (): SortPreferences => {
+  if (typeof localStorage === 'undefined') return DEFAULT_SORT_PREFERENCES;
+
   try {
-    const saved = localStorage.getItem(STORAGE_KEY);
+    const saved = window.localStorage.getItem(STORAGE_KEY);
     if (!saved) return DEFAULT_SORT_PREFERENCES;
 
     const parsed = JSON.parse(saved);

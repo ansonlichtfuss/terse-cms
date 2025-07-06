@@ -1,10 +1,10 @@
 'use client';
 
-import { useParams, useRouter } from 'next/navigation'; // Removed useSearchParams
-import { useEffect } from 'react'; // Keep useEffect for error handling
+import { useParams, useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 import { Dashboard } from '@/components/dashboard';
-import { Editor } from '@/components/editor/editor'; // Corrected import path
+import { Editor } from '@/components/editor/editor';
 import { useFileContentQuery } from '@/hooks/api/use-file-content-query';
 import { useSaveFileMutation } from '@/hooks/api/use-save-file-mutation';
 
