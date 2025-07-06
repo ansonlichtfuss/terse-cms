@@ -1,35 +1,30 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { createMutationHook, ApiClient, useQueryInvalidation } from './shared';
+import { useRepository } from '@/context/repository-context';
+import { useMutation } from '@tanstack/react-query';
 
 interface SaveFileArgs {
   path: string;
   content: string;
 }
 
-const saveFile = async ({ path, content }: SaveFileArgs): Promise<void> => {
-  const response = await fetch('/api/files', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ path, content })
-  });
-
-  if (!response.ok) {
-    throw new Error('Failed to save file');
-  }
+const saveFile = async ({ path, content }: SaveFileArgs, client: ApiClient): Promise<void> => {
+  await client.post('/api/files', { path, content });
 };
 
 export const useSaveFileMutation = () => {
-  const queryClient = useQueryClient();
+  const { currentRepositoryId } = useRepository();
+  const { invalidateQuery } = useQueryInvalidation();
+
   return useMutation({
-    mutationFn: saveFile,
+    mutationFn: (args: SaveFileArgs) => {
+      const client = new ApiClient(currentRepositoryId);
+      return saveFile(args, client);
+    },
     onSuccess: (_, variables) => {
-      // Invalidate the file content query for the saved file to refetch
-      queryClient.invalidateQueries({
-        queryKey: ['fileContent', variables.path]
-      });
-      // Optionally invalidate git status if saving a file affects it
-      queryClient.invalidateQueries({ queryKey: ['gitStatus'] });
+      // Invalidate the specific file content query
+      invalidateQuery(['fileContent', variables.path, currentRepositoryId]);
+      // Invalidate git status
+      invalidateQuery(['gitStatus', currentRepositoryId]);
     }
   });
 };

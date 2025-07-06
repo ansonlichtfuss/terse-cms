@@ -1,8 +1,6 @@
 import { NextResponse } from 'next/server';
 
-import { getGitInstance } from '@/lib/git';
-
-const git = getGitInstance();
+import { getGitInstanceForRequest } from '@/lib/api';
 
 export async function POST(request: Request) {
   try {
@@ -11,6 +9,14 @@ export async function POST(request: Request) {
     if (!branchName) {
       return NextResponse.json({ error: 'Branch name is required' }, { status: 400 });
     }
+
+    const gitResult = getGitInstanceForRequest(request);
+    if (gitResult.error) {
+      return gitResult.error;
+    }
+
+    const { getGitInstanceForRepository } = await import('@/lib/git');
+    const git = getGitInstanceForRepository(gitResult.repoId);
 
     // Check for pending changes
     const status = await git.status();

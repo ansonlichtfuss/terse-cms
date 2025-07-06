@@ -1,16 +1,21 @@
 import { NextResponse } from 'next/server';
 
-import { getGitInstance } from '@/lib/git';
+import { getGitInstanceForRequest, validateGitRepository } from '@/lib/api';
 
-export async function POST() {
+export async function POST(request: Request) {
   try {
-    const git = getGitInstance(); // Assuming the git repo is in mock-data as per status endpoint
+    const gitResult = getGitInstanceForRequest(request);
+    if (gitResult.error) {
+      return gitResult.error;
+    }
+
+    const { getGitInstanceForRepository } = await import('@/lib/git');
+    const git = getGitInstanceForRepository(gitResult.repoId);
 
     // Check if directory is a git repository
-    const isRepo = await git.checkIsRepo();
-
-    if (!isRepo) {
-      return NextResponse.json({ error: 'Not a git repository' }, { status: 400 });
+    const validation = await validateGitRepository(git);
+    if (!validation.isValid) {
+      return validation.error!;
     }
 
     // Stage all changes

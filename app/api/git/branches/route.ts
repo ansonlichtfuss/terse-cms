@@ -1,11 +1,17 @@
 import { NextResponse } from 'next/server';
 
-import { getGitInstance } from '@/lib/git';
+import { getGitInstanceForRequest } from '@/lib/api';
 
-const git = getGitInstance();
-
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    const gitResult = getGitInstanceForRequest(request);
+    if (gitResult.error) {
+      return gitResult.error;
+    }
+
+    const { getGitInstanceForRepository } = await import('@/lib/git');
+    const git = getGitInstanceForRepository(gitResult.repoId);
+
     const branchSummary = await git.branchLocal();
     const branchList = branchSummary.all.map((branchName) => ({
       name: branchName,

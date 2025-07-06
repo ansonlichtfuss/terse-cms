@@ -1,27 +1,10 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { createMutationHook, ApiClient } from './shared';
 
-const revertChanges = async (): Promise<void> => {
-  const response = await fetch('/api/git/revert', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  });
-
-  if (!response.ok) {
-    throw new Error('Failed to revert changes');
-  }
+const revertChanges = async (_: void, client: ApiClient): Promise<void> => {
+  await client.post('/api/git/revert', {});
 };
 
-export const useRevertChangesMutation = () => {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: revertChanges,
-    onSuccess: () => {
-      // Invalidate the git status query to refetch
-      queryClient.invalidateQueries({ queryKey: ['gitStatus'] });
-      // Invalidate the git history query to refetch
-      queryClient.invalidateQueries({ queryKey: ['gitHistory'] });
-    }
-  });
-};
+export const useRevertChangesMutation = createMutationHook(
+  revertChanges,
+  { invalidateQueries: 'git' }
+);

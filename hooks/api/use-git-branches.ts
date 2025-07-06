@@ -1,47 +1,25 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { createQueryHook, createMutationHook, queryKeys, ApiClient } from './shared';
 
 interface Branch {
   name: string;
   isCurrent: boolean;
 }
 
-const fetchGitBranches = async (): Promise<Branch[]> => {
-  const response = await fetch('/api/git/branches');
-  if (!response.ok) {
-    throw new Error('Failed to fetch git branches');
-  }
-  const data = await response.json();
-  return data.branches as Branch[];
+const fetchGitBranches = async (client: ApiClient): Promise<Branch[]> => {
+  const data = await client.get<{ branches: Branch[] }>('/api/git/branches');
+  return data.branches;
 };
 
-const switchGitBranch = async (branchName: string): Promise<void> => {
-  const response = await fetch('/api/git/switch-branch', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ branchName })
-  });
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.error || 'Failed to switch branch');
-  }
+const switchGitBranch = async (branchName: string, client: ApiClient): Promise<void> => {
+  await client.post('/api/git/switch-branch', { branchName });
 };
 
-export const useGitBranchesQuery = () => {
-  return useQuery<Branch[], Error>({
-    queryKey: ['gitBranches'], // Unique key for git branches
-    queryFn: fetchGitBranches
-  });
-};
+export const useGitBranchesQuery = createQueryHook(
+  queryKeys.gitBranches,
+  fetchGitBranches
+);
 
-export const useSwitchGitBranchMutation = () => {
-  const queryClient = useQueryClient();
-  return useMutation<void, Error, string>({
-    mutationFn: switchGitBranch,
-    onSuccess: () => {
-      // Invalidate the gitBranches query to refetch after a successful switch
-      queryClient.invalidateQueries({ queryKey: ['gitBranches'] });
-    }
-  });
-};
+export const useSwitchGitBranchMutation = createMutationHook(
+  switchGitBranch,
+  { invalidateQueries: 'git' }
+);

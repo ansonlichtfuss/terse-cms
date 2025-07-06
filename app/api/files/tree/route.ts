@@ -1,10 +1,14 @@
 import { NextResponse } from 'next/server';
 
-import { FileOperations } from '@/lib/api/files/file-operations';
+import { getFileOperationsForRequest } from '@/lib/api';
 
-export async function GET(_request: Request) {
-  const fileOps = new FileOperations();
-  const result = await fileOps.getFileTree();
+export async function GET(request: Request) {
+  const fileOpsOrError = getFileOperationsForRequest(request);
+  if (fileOpsOrError instanceof NextResponse) {
+    return fileOpsOrError;
+  }
+
+  const result = await fileOpsOrError.getFileTree();
 
   if (!result.success) {
     return NextResponse.json({ error: result.error }, { status: result.statusCode });

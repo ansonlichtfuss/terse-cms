@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { createQueryHook, queryKeys, ApiClient } from './shared';
 
 interface FileTreeNode {
   name: string;
@@ -7,16 +7,8 @@ interface FileTreeNode {
   children?: FileTreeNode[];
 }
 
-const fetchFileTree = async (): Promise<{ files: FileTreeNode[] }> => {
-  const response = await fetch('/api/files/tree');
-  if (!response.ok) {
-    throw new Error('Failed to fetch file tree');
-  }
-  return response.json();
-};
-
 // Convert the file tree to our folder tree format
-const convertToFileTree = (nodes: FileTreeNode[], parentKey = ''): FolderNode[] => {
+const convertToFileTree = (nodes: FileTreeNode[], _parentKey = ''): FolderNode[] => {
   return nodes
     .filter((node) => node.type === 'directory')
     .map((node) => ({
@@ -34,18 +26,16 @@ interface FolderNode {
   isExpanded: boolean;
 }
 
-export const useFileTreeQuery = () => {
-  return useQuery({
-    queryKey: ['fileTree'],
-    queryFn: async () => {
-      const data = await fetchFileTree();
-      const rootNode: FolderNode = {
-        key: '',
-        name: 'Root',
-        children: convertToFileTree(data.files || []),
-        isExpanded: true
-      };
-      return rootNode;
-    }
-  });
-};
+export const useFileTreeQuery = createQueryHook(
+  queryKeys.fileTree,
+  async (client: ApiClient) => {
+    const data = await client.get<{ files: FileTreeNode[] }>('/api/files/tree');
+    const rootNode: FolderNode = {
+      key: '',
+      name: 'Root',
+      children: convertToFileTree(data.files || []),
+      isExpanded: true
+    };
+    return rootNode;
+  }
+);

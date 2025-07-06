@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { vi, describe, it, expect, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { DELETE, GET, POST } from '../route';
 
@@ -14,8 +14,8 @@ vi.mock('@/lib/api/files/file-operations', () => {
     FileOperations: vi.fn().mockImplementation(() => ({
       readFile: mockReadFile,
       writeFile: mockWriteFile,
-      deleteFile: mockDeleteFile,
-    })),
+      deleteFile: mockDeleteFile
+    }))
   };
 });
 
@@ -28,7 +28,7 @@ describe('/api/files', () => {
     it('should return file content successfully', async () => {
       const mockResult = {
         success: true,
-        data: { path: 'test.md', content: '# Test Content' },
+        data: { path: 'test.md', content: '# Test Content' }
       };
       mockReadFile.mockResolvedValue(mockResult);
 
@@ -55,7 +55,7 @@ describe('/api/files', () => {
       const mockResult = {
         success: false,
         error: 'File not found',
-        statusCode: 404,
+        statusCode: 404
       };
       mockReadFile.mockResolvedValue(mockResult);
 
@@ -88,7 +88,7 @@ describe('/api/files', () => {
       const request = new NextRequest('http://localhost/api/files', {
         method: 'POST',
         body: JSON.stringify(requestBody),
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json' }
       });
 
       const response = await POST(request);
@@ -104,7 +104,7 @@ describe('/api/files', () => {
       const request = new NextRequest('http://localhost/api/files', {
         method: 'POST',
         body: JSON.stringify(requestBody),
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json' }
       });
 
       const response = await POST(request);
@@ -119,7 +119,7 @@ describe('/api/files', () => {
       const mockResult = {
         success: false,
         error: 'Write failed',
-        statusCode: 500,
+        statusCode: 500
       };
       mockWriteFile.mockResolvedValue(mockResult);
 
@@ -127,7 +127,7 @@ describe('/api/files', () => {
       const request = new NextRequest('http://localhost/api/files', {
         method: 'POST',
         body: JSON.stringify(requestBody),
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json' }
       });
 
       const response = await POST(request);
@@ -142,7 +142,7 @@ describe('/api/files', () => {
       const request = new NextRequest('http://localhost/api/files', {
         method: 'POST',
         body: 'invalid json',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json' }
       });
 
       const response = await POST(request);
@@ -161,7 +161,7 @@ describe('/api/files', () => {
       const request = new NextRequest('http://localhost/api/files', {
         method: 'POST',
         body: JSON.stringify(requestBody),
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json' }
       });
 
       const response = await POST(request);
@@ -180,7 +180,7 @@ describe('/api/files', () => {
       const request = new NextRequest('http://localhost/api/files', {
         method: 'POST',
         body: JSON.stringify(requestBody),
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json' }
       });
 
       const response = await POST(request);
@@ -201,7 +201,7 @@ describe('/api/files', () => {
       const request = new NextRequest('http://localhost/api/files', {
         method: 'DELETE',
         body: JSON.stringify(requestBody),
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json' }
       });
 
       const response = await DELETE(request);
@@ -217,7 +217,7 @@ describe('/api/files', () => {
       const request = new NextRequest('http://localhost/api/files', {
         method: 'DELETE',
         body: JSON.stringify(requestBody),
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json' }
       });
 
       const response = await DELETE(request);
@@ -232,7 +232,7 @@ describe('/api/files', () => {
       const mockResult = {
         success: false,
         error: 'Delete failed',
-        statusCode: 500,
+        statusCode: 500
       };
       mockDeleteFile.mockResolvedValue(mockResult);
 
@@ -240,7 +240,7 @@ describe('/api/files', () => {
       const request = new NextRequest('http://localhost/api/files', {
         method: 'DELETE',
         body: JSON.stringify(requestBody),
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json' }
       });
 
       const response = await DELETE(request);
@@ -255,7 +255,7 @@ describe('/api/files', () => {
       const request = new NextRequest('http://localhost/api/files', {
         method: 'DELETE',
         body: 'invalid json',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json' }
       });
 
       const response = await DELETE(request);
@@ -271,7 +271,7 @@ describe('/api/files', () => {
       const request = new NextRequest('http://localhost/api/files', {
         method: 'DELETE',
         body: JSON.stringify(requestBody),
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json' }
       });
 
       const response = await DELETE(request);

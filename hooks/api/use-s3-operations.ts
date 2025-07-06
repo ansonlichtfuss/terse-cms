@@ -1,6 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-
-// Assuming FileItem type is accessible
+import { ApiClient } from './shared';
 
 interface DeleteS3ItemVariables {
   key: string;
@@ -14,36 +13,20 @@ interface MoveS3ItemVariables {
 }
 
 const deleteS3Item = async ({ key, type }: DeleteS3ItemVariables): Promise<void> => {
-  const response = await fetch('/api/s3', {
-    method: 'DELETE',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ key, type })
-  });
-
-  if (!response.ok) {
-    throw new Error('Failed to delete S3 item');
-  }
+  // S3 operations don't use repository context, so no repository ID needed
+  const client = new ApiClient();
+  await client.delete('/api/s3', { key, type });
 };
 
 const moveS3Item = async ({ sourceKey, destinationPath, type }: MoveS3ItemVariables): Promise<void> => {
-  const response = await fetch('/api/s3/operations', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      operation: 'move',
-      sourceKey,
-      destinationPath,
-      type
-    })
+  // S3 operations don't use repository context, so no repository ID needed
+  const client = new ApiClient();
+  await client.post('/api/s3/operations', {
+    operation: 'move',
+    sourceKey,
+    destinationPath,
+    type
   });
-
-  if (!response.ok) {
-    throw new Error('Failed to move S3 item');
-  }
 };
 
 export const useDeleteS3ItemMutation = () => {
@@ -52,7 +35,6 @@ export const useDeleteS3ItemMutation = () => {
     mutationFn: deleteS3Item,
     onSuccess: () => {
       // Invalidate the files query for media type to refetch the list
-      // This assumes the file browser is displaying media files
       queryClient.invalidateQueries({ queryKey: ['files', 'media'] });
     }
   });
@@ -64,7 +46,6 @@ export const useMoveS3ItemMutation = () => {
     mutationFn: moveS3Item,
     onSuccess: () => {
       // Invalidate the files query for media type to refetch the list
-      // This assumes the file browser is displaying media files
       queryClient.invalidateQueries({ queryKey: ['files', 'media'] });
     }
   });

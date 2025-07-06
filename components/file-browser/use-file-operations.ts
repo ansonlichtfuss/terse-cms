@@ -2,7 +2,7 @@ import type { QueryObserverResult, RefetchOptions } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'; // Import useRouter
 
 import { toast } from '@/components/ui/use-toast';
-import { useGitStatus } from '@/context/git-status-context';
+import { useRepository } from '@/context/repository-context';
 // Import the new file operation mutation hooks
 import { useCreateFileMutation } from '@/hooks/api/use-create-file-mutation';
 import { useCreateFolderMutation } from '@/hooks/api/use-create-folder-mutation';
@@ -47,7 +47,7 @@ export const useFileOperations = ({
   setItemToAction
 }: UseFileOperationsProps): UseFileOperationsResult => {
   const router = useRouter(); // Initialize useRouter
-  const { updateGitStatus } = useGitStatus();
+  const { currentRepositoryId } = useRepository();
 
   // Use the S3 mutation hooks
   const { mutate: deleteS3Item, isPending: isDeletingS3 } = useDeleteS3ItemMutation();
@@ -71,7 +71,12 @@ export const useFileOperations = ({
       formData.append('path', currentPath);
       formData.append('file', files[0]);
 
-      const response = await fetch('/api/s3/upload', {
+      const url = new URL('/api/s3/upload', window.location.origin);
+      if (currentRepositoryId) {
+        url.searchParams.set('repo', currentRepositoryId);
+      }
+
+      const response = await fetch(url.toString(), {
         method: 'POST',
         body: formData
       });
@@ -104,7 +109,12 @@ export const useFileOperations = ({
       // Assuming a useCreateS3FolderMutation exists or create one
       // For now, keeping the fetch call as the mutation hook was a placeholder
       try {
-        const response = await fetch('/api/s3/folder', {
+        const url = new URL('/api/s3/folder', window.location.origin);
+        if (currentRepositoryId) {
+          url.searchParams.set('repo', currentRepositoryId);
+        }
+
+        const response = await fetch(url.toString(), {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

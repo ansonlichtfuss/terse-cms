@@ -1,34 +1,15 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { createMutationHook, ApiClient } from './shared';
 
 interface CreateFileArgs {
   filePath: string;
   content?: string;
 }
 
-const createFile = async ({ filePath, content = '' }: CreateFileArgs): Promise<void> => {
-  const response = await fetch('/api/files', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ path: filePath, content })
-  });
-
-  if (!response.ok) {
-    throw new Error('Failed to create file');
-  }
+const createFile = async ({ filePath, content = '' }: CreateFileArgs, client: ApiClient): Promise<void> => {
+  await client.post('/api/files', { path: filePath, content });
 };
 
-export const useCreateFileMutation = () => {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: createFile,
-    onSuccess: () => {
-      // Invalidate the file tree query to refetch the file list
-      queryClient.invalidateQueries({ queryKey: ['fileTree'] });
-      queryClient.invalidateQueries({ queryKey: ['files'] });
-      // Invalidate the git status query as creating a file affects it
-      queryClient.invalidateQueries({ queryKey: ['gitStatus'] });
-    }
-  });
-};
+export const useCreateFileMutation = createMutationHook(
+  createFile,
+  { invalidateQueries: 'file' }
+);

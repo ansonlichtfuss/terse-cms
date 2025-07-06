@@ -1,5 +1,5 @@
 import { shouldUseMockApi } from '@/lib/env';
-import { getMarkdownRootDir } from '@/lib/paths';
+import { getMarkdownRootDir, getRepositoryPath } from '@/lib/paths';
 
 import type { ExistenceInfo, FileContent, FileNode, FileOperationResult } from './file-operations-types';
 import { FileSystemOperations } from './file-system-operations';
@@ -23,19 +23,56 @@ export type { ExistenceInfo, FileContent, FileNode, FileOperationResult } from '
  *   console.log(result.data.content);
  * }
  * ```
+ *
+ * @example
+ * ```typescript
+ * // Using with a specific repository
+ * const fileOps = new FileOperations('repo1');
+ * const result = await fileOps.readFile('example.md');
+ * ```
  */
 export class FileOperations {
   private rootDir: string;
   private fileSystemOps: FileSystemOperations;
+  private repositoryId?: string;
 
   /**
    * Creates a new FileOperations instance.
    * Automatically determines whether to use mock data or real file system
    * based on the environment configuration.
+   *
+   * @param repositoryId - Optional repository ID. If provided, operations will be scoped to that repository
    */
-  constructor() {
-    this.rootDir = shouldUseMockApi() ? 'mock-data/filesystem' : getMarkdownRootDir();
+  constructor(repositoryId?: string) {
+    this.repositoryId = repositoryId;
+
+    if (shouldUseMockApi()) {
+      this.rootDir = 'mock-data/filesystem';
+    } else if (repositoryId) {
+      this.rootDir = getRepositoryPath(repositoryId);
+    } else {
+      this.rootDir = getMarkdownRootDir();
+    }
+
     this.fileSystemOps = new FileSystemOperations(this.rootDir);
+  }
+
+  /**
+   * Gets the repository ID associated with this FileOperations instance.
+   *
+   * @returns The repository ID, or undefined if using the default repository
+   */
+  getRepositoryId(): string | undefined {
+    return this.repositoryId;
+  }
+
+  /**
+   * Gets the root directory path for this FileOperations instance.
+   *
+   * @returns The root directory path
+   */
+  getRootDir(): string {
+    return this.rootDir;
   }
 
   /**

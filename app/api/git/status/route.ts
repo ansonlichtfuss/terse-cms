@@ -1,17 +1,24 @@
 import { NextResponse } from 'next/server';
 
-export async function GET(_request: Request) {
-  try {
-    // Dynamically import simple-git only on the server
-    const { getGitInstance } = await import('@/lib/git');
+import { createBadRequestResponse, getGitInstanceForRequest, handleApiError } from '@/lib/api';
 
-    const git = getGitInstance();
+export async function GET(request: Request) {
+  try {
+    const gitResult = getGitInstanceForRequest(request);
+    if (gitResult.error) {
+      return gitResult.error;
+    }
+
+    // Dynamically import simple-git only on the server
+    const { getGitInstanceForRepository } = await import('@/lib/git');
+
+    const git = getGitInstanceForRepository(gitResult.repoId);
 
     // Check if directory is a git repository
     const isRepo = await git.checkIsRepo();
 
     if (!isRepo) {
-      return NextResponse.json({ error: 'Not a git repository' }, { status: 400 });
+      return createBadRequestResponse('Not a git repository');
     }
 
     // Get status
@@ -31,7 +38,6 @@ export async function GET(_request: Request) {
       isClean: status.isClean()
     });
   } catch (error) {
-    console.error('Error getting git status:', error);
-    return NextResponse.json({ error: 'Failed to get git status' }, { status: 500 });
+    return handleApiError(error, 'get git status');
   }
 }

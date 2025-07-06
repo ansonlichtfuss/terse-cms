@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 
-import { FileOperations } from '@/lib/api/files/file-operations';
+import { getFileOperationsForRequest, handleApiError, validateRequiredParam } from '@/lib/api';
 
 interface MoveFileRequest {
   sourcePath: string;
@@ -12,16 +12,22 @@ export async function POST(request: Request) {
   try {
     const { sourcePath, destinationPath, type }: MoveFileRequest = await request.json();
 
-    if (!sourcePath) {
-      return NextResponse.json({ error: 'Source path is required' }, { status: 400 });
+    const sourceValidation = validateRequiredParam(sourcePath, 'Source path');
+    if (sourceValidation) {
+      return sourceValidation;
     }
 
-    if (!destinationPath) {
-      return NextResponse.json({ error: 'Destination path is required' }, { status: 400 });
+    const destValidation = validateRequiredParam(destinationPath, 'Destination path');
+    if (destValidation) {
+      return destValidation;
     }
 
-    const fileOps = new FileOperations();
-    const result = await fileOps.moveFile(sourcePath, destinationPath);
+    const fileOpsOrError = getFileOperationsForRequest(request);
+    if (fileOpsOrError instanceof NextResponse) {
+      return fileOpsOrError;
+    }
+
+    const result = await fileOpsOrError.moveFile(sourcePath, destinationPath);
 
     if (!result.success) {
       return NextResponse.json({ error: result.error }, { status: result.statusCode });
@@ -32,7 +38,6 @@ export async function POST(request: Request) {
       message: `${type === 'directory' ? 'Folder' : 'File'} moved`
     });
   } catch (error) {
-    console.error('Error moving file:', error);
-    return NextResponse.json({ error: 'Failed to move file' }, { status: 500 });
+    return handleApiError(error, 'move file');
   }
 }

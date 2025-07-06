@@ -1,8 +1,6 @@
 import { NextResponse } from 'next/server';
 
-import { getGitInstance } from '@/lib/git';
-
-const git = getGitInstance();
+import { getGitInstanceForRequest, validateGitRepository } from '@/lib/api';
 
 export async function GET(request: Request) {
   try {
@@ -13,11 +11,18 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: 'filePath parameter is required' }, { status: 400 });
     }
 
-    // Check if directory is a git repository
-    const isRepo = await git.checkIsRepo();
+    const gitResult = getGitInstanceForRequest(request);
+    if (gitResult.error) {
+      return gitResult.error;
+    }
 
-    if (!isRepo) {
-      return NextResponse.json({ error: 'Not a git repository' }, { status: 400 });
+    const { getGitInstanceForRepository } = await import('@/lib/git');
+    const git = getGitInstanceForRepository(gitResult.repoId);
+
+    // Check if directory is a git repository
+    const validation = await validateGitRepository(git);
+    if (!validation.isValid) {
+      return validation.error!;
     }
 
     // Get commit history for the specific file

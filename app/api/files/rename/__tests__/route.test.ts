@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { vi, describe, it, expect, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { POST } from '../route';
 
@@ -10,8 +10,8 @@ const mockRenameFile = vi.fn();
 vi.mock('@/lib/api/files/file-operations', () => {
   return {
     FileOperations: vi.fn().mockImplementation(() => ({
-      renameFile: mockRenameFile,
-    })),
+      renameFile: mockRenameFile
+    }))
   };
 });
 
@@ -28,12 +28,12 @@ describe('/api/files/rename', () => {
       const requestBody = {
         sourcePath: 'old-name.md',
         newName: 'new-name.md',
-        type: 'file',
+        type: 'file'
       };
       const request = new NextRequest('http://localhost/api/files/rename', {
         method: 'POST',
         body: JSON.stringify(requestBody),
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json' }
       });
 
       const response = await POST(request);
@@ -42,7 +42,7 @@ describe('/api/files/rename', () => {
       const jsonResponse = await response.json();
       expect(jsonResponse).toEqual({
         success: true,
-        message: 'File renamed',
+        message: 'File renamed'
       });
       expect(mockRenameFile).toHaveBeenCalledWith('old-name.md', 'new-name.md');
     });
@@ -54,12 +54,12 @@ describe('/api/files/rename', () => {
       const requestBody = {
         sourcePath: 'old-folder',
         newName: 'new-folder',
-        type: 'directory',
+        type: 'directory'
       };
       const request = new NextRequest('http://localhost/api/files/rename', {
         method: 'POST',
         body: JSON.stringify(requestBody),
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json' }
       });
 
       const response = await POST(request);
@@ -68,7 +68,7 @@ describe('/api/files/rename', () => {
       const jsonResponse = await response.json();
       expect(jsonResponse).toEqual({
         success: true,
-        message: 'Folder renamed',
+        message: 'Folder renamed'
       });
       expect(mockRenameFile).toHaveBeenCalledWith('old-folder', 'new-folder');
     });
@@ -79,12 +79,12 @@ describe('/api/files/rename', () => {
 
       const requestBody = {
         sourcePath: 'old-name.md',
-        newName: 'new-name.md',
+        newName: 'new-name.md'
       };
       const request = new NextRequest('http://localhost/api/files/rename', {
         method: 'POST',
         body: JSON.stringify(requestBody),
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json' }
       });
 
       const response = await POST(request);
@@ -93,19 +93,19 @@ describe('/api/files/rename', () => {
       const jsonResponse = await response.json();
       expect(jsonResponse).toEqual({
         success: true,
-        message: 'File renamed',
+        message: 'File renamed'
       });
       expect(mockRenameFile).toHaveBeenCalledWith('old-name.md', 'new-name.md');
     });
 
     it('should return 400 if sourcePath is missing', async () => {
       const requestBody = {
-        newName: 'new-name.md',
+        newName: 'new-name.md'
       };
       const request = new NextRequest('http://localhost/api/files/rename', {
         method: 'POST',
         body: JSON.stringify(requestBody),
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json' }
       });
 
       const response = await POST(request);
@@ -118,12 +118,12 @@ describe('/api/files/rename', () => {
 
     it('should return 400 if newName is missing', async () => {
       const requestBody = {
-        sourcePath: 'old-name.md',
+        sourcePath: 'old-name.md'
       };
       const request = new NextRequest('http://localhost/api/files/rename', {
         method: 'POST',
         body: JSON.stringify(requestBody),
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json' }
       });
 
       const response = await POST(request);
@@ -137,12 +137,12 @@ describe('/api/files/rename', () => {
     it('should return 400 if sourcePath is empty', async () => {
       const requestBody = {
         sourcePath: '',
-        newName: 'new-name.md',
+        newName: 'new-name.md'
       };
       const request = new NextRequest('http://localhost/api/files/rename', {
         method: 'POST',
         body: JSON.stringify(requestBody),
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json' }
       });
 
       const response = await POST(request);
@@ -156,12 +156,12 @@ describe('/api/files/rename', () => {
     it('should return 400 if newName is empty', async () => {
       const requestBody = {
         sourcePath: 'old-name.md',
-        newName: '',
+        newName: ''
       };
       const request = new NextRequest('http://localhost/api/files/rename', {
         method: 'POST',
         body: JSON.stringify(requestBody),
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json' }
       });
 
       const response = await POST(request);
@@ -176,18 +176,18 @@ describe('/api/files/rename', () => {
       const mockResult = {
         success: false,
         error: 'Rename failed',
-        statusCode: 404,
+        statusCode: 404
       };
       mockRenameFile.mockResolvedValue(mockResult);
 
       const requestBody = {
         sourcePath: 'old-name.md',
-        newName: 'new-name.md',
+        newName: 'new-name.md'
       };
       const request = new NextRequest('http://localhost/api/files/rename', {
         method: 'POST',
         body: JSON.stringify(requestBody),
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json' }
       });
 
       const response = await POST(request);
@@ -202,7 +202,7 @@ describe('/api/files/rename', () => {
       const request = new NextRequest('http://localhost/api/files/rename', {
         method: 'POST',
         body: 'invalid json',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json' }
       });
 
       const response = await POST(request);

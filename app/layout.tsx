@@ -8,6 +8,7 @@ import { ReactQueryClientProvider } from '@/components/react-query-client-provid
 import { ThemeProvider } from '@/components/theme-provider';
 import { Toaster } from '@/components/ui/toaster';
 import { GitStatusProvider } from '@/context/git-status-context';
+import { RepositoryProvider } from '@/context/repository-context';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -22,7 +23,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <html lang="en" suppressHydrationWarning>
         <body className={inter.className}>
           <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
-            <GitStatusProvider>{children}</GitStatusProvider>
+            <RepositoryProvider>
+              <GitStatusProvider>{children}</GitStatusProvider>
+            </RepositoryProvider>
           </ThemeProvider>
           <Toaster />
         </body>

@@ -1,23 +1,31 @@
 import { NextResponse } from 'next/server';
 
+import { createBadRequestResponse, getGitInstanceForRequest, handleApiError, validateRequiredParam } from '@/lib/api';
+
 export async function POST(request: Request) {
   try {
     const { message } = await request.json();
 
-    if (!message) {
-      return NextResponse.json({ error: 'Commit message is required' }, { status: 400 });
+    const messageValidation = validateRequiredParam(message, 'Commit message');
+    if (messageValidation) {
+      return messageValidation;
+    }
+
+    const gitResult = getGitInstanceForRequest(request);
+    if (gitResult.error) {
+      return gitResult.error;
     }
 
     // Dynamically import simple-git only on the server
-    const { getGitInstance } = await import('@/lib/git');
+    const { getGitInstanceForRepository } = await import('@/lib/git');
 
-    const git = getGitInstance();
+    const git = getGitInstanceForRepository(gitResult.repoId);
 
     // Check if directory is a git repository
     const isRepo = await git.checkIsRepo();
 
     if (!isRepo) {
-      return NextResponse.json({ error: 'Not a git repository' }, { status: 400 });
+      return createBadRequestResponse('Not a git repository');
     }
 
     // Add all changes
@@ -31,7 +39,6 @@ export async function POST(request: Request) {
       commit: commitResult
     });
   } catch (error) {
-    console.error('Error committing changes:', error);
-    return NextResponse.json({ error: 'Failed to commit changes' }, { status: 500 });
+    return handleApiError(error, 'commit changes');
   }
 }

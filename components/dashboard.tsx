@@ -9,6 +9,7 @@ import { FileBrowser } from '@/components/file-browser/file-browser';
 import { GitBranchDisplay } from '@/components/git/git-branch-display';
 import { Logo } from '@/components/logo';
 import { MediaManager } from '@/components/media-manager';
+import { RepositorySwitcher } from '@/components/repository-switcher';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -155,6 +156,7 @@ export function Dashboard({ selectedFilePath, children }: { selectedFilePath?: s
       <header className="border-b flex items-center justify-between bg-dot-pattern">
         <div className="flex items-center gap-2 px-3 py-2">
           <Logo size="sm" withIcon={false} />
+          <RepositorySwitcher />
           <span className="text-xs text-muted-foreground">v{packageInfo.version}</span>
         </div>
         <div className="flex items-center gap-2 px-3 py-2">

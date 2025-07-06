@@ -1,38 +1,23 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { createQueryHook, createMutationHook, queryKeys, ApiClient } from './shared';
 
-const fetchGitStatus = async (): Promise<string[]> => {
+const fetchGitStatus = async (client: ApiClient): Promise<string[]> => {
   // Stage all changes before fetching status
-  await fetch('/api/git/stage', { method: 'POST' });
-
-  const response = await fetch('/api/git/status');
-  if (!response.ok) {
-    throw new Error('Failed to fetch git status');
-  }
-  const data = await response.json();
-  return data.modifiedFiles as string[];
+  await client.post('/api/git/stage', {});
+  
+  const data = await client.get<{ modifiedFiles: string[] }>('/api/git/status');
+  return data.modifiedFiles;
 };
 
-const stageGitChanges = async (): Promise<void> => {
-  const response = await fetch('/api/git/stage', { method: 'POST' });
-  if (!response.ok) {
-    throw new Error('Failed to stage git changes');
-  }
+const stageGitChanges = async (_: void, client: ApiClient): Promise<void> => {
+  await client.post('/api/git/stage', {});
 };
 
-export const useGitStatusQuery = () => {
-  return useQuery<string[], Error>({
-    queryKey: ['gitStatus'], // Unique key for git status
-    queryFn: fetchGitStatus
-  });
-};
+export const useGitStatusQuery = createQueryHook(
+  queryKeys.gitStatus,
+  fetchGitStatus
+);
 
-export const useStageGitChangesMutation = () => {
-  const queryClient = useQueryClient();
-  return useMutation<void, Error>({
-    mutationFn: stageGitChanges,
-    onSuccess: () => {
-      // Invalidate the gitStatus query to refetch after staging
-      queryClient.invalidateQueries({ queryKey: ['gitStatus'] });
-    }
-  });
-};
+export const useStageGitChangesMutation = createMutationHook(
+  stageGitChanges,
+  { invalidateQueries: 'git' }
+);

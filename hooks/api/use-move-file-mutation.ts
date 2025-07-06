@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { createMutationHook, ApiClient } from './shared';
 
 interface MoveFileArgs {
   sourcePath: string;
@@ -6,34 +6,15 @@ interface MoveFileArgs {
   type: 'file' | 'directory';
 }
 
-const moveFile = async ({ sourcePath, destinationPath, type }: MoveFileArgs): Promise<void> => {
-  const response = await fetch('/api/files/move', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      sourcePath,
-      destinationPath,
-      type
-    })
-  });
-
-  if (!response.ok) {
-    throw new Error('Failed to move file');
-  }
-};
-
-export const useMoveFileMutation = () => {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: moveFile,
-    onSuccess: () => {
-      // Invalidate the file tree query to refetch the file list
-      queryClient.invalidateQueries({ queryKey: ['fileTree'] });
-      queryClient.invalidateQueries({ queryKey: ['files'] });
-      // Invalidate the git status query as moving a file affects it
-      queryClient.invalidateQueries({ queryKey: ['gitStatus'] });
-    }
+const moveFile = async ({ sourcePath, destinationPath, type }: MoveFileArgs, client: ApiClient): Promise<void> => {
+  await client.post('/api/files/move', {
+    sourcePath,
+    destinationPath,
+    type
   });
 };
+
+export const useMoveFileMutation = createMutationHook(
+  moveFile,
+  { invalidateQueries: 'file' }
+);

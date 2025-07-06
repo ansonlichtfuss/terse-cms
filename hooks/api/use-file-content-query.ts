@@ -1,25 +1,20 @@
-import { useQuery } from '@tanstack/react-query';
-
+import { createQueryHook, queryKeys, ApiClient } from './shared';
 import type { FileData } from '@/types';
 
-const fetchFileContent = async (path: string): Promise<FileData> => {
-  const response = await fetch(`/api/files?path=${encodeURIComponent(path)}`);
-  if (!response.ok) {
-    throw new Error(`Error fetching file content: ${response.statusText}`);
-  }
-  const data = await response.json();
-  return {
-    path,
-    content: data.content,
-    isModified: false, // Assuming fetched file is not modified initially
-    lastModified: data.lastModified
-  };
-};
-
 export const useFileContentQuery = (filePath: string) => {
-  return useQuery({
-    queryKey: ['fileContent', filePath],
-    queryFn: () => fetchFileContent(filePath),
-    enabled: !!filePath // Only run the query if filePath is provided
-  });
+  return createQueryHook(
+    (repositoryId) => queryKeys.fileContent(filePath, repositoryId),
+    async (client: ApiClient) => {
+      // Use the ApiClient's buildUrl method by adding path as query param
+      const endpoint = `/api/files?path=${encodeURIComponent(filePath)}`;
+      const data = await client.get<{ content: string; lastModified: string }>(endpoint);
+      return {
+        path: filePath,
+        content: data.content,
+        isModified: false,
+        lastModified: data.lastModified
+      } as FileData;
+    },
+    { enabled: !!filePath }
+  )();
 };

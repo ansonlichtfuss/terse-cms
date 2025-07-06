@@ -1,18 +1,24 @@
 import { NextResponse } from 'next/server';
 import { ResetMode } from 'simple-git';
 
-export async function POST(_request: Request) {
-  try {
-    // Dynamically import simple-git only on the server
-    const { getGitInstance } = await import('@/lib/git');
+import { getGitInstanceForRequest, validateGitRepository } from '@/lib/api';
 
-    const git = getGitInstance();
+export async function POST(request: Request) {
+  try {
+    const gitResult = getGitInstanceForRequest(request);
+    if (gitResult.error) {
+      return gitResult.error;
+    }
+
+    // Dynamically import simple-git only on the server
+    const { getGitInstanceForRepository } = await import('@/lib/git');
+
+    const git = getGitInstanceForRepository(gitResult.repoId);
 
     // Check if directory is a git repository
-    const isRepo = await git.checkIsRepo();
-
-    if (!isRepo) {
-      return NextResponse.json({ error: 'Not a git repository' }, { status: 400 });
+    const validation = await validateGitRepository(git);
+    if (!validation.isValid) {
+      return validation.error!;
     }
 
     // Discard all changes

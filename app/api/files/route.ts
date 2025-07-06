@@ -1,17 +1,22 @@
 import { NextResponse } from 'next/server';
 
-import { FileOperations } from '@/lib/api/files/file-operations';
+import { getFileOperationsForRequest, validateRequiredParam } from '@/lib/api';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const filePath = searchParams.get('path');
 
-  if (!filePath) {
-    return NextResponse.json({ error: 'Path parameter is required' }, { status: 400 });
+  const validationError = validateRequiredParam(filePath, 'Path parameter');
+  if (validationError) {
+    return validationError;
   }
 
-  const fileOps = new FileOperations();
-  const result = await fileOps.readFile(filePath);
+  const fileOpsOrError = getFileOperationsForRequest(request);
+  if (fileOpsOrError instanceof NextResponse) {
+    return fileOpsOrError;
+  }
+
+  const result = await fileOpsOrError.readFile(filePath!);
 
   if (!result.success) {
     return NextResponse.json({ error: result.error }, { status: result.statusCode });
@@ -24,12 +29,17 @@ export async function POST(request: Request) {
   try {
     const { path: filePath, content } = await request.json();
 
-    if (!filePath) {
-      return NextResponse.json({ error: 'Path parameter is required' }, { status: 400 });
+    const validationError = validateRequiredParam(filePath, 'Path parameter');
+    if (validationError) {
+      return validationError;
     }
 
-    const fileOps = new FileOperations();
-    const result = await fileOps.writeFile(filePath, content);
+    const fileOpsOrError = getFileOperationsForRequest(request);
+    if (fileOpsOrError instanceof NextResponse) {
+      return fileOpsOrError;
+    }
+
+    const result = await fileOpsOrError.writeFile(filePath, content);
 
     if (!result.success) {
       return NextResponse.json({ error: result.error }, { status: result.statusCode });
@@ -46,12 +56,17 @@ export async function DELETE(request: Request) {
   try {
     const { path: filePath } = await request.json();
 
-    if (!filePath) {
-      return NextResponse.json({ error: 'Path parameter is required' }, { status: 400 });
+    const validationError = validateRequiredParam(filePath, 'Path parameter');
+    if (validationError) {
+      return validationError;
     }
 
-    const fileOps = new FileOperations();
-    const result = await fileOps.deleteFile(filePath);
+    const fileOpsOrError = getFileOperationsForRequest(request);
+    if (fileOpsOrError instanceof NextResponse) {
+      return fileOpsOrError;
+    }
+
+    const result = await fileOpsOrError.deleteFile(filePath);
 
     if (!result.success) {
       return NextResponse.json({ error: result.error }, { status: result.statusCode });

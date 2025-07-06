@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { vi, describe, it, expect, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { POST } from '../route';
 
@@ -10,8 +10,8 @@ const mockMoveFile = vi.fn();
 vi.mock('@/lib/api/files/file-operations', () => {
   return {
     FileOperations: vi.fn().mockImplementation(() => ({
-      moveFile: mockMoveFile,
-    })),
+      moveFile: mockMoveFile
+    }))
   };
 });
 
@@ -28,12 +28,12 @@ describe('/api/files/move', () => {
       const requestBody = {
         sourcePath: 'source.md',
         destinationPath: 'destination.md',
-        type: 'file',
+        type: 'file'
       };
       const request = new NextRequest('http://localhost/api/files/move', {
         method: 'POST',
         body: JSON.stringify(requestBody),
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json' }
       });
 
       const response = await POST(request);
@@ -42,7 +42,7 @@ describe('/api/files/move', () => {
       const jsonResponse = await response.json();
       expect(jsonResponse).toEqual({
         success: true,
-        message: 'File moved',
+        message: 'File moved'
       });
       expect(mockMoveFile).toHaveBeenCalledWith('source.md', 'destination.md');
     });
@@ -54,12 +54,12 @@ describe('/api/files/move', () => {
       const requestBody = {
         sourcePath: 'source-folder',
         destinationPath: 'destination-folder',
-        type: 'directory',
+        type: 'directory'
       };
       const request = new NextRequest('http://localhost/api/files/move', {
         method: 'POST',
         body: JSON.stringify(requestBody),
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json' }
       });
 
       const response = await POST(request);
@@ -68,7 +68,7 @@ describe('/api/files/move', () => {
       const jsonResponse = await response.json();
       expect(jsonResponse).toEqual({
         success: true,
-        message: 'Folder moved',
+        message: 'Folder moved'
       });
       expect(mockMoveFile).toHaveBeenCalledWith('source-folder', 'destination-folder');
     });
@@ -79,12 +79,12 @@ describe('/api/files/move', () => {
 
       const requestBody = {
         sourcePath: 'source.md',
-        destinationPath: 'destination.md',
+        destinationPath: 'destination.md'
       };
       const request = new NextRequest('http://localhost/api/files/move', {
         method: 'POST',
         body: JSON.stringify(requestBody),
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json' }
       });
 
       const response = await POST(request);
@@ -93,19 +93,19 @@ describe('/api/files/move', () => {
       const jsonResponse = await response.json();
       expect(jsonResponse).toEqual({
         success: true,
-        message: 'File moved',
+        message: 'File moved'
       });
       expect(mockMoveFile).toHaveBeenCalledWith('source.md', 'destination.md');
     });
 
     it('should return 400 if sourcePath is missing', async () => {
       const requestBody = {
-        destinationPath: 'destination.md',
+        destinationPath: 'destination.md'
       };
       const request = new NextRequest('http://localhost/api/files/move', {
         method: 'POST',
         body: JSON.stringify(requestBody),
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json' }
       });
 
       const response = await POST(request);
@@ -118,12 +118,12 @@ describe('/api/files/move', () => {
 
     it('should return 400 if destinationPath is missing', async () => {
       const requestBody = {
-        sourcePath: 'source.md',
+        sourcePath: 'source.md'
       };
       const request = new NextRequest('http://localhost/api/files/move', {
         method: 'POST',
         body: JSON.stringify(requestBody),
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json' }
       });
 
       const response = await POST(request);
@@ -137,12 +137,12 @@ describe('/api/files/move', () => {
     it('should return 400 if sourcePath is empty', async () => {
       const requestBody = {
         sourcePath: '',
-        destinationPath: 'destination.md',
+        destinationPath: 'destination.md'
       };
       const request = new NextRequest('http://localhost/api/files/move', {
         method: 'POST',
         body: JSON.stringify(requestBody),
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json' }
       });
 
       const response = await POST(request);
@@ -156,12 +156,12 @@ describe('/api/files/move', () => {
     it('should return 400 if destinationPath is empty', async () => {
       const requestBody = {
         sourcePath: 'source.md',
-        destinationPath: '',
+        destinationPath: ''
       };
       const request = new NextRequest('http://localhost/api/files/move', {
         method: 'POST',
         body: JSON.stringify(requestBody),
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json' }
       });
 
       const response = await POST(request);
@@ -176,18 +176,18 @@ describe('/api/files/move', () => {
       const mockResult = {
         success: false,
         error: 'Move failed',
-        statusCode: 404,
+        statusCode: 404
       };
       mockMoveFile.mockResolvedValue(mockResult);
 
       const requestBody = {
         sourcePath: 'source.md',
-        destinationPath: 'destination.md',
+        destinationPath: 'destination.md'
       };
       const request = new NextRequest('http://localhost/api/files/move', {
         method: 'POST',
         body: JSON.stringify(requestBody),
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json' }
       });
 
       const response = await POST(request);
@@ -202,7 +202,7 @@ describe('/api/files/move', () => {
       const request = new NextRequest('http://localhost/api/files/move', {
         method: 'POST',
         body: 'invalid json',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json' }
       });
 
       const response = await POST(request);
