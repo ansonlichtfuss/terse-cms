@@ -8,12 +8,12 @@ import { Breadcrumbs } from '@/components/breadcrumbs/breadcrumbs';
 import { MoveFileDialog } from '@/components/file-browser/move-file-dialog';
 import { RenameFileDialog } from '@/components/rename-file-dialog';
 import { ConfirmationDialog } from '@/components/ui/confirmation-dialog';
-import { useRepositoryFromUrl } from '@/hooks/use-repository-from-url';
 import { useFilesQuery } from '@/hooks/api/use-files-query';
 import { useFileBrowserNavigation } from '@/hooks/file-browser/use-file-browser-navigation';
 import { useFileBrowserSorting } from '@/hooks/file-browser/use-file-browser-sorting';
 import { useFileSelection } from '@/hooks/file-browser/use-file-selection';
 import { useDialogState } from '@/hooks/ui/use-dialog-state';
+import { useRepositoryFromUrl } from '@/hooks/use-repository-from-url';
 import { cn } from '@/lib/utils';
 
 import { CreateFolderDialog } from './create-folder-dialog';
