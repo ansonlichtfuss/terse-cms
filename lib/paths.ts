@@ -1,3 +1,5 @@
+import crypto from 'crypto';
+
 /**
  * Configuration for a single repository
  */
@@ -8,6 +10,10 @@ export interface RepositoryConfig {
   label: string;
   /** File system path to the repository */
   path: string;
+}
+
+function encodeId(id: string) {
+  return crypto.createHash('sha256').update(id).digest('hex').slice(0, 12);
 }
 
 /**
@@ -61,7 +67,7 @@ export function getRepositoryConfig(): RepositoryConfig[] {
     const label = process.env[labelKey] || `Repository ${index}`;
 
     repositories.push({
-      id: index.toString(),
+      id: encodeId(index.toString()),
       label,
       path
     });
