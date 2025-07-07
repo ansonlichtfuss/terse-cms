@@ -81,14 +81,4 @@ describe('paths', () => {
       expect(() => getRepositoryPath('invalid')).toThrow("Repository with ID 'invalid' not found.");
     });
   });
-
-  describe('getRepositoryLabel', () => {
-    beforeEach(() => {
-      process.env.USE_MOCK_API = 'false';
-      process.env.MARKDOWN_ROOT_DIR_1 = '/repo1/path';
-      process.env.MARKDOWN_ROOT_LABEL_1 = 'Repository One';
-      process.env.MARKDOWN_ROOT_DIR_2 = '/repo2/path';
-      process.env.MARKDOWN_ROOT_LABEL_2 = 'Repository Two';
-    });
-  });
 });

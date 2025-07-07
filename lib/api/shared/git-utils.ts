@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { SimpleGit } from 'simple-git';
 
 import { getRepositoryConfig } from '@/lib/paths';
 
@@ -48,7 +49,7 @@ export function getGitInstanceForRequest(request: Request): GitInstanceResult {
   return { repoId };
 }
 
-export async function validateGitRepository(git: unknown): Promise<GitValidationResult> {
+export async function validateGitRepository(git: SimpleGit): Promise<GitValidationResult> {
   try {
     const isRepo = await git.checkIsRepo();
 
