@@ -119,4 +119,3 @@ describe('/api/git/status', () => {
     });
   });
 });
-

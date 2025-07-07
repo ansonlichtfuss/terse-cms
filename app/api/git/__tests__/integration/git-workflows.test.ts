@@ -9,20 +9,20 @@ vi.mock('@/lib/git', () => ({
 
 import { createGitInstance } from '@/lib/git';
 
+import { POST as postCommit } from '../../commit/route';
+import { GET as getHistory } from '../../history/route';
+import { POST as postRevert } from '../../revert/route';
+import { POST as postStage } from '../../stage/route';
 // Import all Git API route handlers
 import { GET as getStatus } from '../../status/route';
-import { POST as postCommit } from '../../commit/route';
-import { POST as postStage } from '../../stage/route';
 import { POST as postSwitchBranch } from '../../switch-branch/route';
-import { POST as postRevert } from '../../revert/route';
-import { GET as getHistory } from '../../history/route';
 
 describe('Git Workflows Integration Tests', () => {
   let mockGitInstance: any;
 
   beforeEach(() => {
     vi.clearAllMocks();
-    
+
     // Create a comprehensive mock git instance
     mockGitInstance = {
       status: vi.fn(),
@@ -52,7 +52,7 @@ describe('Git Workflows Integration Tests', () => {
 
       const statusRequest1 = new NextRequest('http://localhost/api/git/status');
       const statusResponse1 = await getStatus(statusRequest1);
-      
+
       expect(statusResponse1.status).toBe(200);
       const statusData1 = await statusResponse1.json();
       expect(statusData1.isClean).toBe(false);
@@ -67,7 +67,7 @@ describe('Git Workflows Integration Tests', () => {
         headers: { 'Content-Type': 'application/json' }
       });
       const stageResponse = await postStage(stageRequest);
-      
+
       expect(stageResponse.status).toBe(200);
       const stageData = await stageResponse.json();
       expect(stageData.success).toBe(true);
@@ -91,7 +91,7 @@ describe('Git Workflows Integration Tests', () => {
         headers: { 'Content-Type': 'application/json' }
       });
       const commitResponse = await postCommit(commitRequest);
-      
+
       expect(commitResponse.status).toBe(200);
       const commitData = await commitResponse.json();
       expect(commitData.success).toBe(true);
@@ -109,7 +109,7 @@ describe('Git Workflows Integration Tests', () => {
 
       const statusRequest2 = new NextRequest('http://localhost/api/git/status');
       const statusResponse2 = await getStatus(statusRequest2);
-      
+
       expect(statusResponse2.status).toBe(200);
       const statusData2 = await statusResponse2.json();
       expect(statusData2.isClean).toBe(true);
@@ -131,7 +131,7 @@ describe('Git Workflows Integration Tests', () => {
 
       const statusRequest = new NextRequest('http://localhost/api/git/status');
       const statusResponse = await getStatus(statusRequest);
-      
+
       expect(statusResponse.status).toBe(200);
       const statusData = await statusResponse.json();
       expect(statusData.isClean).toBe(true);
@@ -148,7 +148,7 @@ describe('Git Workflows Integration Tests', () => {
         headers: { 'Content-Type': 'application/json' }
       });
       const switchResponse = await postSwitchBranch(switchRequest);
-      
+
       expect(switchResponse.status).toBe(200);
       const switchData = await switchResponse.json();
       expect(switchData.success).toBe(true);
@@ -166,7 +166,7 @@ describe('Git Workflows Integration Tests', () => {
 
       const statusRequest2 = new NextRequest('http://localhost/api/git/status');
       const statusResponse2 = await getStatus(statusRequest2);
-      
+
       expect(statusResponse2.status).toBe(200);
       const statusData2 = await statusResponse2.json();
       expect(statusData2.isClean).toBe(true);
@@ -185,7 +185,7 @@ describe('Git Workflows Integration Tests', () => {
 
       const statusRequest = new NextRequest('http://localhost/api/git/status');
       const statusResponse = await getStatus(statusRequest);
-      
+
       expect(statusResponse.status).toBe(200);
       const statusData = await statusResponse.json();
       expect(statusData.isClean).toBe(false);
@@ -201,7 +201,7 @@ describe('Git Workflows Integration Tests', () => {
         headers: { 'Content-Type': 'application/json' }
       });
       const switchResponse = await postSwitchBranch(switchRequest);
-      
+
       expect(switchResponse.status).toBe(409);
       const switchData = await switchResponse.json();
       expect(switchData.error).toBe('Pending changes detected. Please commit or stash them before switching branches.');
@@ -222,7 +222,7 @@ describe('Git Workflows Integration Tests', () => {
 
       const statusRequest1 = new NextRequest('http://localhost/api/git/status');
       const statusResponse1 = await getStatus(statusRequest1);
-      
+
       expect(statusResponse1.status).toBe(200);
       const statusData1 = await statusResponse1.json();
       expect(statusData1.isClean).toBe(false);
@@ -236,7 +236,7 @@ describe('Git Workflows Integration Tests', () => {
         headers: { 'Content-Type': 'application/json' }
       });
       const revertResponse = await postRevert(revertRequest);
-      
+
       expect(revertResponse.status).toBe(200);
       const revertData = await revertResponse.json();
       expect(revertData.success).toBe(true);
@@ -254,7 +254,7 @@ describe('Git Workflows Integration Tests', () => {
 
       const statusRequest2 = new NextRequest('http://localhost/api/git/status');
       const statusResponse2 = await getStatus(statusRequest2);
-      
+
       expect(statusResponse2.status).toBe(200);
       const statusData2 = await statusResponse2.json();
       expect(statusData2.isClean).toBe(true);
@@ -281,7 +281,7 @@ describe('Git Workflows Integration Tests', () => {
         headers: { 'Content-Type': 'application/json' }
       });
       const commitResponse = await postCommit(commitRequest);
-      
+
       expect(commitResponse.status).toBe(200);
 
       // 2. Get history for the file
@@ -302,7 +302,7 @@ describe('Git Workflows Integration Tests', () => {
 
       const historyRequest = new NextRequest('http://localhost/api/git/history?filePath=test.md');
       const historyResponse = await getHistory(historyRequest);
-      
+
       expect(historyResponse.status).toBe(200);
       const historyData = await historyResponse.json();
       expect(historyData).toHaveLength(1);

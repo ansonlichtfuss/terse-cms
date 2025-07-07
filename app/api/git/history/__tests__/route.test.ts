@@ -36,11 +36,9 @@ describe('/api/git/history', () => {
       };
 
       const mockGitLog = vi.fn().mockResolvedValue(mockLog);
-      const mockGitShow = vi.fn()
-        .mockResolvedValueOnce(`abc123 Initial commit
+      const mockGitShow = vi.fn().mockResolvedValueOnce(`abc123 Initial commit
  test.md | 10 +++++++++++
- 1 file changed, 10 insertions(+)`)
-        .mockResolvedValueOnce(`def456 Update content
+ 1 file changed, 10 insertions(+)`).mockResolvedValueOnce(`def456 Update content
  test.md | 5 +++++-----
  1 file changed, 5 insertions(+), 5 deletions(-)`);
 
