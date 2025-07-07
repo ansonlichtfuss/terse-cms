@@ -26,7 +26,9 @@ export default defineConfig({
       '@/context': path.resolve(__dirname, './context'),
       '@/lib': path.resolve(__dirname, './lib'),
       '@/hooks': path.resolve(__dirname, './hooks'),
-      '@/app': path.resolve(__dirname, './app')
+      '@/app': path.resolve(__dirname, './app'),
+      '@/utils': path.resolve(__dirname, './utils'),
+      '@/types': path.resolve(__dirname, './types')
       // Add other aliases as needed
     }
   },
@@ -36,7 +38,9 @@ export default defineConfig({
       '@/context': path.resolve(__dirname, './context'),
       '@/lib': path.resolve(__dirname, './lib'),
       '@/hooks': path.resolve(__dirname, './hooks'),
-      '@/app': path.resolve(__dirname, './app')
+      '@/app': path.resolve(__dirname, './app'),
+      '@/utils': path.resolve(__dirname, './utils'),
+      '@/types': path.resolve(__dirname, './types')
     }
   }
 });
