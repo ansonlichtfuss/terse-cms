@@ -8,6 +8,7 @@ import { Breadcrumbs } from '@/components/breadcrumbs/breadcrumbs';
 import { MoveFileDialog } from '@/components/file-browser/move-file-dialog';
 import { RenameFileDialog } from '@/components/rename-file-dialog';
 import { ConfirmationDialog } from '@/components/ui/confirmation-dialog';
+import { useRepository } from '@/context/repository-context';
 // Import the new Tanstack Query hook
 import { useFilesQuery } from '@/hooks/api/use-files-query';
 import { cn } from '@/lib/utils';
@@ -77,6 +78,7 @@ export function FileBrowser({
   };
 
   const router = useRouter();
+  const { currentRepositoryId } = useRepository();
 
   // Add state for the upload dialog
   const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
@@ -181,7 +183,10 @@ export function FileBrowser({
           onSelect(itemPath);
         }
       } else {
-        router.push(`/edit/${item.path}`);
+        const href = currentRepositoryId 
+          ? `/edit/${item.path}?repo=${currentRepositoryId}`
+          : `/edit/${item.path}`;
+        router.push(href);
         // For media items, always use the callback
         if (typeof onSelect === 'function') {
           onSelect(itemPath, item.path);

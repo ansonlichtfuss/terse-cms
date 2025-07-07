@@ -3,6 +3,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import React, { createContext, useContext, useEffect, useState } from 'react';
+
 import { ConfigErrorDialog } from '@/components/config-error-dialog';
 
 interface Repository {
@@ -48,7 +49,7 @@ export const RepositoryProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     queryFn: fetchRepositories,
     retry: (failureCount, error) => {
       // Don't retry on configuration errors
-      if (error.message.includes('No repositories configured')) {
+      if (failureCount >= 1) {
         setConfigError(error.message);
         return false;
       }
@@ -56,17 +57,10 @@ export const RepositoryProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     }
   });
 
-  // Handle configuration errors
-  useEffect(() => {
-    if (error && error.message.includes('No repositories configured')) {
-      setConfigError(error.message);
-    }
-  }, [error]);
-
   // Get current repository from URL params and auto-fill if needed
   useEffect(() => {
     const repoParam = searchParams.get('repo');
-    
+
     if (!repoParam && repositories && repositories.length > 0) {
       // Auto-fill with first repository if no repo parameter
       const firstRepo = repositories[0];

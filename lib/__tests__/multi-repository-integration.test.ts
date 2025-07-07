@@ -64,28 +64,6 @@ describe('Multi-Repository Integration', () => {
     expect(getDefaultRepositoryId()).toBe('1');
   });
 
-  it('should maintain backward compatibility with legacy configuration', () => {
-    // Setup legacy single repository environment
-    process.env.USE_MOCK_API = 'false';
-    process.env.MARKDOWN_ROOT_DIR = '/legacy/docs';
-
-    // Test that legacy function still works
-    expect(getMarkdownRootDir()).toBe('/legacy/docs');
-
-    // Test that repository config falls back to legacy
-    const repositories = getRepositoryConfig();
-    expect(repositories).toHaveLength(1);
-    expect(repositories[0]).toEqual({
-      id: 'default',
-      label: 'Default Repository',
-      path: '/legacy/docs'
-    });
-
-    expect(getRepositoryPath('default')).toBe('/legacy/docs');
-    expect(getRepositoryLabel('default')).toBe('Default Repository');
-    expect(getDefaultRepositoryId()).toBe('default');
-  });
-
   it('should handle mixed configuration scenarios', () => {
     // Test with some repositories configured but gaps in numbering
     process.env.USE_MOCK_API = 'false';

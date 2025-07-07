@@ -5,6 +5,7 @@ import type React from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { useRepository } from '@/context/repository-context';
 import { cn } from '@/lib/utils';
 
 import type { FileItem } from './file-browser'; // Import FileItem type
@@ -38,6 +39,7 @@ export function FileBrowserActions({
   onSortChange
 }: FileBrowserActionsProps) {
   const router = useRouter(); // Initialize useRouter
+  const { currentRepositoryId } = useRepository();
   // Remove useFileFetching and its usage
   // const { currentDirContents, fetchItems } = useFileFetching({
   //   currentPath,
@@ -73,11 +75,10 @@ export function FileBrowserActions({
 
     try {
       await handleCreateFile(newFilePath, ''); // Create the file and await completion
-      router.push(`/edit/${newFilePath}`); // Redirect after file creation and refresh
+      const href = currentRepositoryId ? `/edit/${newFilePath}?repo=${currentRepositoryId}` : `/edit/${newFilePath}`;
+      router.push(href); // Redirect after file creation and refresh
     } catch (error) {
       console.error('Failed to create new file:', error);
-      // The handleCreateFile function already shows a toast on error,
-      // so no need to show another one here.
     }
   };
 

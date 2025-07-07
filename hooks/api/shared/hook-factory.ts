@@ -1,4 +1,4 @@
-import { useMutation, useQuery, UseQueryOptions, UseMutationOptions } from '@tanstack/react-query';
+import { useMutation, UseMutationOptions, useQuery, UseQueryOptions } from '@tanstack/react-query';
 
 import { useRepository } from '@/context/repository-context';
 
@@ -15,10 +15,8 @@ export function createQueryHook<TData, TError = Error>(
 ) {
   return () => {
     const { currentRepositoryId } = useRepository();
-    
-    const key = typeof queryKey === 'string' 
-      ? [queryKey, currentRepositoryId]
-      : queryKey(currentRepositoryId);
+
+    const key = typeof queryKey === 'string' ? [queryKey, currentRepositoryId] : queryKey(currentRepositoryId);
 
     return useQuery<TData, TError>({
       queryKey: key,

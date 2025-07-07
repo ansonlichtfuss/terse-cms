@@ -3,6 +3,7 @@ import { useRouter } from 'next/navigation'; // Import useRouter
 
 import { toast } from '@/components/ui/use-toast';
 import { useRepository } from '@/context/repository-context';
+import { useQueryInvalidation } from '@/hooks/api/shared';
 // Import the new file operation mutation hooks
 import { useCreateFileMutation } from '@/hooks/api/use-create-file-mutation';
 import { useCreateFolderMutation } from '@/hooks/api/use-create-folder-mutation';
@@ -48,6 +49,7 @@ export const useFileOperations = ({
 }: UseFileOperationsProps): UseFileOperationsResult => {
   const router = useRouter(); // Initialize useRouter
   const { currentRepositoryId } = useRepository();
+  const { invalidateFileQueries } = useQueryInvalidation();
 
   // Use the S3 mutation hooks
   const { mutate: deleteS3Item, isPending: isDeletingS3 } = useDeleteS3ItemMutation();
@@ -238,7 +240,8 @@ export const useFileOperations = ({
             const sourceParts = sourcePath.split('/');
             sourceParts[sourceParts.length - 1] = newName;
             const newPath = sourceParts.join('/');
-            router.push(`/edit/${newPath}`);
+            const href = currentRepositoryId ? `/edit/${newPath}?repo=${currentRepositoryId}` : `/edit/${newPath}`;
+            router.push(href);
           },
           onError: (error) => {
             console.error('Failed to rename item:', error);
@@ -329,6 +332,7 @@ export const useFileOperations = ({
           toast({
             title: 'File created'
           });
+          invalidateFileQueries();
         },
         onError: (error) => {
           toast({

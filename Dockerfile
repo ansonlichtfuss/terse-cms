@@ -34,7 +34,7 @@ RUN apk add --no-cache git
 RUN mkdir -p /cms/files
 
 # Hardcode MARKDOWN_ROOT_DIR
-ENV MARKDOWN_ROOT_DIR=/cms/files
+ENV MARKDOWN_ROOT_DIR_1=/cms/files
 
 # Expose port
 EXPOSE 3000

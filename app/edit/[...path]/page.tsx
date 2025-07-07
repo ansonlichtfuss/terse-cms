@@ -25,8 +25,6 @@ export default function EditPage() {
   useEffect(() => {
     if (fetchError) {
       console.error('Failed to fetch file:', fetchError);
-      // Optionally redirect to home or show an error message
-      // router.push("/");
     }
   }, [fetchError, router]);
 

@@ -16,8 +16,7 @@ export const queryKeys = {
   gitStatus: (repositoryId?: string | null) => createQueryKey('gitStatus', repositoryId),
   gitHistory: (repositoryId?: string | null) => createQueryKey('gitHistory', repositoryId),
   gitBranches: (repositoryId?: string | null) => createQueryKey('gitBranches', repositoryId),
-  fileContent: (filePath: string, repositoryId?: string | null) => 
-    createQueryKey('fileContent', repositoryId, filePath)
+  fileContent: (filePath: string, repositoryId?: string | null) => createQueryKey('fileContent', repositoryId, filePath)
 };
 
 /**
@@ -57,7 +56,7 @@ export const useQueryInvalidation = () => {
      */
     invalidateRepositoryQueries: (repositoryId?: string | null) => {
       if (repositoryId) {
-        queryClient.invalidateQueries({ 
+        queryClient.invalidateQueries({
           predicate: (query) => query.queryKey.includes(repositoryId)
         });
       }

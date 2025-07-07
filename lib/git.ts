@@ -22,16 +22,3 @@ export function getGitInstanceForRepository(repoId: string) {
 
   return simpleGit(repositoryOptions);
 }
-
-/**
- * @deprecated Use getGitInstanceForRepository() instead
- * Gets a git instance for the default repository (backward compatibility).
- * This function is deprecated and will be removed in a future version.
- *
- * @returns SimpleGit instance configured for the first available repository
- */
-export function getGitInstance() {
-  throw new Error(
-    'Legacy git instance is no longer supported. Use getGitInstanceForRepository() with a repository ID.'
-  );
-}

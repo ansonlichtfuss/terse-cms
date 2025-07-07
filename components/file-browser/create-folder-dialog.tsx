@@ -30,10 +30,8 @@ export function CreateFolderDialog({
       setNewFolderName(''); // Clear input on success
       onOpenChange(false); // Close dialog on success
     } catch (error) {
-      // Error handling is done in useFileOperations, just prevent dialog close on error
       console.error('Error creating folder:', error);
     }
-    // setIsCreating is now managed by the parent component
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {

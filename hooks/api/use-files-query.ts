@@ -1,6 +1,7 @@
-import { createQueryHook, ApiClient } from './shared';
 import type { FileItem } from '@/components/file-browser/file-browser';
 import { fileNodeToFileItem } from '@/components/file-browser/utils';
+
+import { ApiClient, createQueryHook } from './shared';
 
 interface UseFilesQueryProps {
   currentPath: string;

@@ -9,8 +9,7 @@ export async function GET() {
     return NextResponse.json({
       repositories: repositories.map((repo) => ({
         id: repo.id,
-        label: repo.label,
-        path: repo.path
+        label: repo.label
       }))
     });
   } catch (error) {

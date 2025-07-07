@@ -1,12 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import {
-  getDefaultRepositoryId,
-  getMarkdownRootDir,
-  getRepositoryConfig,
-  getRepositoryLabel,
-  getRepositoryPath
-} from '../paths';
+import { getDefaultRepositoryId, getRepositoryConfig, getRepositoryLabel, getRepositoryPath } from '../paths';
 
 describe('paths', () => {
   const originalEnv = process.env;
@@ -19,25 +13,6 @@ describe('paths', () => {
   afterEach(() => {
     // Restore original environment variables after each test
     process.env = originalEnv;
-  });
-
-  describe('getMarkdownRootDir (backward compatibility)', () => {
-    it('should return mock directory when USE_MOCK_API is true', () => {
-      process.env.USE_MOCK_API = 'true';
-      expect(getMarkdownRootDir()).toBe('./mock-data/filesystem');
-    });
-
-    it('should return MARKDOWN_ROOT_DIR when USE_MOCK_API is false', () => {
-      process.env.USE_MOCK_API = 'false';
-      process.env.MARKDOWN_ROOT_DIR = '/custom/path';
-      expect(getMarkdownRootDir()).toBe('/custom/path');
-    });
-
-    it('should return default "/" when no MARKDOWN_ROOT_DIR is set', () => {
-      process.env.USE_MOCK_API = 'false';
-      delete process.env.MARKDOWN_ROOT_DIR;
-      expect(getMarkdownRootDir()).toBe('/');
-    });
   });
 
   describe('getRepositoryConfig', () => {
@@ -85,34 +60,6 @@ describe('paths', () => {
       expect(config).toHaveLength(2);
       expect(config[0].label).toBe('Repository 1');
       expect(config[1].label).toBe('Repository 2');
-    });
-
-    it('should fall back to legacy single repository when no numbered vars are present', () => {
-      process.env.USE_MOCK_API = 'false';
-      process.env.MARKDOWN_ROOT_DIR = '/legacy/path';
-
-      const config = getRepositoryConfig();
-
-      expect(config).toHaveLength(1);
-      expect(config[0]).toEqual({
-        id: 'default',
-        label: 'Default Repository',
-        path: '/legacy/path'
-      });
-    });
-
-    it('should use default "/" path when no configuration is present', () => {
-      process.env.USE_MOCK_API = 'false';
-      delete process.env.MARKDOWN_ROOT_DIR;
-
-      const config = getRepositoryConfig();
-
-      expect(config).toHaveLength(1);
-      expect(config[0]).toEqual({
-        id: 'default',
-        label: 'Default Repository',
-        path: '/'
-      });
     });
   });
 
