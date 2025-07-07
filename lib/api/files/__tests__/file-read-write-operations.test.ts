@@ -31,7 +31,8 @@ describe('FileReadWriteOperations', () => {
       expect(result.statusCode).toBe(200);
       expect(result.data).toEqual({
         path: 'test.md',
-        content: 'Test content'
+        content: 'Test content',
+        lastModified: expect.any(String)
       });
       expect(result.error).toBeUndefined();
     });
@@ -46,7 +47,8 @@ describe('FileReadWriteOperations', () => {
       expect(result.success).toBe(true);
       expect(result.data).toEqual({
         path: 'folder/nested.md',
-        content: 'Nested content'
+        content: 'Nested content',
+        lastModified: expect.any(String)
       });
     });
 
