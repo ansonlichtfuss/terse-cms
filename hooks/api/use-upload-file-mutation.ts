@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { useRepository } from '@/context/repository-context';
+import { useRepositoryFromUrl } from '@/hooks/use-repository-from-url';
 
 interface UploadFileVariables {
   path: string;
@@ -29,7 +29,7 @@ const uploadFile = async ({ path, file }: UploadFileVariables, repositoryId?: st
 
 export const useUploadFileMutation = () => {
   const queryClient = useQueryClient();
-  const { currentRepositoryId } = useRepository();
+  const { currentRepositoryId } = useRepositoryFromUrl();
   
   return useMutation<void, Error, UploadFileVariables>({
     mutationFn: (variables) => uploadFile(variables, currentRepositoryId),

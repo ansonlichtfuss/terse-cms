@@ -3,7 +3,7 @@ import Link from 'next/link';
 import type React from 'react';
 
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
-import { useRepository } from '@/context/repository-context';
+import { useRepositoryFromUrl } from '@/hooks/use-repository-from-url';
 import { cn } from '@/lib/utils';
 
 import type { FileItem } from './file-browser'; // Assuming FileItem type remains in the main file for now
@@ -36,7 +36,7 @@ export function FileItemRow({
   isRenaming,
   isMoving
 }: FileItemRowProps) {
-  const { currentRepositoryId } = useRepository();
+  const { currentRepositoryId } = useRepositoryFromUrl();
   const itemPath = getItemPath(item);
   const itemName = getItemName(item);
   const isFolder = item.type === 'folder' || item.type === 'directory';

@@ -8,7 +8,7 @@ import { Breadcrumbs } from '@/components/breadcrumbs/breadcrumbs';
 import { MoveFileDialog } from '@/components/file-browser/move-file-dialog';
 import { RenameFileDialog } from '@/components/rename-file-dialog';
 import { ConfirmationDialog } from '@/components/ui/confirmation-dialog';
-import { useRepository } from '@/context/repository-context';
+import { useRepositoryFromUrl } from '@/hooks/use-repository-from-url';
 import { useFilesQuery } from '@/hooks/api/use-files-query';
 import { useFileBrowserNavigation } from '@/hooks/file-browser/use-file-browser-navigation';
 import { useFileBrowserSorting } from '@/hooks/file-browser/use-file-browser-sorting';
@@ -62,7 +62,7 @@ export function FileBrowser({
   };
 
   const router = useRouter();
-  const { currentRepositoryId } = useRepository();
+  const { currentRepositoryId } = useRepositoryFromUrl();
 
   // Add state for the upload dialog
   const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);

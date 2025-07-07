@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { useRepository } from '@/context/repository-context';
+import { useRepositoryFromUrl } from '@/hooks/use-repository-from-url';
 
 interface CreateS3FolderVariables {
   path: string;
@@ -31,7 +31,7 @@ const createS3Folder = async ({ path, name }: CreateS3FolderVariables, repositor
 
 export const useCreateS3FolderMutation = () => {
   const queryClient = useQueryClient();
-  const { currentRepositoryId } = useRepository();
+  const { currentRepositoryId } = useRepositoryFromUrl();
   
   return useMutation<void, Error, CreateS3FolderVariables>({
     mutationFn: (variables) => createS3Folder(variables, currentRepositoryId),

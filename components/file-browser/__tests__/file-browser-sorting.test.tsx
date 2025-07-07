@@ -39,6 +39,10 @@ vi.mock('next/navigation', () => ({
     push: vi.fn(),
     replace: vi.fn(),
     back: vi.fn()
+  }),
+  usePathname: () => '/',
+  useSearchParams: () => ({
+    get: vi.fn().mockReturnValue('test-repo')
   })
 }));
 
@@ -47,6 +51,15 @@ vi.mock('../use-file-operations', () => ({
     handleCreateFile: vi.fn().mockResolvedValue(undefined)
   })
 }));
+
+// Mock the repositories API
+global.fetch = vi.fn().mockResolvedValue({
+  ok: true,
+  json: () =>
+    Promise.resolve({
+      repositories: [{ id: 'test-repo', label: 'Test Repository' }]
+    })
+});
 
 vi.mock('lucide-react', () => ({
   FilePlus: () => <span data-testid="file-plus-icon">+</span>,

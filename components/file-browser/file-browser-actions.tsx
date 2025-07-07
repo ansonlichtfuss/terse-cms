@@ -5,7 +5,7 @@ import type React from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { useRepository } from '@/context/repository-context';
+import { useRepositoryFromUrl } from '@/hooks/use-repository-from-url';
 import { cn } from '@/lib/utils';
 
 import type { FileItem } from './file-browser'; // Import FileItem type
@@ -39,7 +39,7 @@ export function FileBrowserActions({
   onSortChange
 }: FileBrowserActionsProps) {
   const router = useRouter(); // Initialize useRouter
-  const { currentRepositoryId } = useRepository();
+  const { currentRepositoryId } = useRepositoryFromUrl();
   // Remove useFileFetching and its usage
   // const { currentDirContents, fetchItems } = useFileFetching({
   //   currentPath,

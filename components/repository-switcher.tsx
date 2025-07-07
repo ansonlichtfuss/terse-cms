@@ -12,10 +12,10 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import { useRepository } from '@/context/repository-context';
+import { useRepositoryFromUrl } from '@/hooks/use-repository-from-url';
 
 export function RepositorySwitcher() {
-  const { repositories, currentRepository, currentRepositoryId, isLoading, switchRepository } = useRepository();
+  const { repositories, currentRepository, currentRepositoryId, isLoading, switchRepository } = useRepositoryFromUrl();
   const pathname = usePathname();
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [pendingRepositoryId, setPendingRepositoryId] = useState<string | null>(null);

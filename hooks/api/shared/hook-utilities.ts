@@ -1,4 +1,4 @@
-import { useRepository } from '@/context/repository-context';
+import { useRepositoryFromUrl } from '@/hooks/use-repository-from-url';
 
 import { ApiClient } from './api-client';
 import { useQueryInvalidation } from './query-utils';
@@ -7,7 +7,7 @@ import { useQueryInvalidation } from './query-utils';
  * Hook to get an ApiClient instance for the current repository
  */
 export function useApiClient() {
-  const { currentRepositoryId } = useRepository();
+  const { currentRepositoryId } = useRepositoryFromUrl();
   return new ApiClient(currentRepositoryId);
 }
 
@@ -15,7 +15,7 @@ export function useApiClient() {
  * Hook to get standardized invalidation functions
  */
 export function useStandardInvalidation() {
-  const { currentRepositoryId } = useRepository();
+  const { currentRepositoryId } = useRepositoryFromUrl();
   const { invalidateFileQueries, invalidateGitQueries, invalidateRepositoryQueries } = useQueryInvalidation();
 
   return {

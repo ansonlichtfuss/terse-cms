@@ -2,16 +2,14 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import React, { createContext, useContext, useEffect, useState } from 'react';
-
-import { ConfigErrorDialog } from '@/components/config-error-dialog';
+import { useEffect } from 'react';
 
 interface Repository {
   id: string;
   label: string;
 }
 
-interface RepositoryContextType {
+interface UseRepositoryFromUrlResult {
   repositories: Repository[] | undefined;
   currentRepository: Repository | undefined;
   currentRepositoryId: string | null;
@@ -19,8 +17,6 @@ interface RepositoryContextType {
   error: Error | null;
   switchRepository: (repositoryId: string) => void;
 }
-
-const RepositoryContext = createContext<RepositoryContextType | undefined>(undefined);
 
 const fetchRepositories = async (): Promise<Repository[]> => {
   const response = await fetch('/api/repositories');
@@ -31,12 +27,21 @@ const fetchRepositories = async (): Promise<Repository[]> => {
   return data.repositories;
 };
 
-export const RepositoryProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export function useRepositoryFromUrl(): UseRepositoryFromUrlResult {
   const router = useRouter();
   const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const [currentRepositoryId, setCurrentRepositoryId] = useState<string | null>(null);
-  const [configError, setConfigError] = useState<string | null>(null);
+  
+  // Handle the case when useSearchParams might not be available during SSR
+  let searchParams: URLSearchParams | null = null;
+  let currentRepositoryId: string | null = null;
+  
+  try {
+    searchParams = useSearchParams();
+    currentRepositoryId = searchParams?.get('repo') || null;
+  } catch (error) {
+    // During SSR or static generation, searchParams might not be available
+    currentRepositoryId = null;
+  }
 
   // Fetch repositories using React Query
   const {
@@ -49,34 +54,19 @@ export const RepositoryProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     retry: (failureCount, error) => {
       // Don't retry on configuration errors
       if (failureCount >= 1) {
-        setConfigError(error.message);
         return false;
       }
       return failureCount < 3;
     }
   });
 
-  // Get current repository from URL params and auto-fill if needed
+  // Auto-fill with first repository if no repo parameter
   useEffect(() => {
-    const repoParam = searchParams.get('repo');
-
-    if (!repoParam && repositories && repositories.length > 0) {
-      // Auto-fill with first repository if no repo parameter
+    if (!currentRepositoryId && repositories && repositories.length > 0) {
       const firstRepo = repositories[0];
       router.replace(`${pathname}?repo=${firstRepo.id}`);
-      setCurrentRepositoryId(firstRepo.id);
-    } else {
-      setCurrentRepositoryId(repoParam);
     }
-  }, [searchParams, repositories, router, pathname]);
-
-  // Find current repository object
-  const currentRepository = repositories?.find((repo) => repo.id === currentRepositoryId);
-
-  // Handle repository switching
-  const switchRepository = (repositoryId: string) => {
-    router.push(`${pathname}?repo=${repositoryId}`);
-  };
+  }, [currentRepositoryId, repositories, router, pathname]);
 
   // Validate repository ID and redirect if invalid
   useEffect(() => {
@@ -90,12 +80,15 @@ export const RepositoryProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     }
   }, [repositories, currentRepositoryId, router, pathname]);
 
-  // Show configuration error dialog if repositories are not configured
-  if (configError) {
-    return <ConfigErrorDialog error={configError} />;
-  }
+  // Find current repository object
+  const currentRepository = repositories?.find((repo) => repo.id === currentRepositoryId);
 
-  const contextValue: RepositoryContextType = {
+  // Handle repository switching
+  const switchRepository = (repositoryId: string) => {
+    router.push(`${pathname}?repo=${repositoryId}`);
+  };
+
+  return {
     repositories,
     currentRepository,
     currentRepositoryId,
@@ -103,14 +96,4 @@ export const RepositoryProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     error,
     switchRepository
   };
-
-  return <RepositoryContext.Provider value={contextValue}>{children}</RepositoryContext.Provider>;
-};
-
-export const useRepository = () => {
-  const context = useContext(RepositoryContext);
-  if (context === undefined) {
-    throw new Error('useRepository must be used within a RepositoryProvider');
-  }
-  return context;
-};
+}

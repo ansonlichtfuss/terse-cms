@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 
-import { useRepository } from '@/context/repository-context';
+import { useRepositoryFromUrl } from '@/hooks/use-repository-from-url';
 
 import { ApiClient, useQueryInvalidation } from './shared';
 
@@ -14,7 +14,7 @@ const saveFile = async ({ path, content }: SaveFileArgs, client: ApiClient): Pro
 };
 
 export const useSaveFileMutation = () => {
-  const { currentRepositoryId } = useRepository();
+  const { currentRepositoryId } = useRepositoryFromUrl();
   const { invalidateQuery } = useQueryInvalidation();
 
   return useMutation({
