@@ -43,19 +43,13 @@ export function FileBrowser({
   const {
     selectedItem,
     setSelectedItem,
-    isMoveDialogOpen,
-    setIsMoveDialogOpen,
-    isRenameDialogOpen,
-    setIsRenameDialogOpen,
-    isDeleteDialogOpen,
-    setIsDeleteDialogOpen,
-    itemToAction,
-    setItemToAction,
+    moveDialog,
+    renameDialog,
+    deleteDialog,
+    createFolderDialog,
     currentPath,
     setCurrentPath,
     setExpandedFolders,
-    isCreateFolderDialogOpen,
-    setIsCreateFolderDialogOpen,
     sortConfig,
     updateSort
   } = useFileBrowserState({ selectedPath, type });
@@ -151,8 +145,7 @@ export function FileBrowser({
     type,
     currentPath,
     fetchItems: refetch, // Pass refetch from Tanstack Query for refreshing after operations
-    setIsDeleteDialogOpen, // Pass the state setter for the delete dialog
-    setItemToAction // Pass the state setter for the item in action
+    deleteDialog // Pass the delete dialog object
   });
 
   // Local handler for item clicks
@@ -209,25 +202,22 @@ export function FileBrowser({
   };
   // Local handler to open delete dialog
   const openDeleteDialog = (item: FileItem) => {
-    setItemToAction(item);
-    setIsDeleteDialogOpen(true);
+    deleteDialog.openDialog(item);
   };
 
   // Local handler to open rename dialog
   const openRenameDialog = (item: FileItem) => {
-    setItemToAction(item);
-    setIsRenameDialogOpen(true);
+    renameDialog.openDialog(item);
   };
 
   // Local handler to open move dialog
   const openMoveDialog = (item: FileItem) => {
-    setItemToAction(item);
-    setIsMoveDialogOpen(true);
+    moveDialog.openDialog(item);
   };
 
   // Local handler for create folder button click
   const handleNewFolderButtonClick = () => {
-    setIsCreateFolderDialogOpen(true);
+    createFolderDialog.openDialog();
   };
 
   // Local handler to open the upload dialog
@@ -302,55 +292,55 @@ export function FileBrowser({
 
       {/* Create Folder Dialog */}
       <CreateFolderDialog
-        open={isCreateFolderDialogOpen}
-        onOpenChange={setIsCreateFolderDialogOpen}
+        open={createFolderDialog.isOpen}
+        onOpenChange={(open) => (open ? createFolderDialog.openDialog() : createFolderDialog.closeDialog())}
         onCreate={handleCreateFolder} // Pass the handleCreateFolder function directly
         isMobile={isMobile}
         isCreating={isCreatingFolder} // Pass loading state (This is the loading state from useFileOperations)
       />
 
       {/* Move File Dialog */}
-      {itemToAction && (
+      {moveDialog.item && (
         <MoveFileDialog
-          open={isMoveDialogOpen}
-          onOpenChange={setIsMoveDialogOpen}
+          open={moveDialog.isOpen}
+          onOpenChange={(open) => (open ? moveDialog.openDialog() : moveDialog.closeDialog())}
           item={{
-            key: getItemPath(itemToAction),
-            type: itemToAction.type === 'directory' || itemToAction.type === 'folder' ? 'folder' : 'file'
+            key: getItemPath(moveDialog.item),
+            type: moveDialog.item.type === 'directory' || moveDialog.item.type === 'folder' ? 'folder' : 'file'
           }}
           currentPath={
-            type === 'files' ? getItemPath(itemToAction).split('/').slice(0, -1).join('/') + '/' : currentPath
+            type === 'files' ? getItemPath(moveDialog.item).split('/').slice(0, -1).join('/') + '/' : currentPath
           }
-          onMove={(destinationPath) => handleMove(itemToAction, destinationPath)} // Call handleMove from operations hook
+          onMove={(destinationPath) => handleMove(moveDialog.item, destinationPath)} // Call handleMove from operations hook
           isMarkdownFile={type === 'files'}
           isMoving={isMovingFile || isMovingS3} // Pass combined loading state
         />
       )}
 
       {/* Rename File Dialog */}
-      {itemToAction && (
+      {renameDialog.item && (
         <RenameFileDialog
-          open={isRenameDialogOpen}
-          onOpenChange={setIsRenameDialogOpen}
+          open={renameDialog.isOpen}
+          onOpenChange={(open) => (open ? renameDialog.openDialog() : renameDialog.closeDialog())}
           item={{
-            key: getItemPath(itemToAction),
-            type: itemToAction.type === 'directory' || itemToAction.type === 'folder' ? 'folder' : 'file'
+            key: getItemPath(renameDialog.item),
+            type: renameDialog.item.type === 'directory' || renameDialog.item.type === 'folder' ? 'folder' : 'file'
           }}
-          onRename={(newName: string) => handleRename(itemToAction, newName)} // Call handleRename from operations hook
+          onRename={(newName: string) => handleRename(renameDialog.item, newName)} // Call handleRename from operations hook
           isMarkdownFile={type === 'files'}
           isRenaming={isRenamingFile} // Pass loading state
         />
       )}
 
       {/* Delete Confirmation Dialog */}
-      {itemToAction && (
+      {deleteDialog.item && (
         <ConfirmationDialog
-          open={isDeleteDialogOpen}
-          onOpenChange={setIsDeleteDialogOpen}
-          title={`Delete ${itemToAction.type === 'directory' || itemToAction.type === 'folder' ? 'Folder' : 'File'}`}
-          description={`Are you sure you want to delete ${getItemName(itemToAction)}? This action cannot be undone.`}
+          open={deleteDialog.isOpen}
+          onOpenChange={(open) => (open ? deleteDialog.openDialog() : deleteDialog.closeDialog())}
+          title={`Delete ${deleteDialog.item.type === 'directory' || deleteDialog.item.type === 'folder' ? 'Folder' : 'File'}`}
+          description={`Are you sure you want to delete ${getItemName(deleteDialog.item)}? This action cannot be undone.`}
           confirmLabel="Delete"
-          onConfirm={() => handleDelete(itemToAction)} // Call handleDelete from operations hook
+          onConfirm={() => handleDelete(deleteDialog.item)} // Call handleDelete from operations hook
           destructive={true}
           isDeleting={isDeletingFile || isDeletingS3} // Pass combined loading state
         />

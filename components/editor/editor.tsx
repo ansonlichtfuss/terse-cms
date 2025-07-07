@@ -184,9 +184,12 @@ export function Editor({ file, onSave }: EditorProps) {
   const { handleRename, isRenamingFile } = useFileOperations({
     type: 'files', // Assuming editor only deals with 'files' type
     currentPath: file?.path || '', // Pass the current file path
-
-    setIsDeleteDialogOpen: () => {}, // Dummy function
-    setItemToAction: () => {} // Dummy function
+    deleteDialog: {
+      isOpen: false,
+      item: null,
+      openDialog: () => {},
+      closeDialog: () => {}
+    } // Dummy dialog object
   });
 
   // Safely get the filename from the path

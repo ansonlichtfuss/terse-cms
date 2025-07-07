@@ -20,8 +20,12 @@ interface UseFileOperationsProps {
   type: 'files' | 'media';
   currentPath: string; // Needed for refreshing after operations
   fetchItems?: (options?: RefetchOptions) => Promise<QueryObserverResult<FileItem[], Error>>; // Function to refresh the file list using Tanstack Query's refetch signature
-  setIsDeleteDialogOpen: (isOpen: boolean) => void; // Function to close the delete dialog
-  setItemToAction: (item: FileItem | null) => void; // Function to clear the item in action
+  deleteDialog: {
+    isOpen: boolean;
+    item: FileItem | null;
+    openDialog: (item?: FileItem) => void;
+    closeDialog: () => void;
+  }; // Delete dialog object
 }
 
 interface UseFileOperationsResult {
@@ -44,8 +48,7 @@ export const useFileOperations = ({
   type,
   currentPath,
   fetchItems,
-  setIsDeleteDialogOpen,
-  setItemToAction
+  deleteDialog
 }: UseFileOperationsProps): UseFileOperationsResult => {
   const router = useRouter(); // Initialize useRouter
   const { currentRepositoryId } = useRepository();
@@ -171,9 +174,8 @@ export const useFileOperations = ({
           { path: getItemPath(item) },
           {
             onSuccess: () => {
-              // Close the dialog and clear the item in action
-              setIsDeleteDialogOpen(false);
-              setItemToAction(null);
+              // Close the dialog
+              deleteDialog.closeDialog();
               toast({
                 title: `${item.type === 'directory' || item.type === 'folder' ? 'Folder' : 'File'} deleted`
               });
@@ -193,9 +195,8 @@ export const useFileOperations = ({
           { key: item.key, type: item.type },
           {
             onSuccess: () => {
-              // Close the dialog and clear the item in action
-              setIsDeleteDialogOpen(false);
-              setItemToAction(null);
+              // Close the dialog
+              deleteDialog.closeDialog();
               toast({
                 title: `${item.type === 'directory' || item.type === 'folder' ? 'Folder' : 'File'} deleted`
               });

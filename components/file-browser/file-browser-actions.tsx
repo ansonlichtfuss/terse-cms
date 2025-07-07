@@ -49,8 +49,12 @@ export function FileBrowserActions({
     currentPath,
     type,
     fetchItems, // Pass fetchItems received as prop
-    setIsDeleteDialogOpen: () => {}, // Dummy function
-    setItemToAction: () => {} // Dummy function
+    deleteDialog: {
+      isOpen: false,
+      item: null,
+      openDialog: () => {},
+      closeDialog: () => {}
+    } // Dummy dialog object
   }); // Get handleCreateFile from useFileOperations
 
   const handleNewFileClick = async () => {
