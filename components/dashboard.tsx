@@ -1,6 +1,6 @@
 'use client';
 
-import { ChevronDown, GitCommit, Menu, Moon, RotateCcw, Sun } from 'lucide-react';
+import { EllipsisVertical, GitCommit, Menu, Moon, RotateCcw, Sun } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import type React from 'react';
 import { useEffect, useState } from 'react';
@@ -40,7 +40,7 @@ function ThemeToggle() {
       variant="ghost"
       size="sm"
       onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-      className="h-7 w-7 p-0 mr-2"
+      className="h-7 w-7 p-0"
     >
       <Sun className="h-[1.1rem] w-[1.1rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
       <Moon className="absolute h-[1.1rem] w-[1.1rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
@@ -154,53 +154,52 @@ export function Dashboard({ selectedFilePath, children }: { selectedFilePath?: s
   return (
     <div className="h-screen flex flex-col">
       <header className="border-b flex items-center justify-between bg-dot-pattern">
-        <div className="flex items-center gap-2 px-3 py-2">
+        <div className="w-[280px] flex items-center gap-2 px-3 py-2">
           <Logo size="sm" withIcon={false} />
-          <RepositorySwitcher />
           <span className="text-xs text-muted-foreground">v{packageInfo.version}</span>
         </div>
+        <RepositorySwitcher />
+
         <div className="flex items-center gap-2 px-3 py-2">
           <ThemeToggle />
           <GitBranchDisplay />
-          <div className="flex">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setIsCommitDialogOpen(true)}
-              disabled={(modifiedFiles?.length || 0) === 0 || isCommitting}
-              className="flex items-center rounded-r-none  gap-1 h-7 text-xs bg-gradient-secondary transition-all"
-            >
-              <GitCommit className="h-3 w-3 mr-1" />
-              Commit
-              {(modifiedFiles?.length || 0) > 0 && (
-                <Badge variant="secondary" className="ml-1 h-4 text-[10px] bg-background pointer-events-none">
-                  {modifiedFiles?.length || 0}
-                </Badge>
-              )}
-            </Button>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  disabled={(modifiedFiles?.length || 0) === 0}
-                  className="px-1 border-l-1 border-l-gray-5`0 rounded-l-none h-7 bg-gradient-secondary transition-all"
-                >
-                  <ChevronDown className="h-3 w-3" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem
-                  onClick={() => setIsRevertDialogOpen(true)}
-                  className="dropdown-menu-item-destructive"
-                  disabled={isReverting}
-                >
-                  <RotateCcw className="h-3 w-3 mr-2" />
-                  <span className="text-xs">Revert Changes</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setIsCommitDialogOpen(true)}
+            disabled={(modifiedFiles?.length || 0) === 0 || isCommitting}
+            className="flex items-center gap-1 h-7 text-xs bg-gradient-secondary transition-all"
+          >
+            <GitCommit className="h-3 w-3 mr-1" />
+            Commit
+            {(modifiedFiles?.length || 0) > 0 && (
+              <Badge variant="secondary" className="ml-1 h-4 text-[10px] bg-background pointer-events-none">
+                {modifiedFiles?.length || 0}
+              </Badge>
+            )}
+          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={(modifiedFiles?.length || 0) === 0}
+                className="px-1 h-7 transition-all"
+              >
+                <EllipsisVertical className="h-3 w-3" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem
+                onClick={() => setIsRevertDialogOpen(true)}
+                className="dropdown-menu-item-destructive"
+                disabled={isReverting}
+              >
+                <RotateCcw className="h-3 w-3 mr-2" />
+                <span className="text-xs">Revert Changes</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </header>
 

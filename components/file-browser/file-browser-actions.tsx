@@ -116,7 +116,7 @@ export function FileBrowserActions({
 
           <SortDropdown sortConfig={sortConfig} onSortChange={onSortChange} type={type} />
         </div>
-        <div className=" absolute right-1 top-1">
+        <div className="absolute right-1 top-1">
           {type === 'media' && (
             <Tooltip>
               <TooltipTrigger asChild>

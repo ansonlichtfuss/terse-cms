@@ -1,6 +1,6 @@
 'use client';
 
-import { Check, ChevronDown, Folder } from 'lucide-react';
+import { Check, ChevronDown, Library } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import React, { useState } from 'react';
 
@@ -19,9 +19,9 @@ export function RepositorySwitcher() {
   const pathname = usePathname();
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [pendingRepositoryId, setPendingRepositoryId] = useState<string | null>(null);
-  
+
   const isNotBaseUrl = pathname !== '/';
-  
+
   const handleRepositorySwitch = (repositoryId: string) => {
     if (isNotBaseUrl) {
       // Show confirmation dialog if not on base URL
@@ -32,7 +32,7 @@ export function RepositorySwitcher() {
       switchRepository(repositoryId);
     }
   };
-  
+
   const confirmSwitch = () => {
     if (pendingRepositoryId) {
       // Redirect to base URL with new repository
@@ -41,16 +41,11 @@ export function RepositorySwitcher() {
     setShowConfirmDialog(false);
     setPendingRepositoryId(null);
   };
-  
-  const cancelSwitch = () => {
-    setShowConfirmDialog(false);
-    setPendingRepositoryId(null);
-  };
 
   if (isLoading) {
     return (
       <Button variant="ghost" size="sm" disabled className="h-7 text-xs">
-        <Folder className="h-3 w-3 mr-1" />
+        <Library className="h-3 w-3 mr-1" />
         Loading...
       </Button>
     );
@@ -60,7 +55,6 @@ export function RepositorySwitcher() {
     return null;
   }
 
-  // Show only if there are multiple repositories
   if (repositories.length === 1) {
     return null;
   }
@@ -72,7 +66,7 @@ export function RepositorySwitcher() {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" size="sm" className="h-7 text-xs gap-1">
-            <Folder className="h-3 w-3" />
+            <Library className="h-3 w-3" />
             <span className="max-w-[120px] truncate">{displayLabel}</span>
             <ChevronDown className="h-3 w-3" />
           </Button>
@@ -82,11 +76,11 @@ export function RepositorySwitcher() {
           {repositories.map((repo) => (
             <DropdownMenuItem
               key={repo.id}
+              disabled={repo.id === currentRepository?.id}
               onClick={() => handleRepositorySwitch(repo.id)}
               className="flex items-center justify-between"
             >
               <div className="flex items-center">
-                <Folder className="h-3 w-3 mr-2" />
                 <span className="text-xs truncate">{repo.label || `Repository ${repo.id}`}</span>
               </div>
               {currentRepositoryId === repo.id && <Check className="h-3 w-3" />}
@@ -94,7 +88,7 @@ export function RepositorySwitcher() {
           ))}
         </DropdownMenuContent>
       </DropdownMenu>
-      
+
       <ConfirmationDialog
         open={showConfirmDialog}
         onOpenChange={setShowConfirmDialog}

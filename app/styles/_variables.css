@@ -64,54 +64,18 @@
   --ring: var(--color-blue-400);
 
   /* Custom gradients - desaturated dark blue theme */
-  --gradient-primary: linear-gradient(
-    135deg,
-    var(--color-blue-300),
-    var(--color-blue-600)
-  );
-  --gradient-secondary: linear-gradient(
-    135deg,
-    var(--color-gray-50),
-    var(--color-blue-100)
-  );
-  --gradient-primary-darker: linear-gradient(
-    135deg,
-    var(--color-blue-700),
-    var(--color-blue-800)
-  );
-  --gradient-secondary-darker: linear-gradient(
-    135deg,
-    var(--color-gray-200),
-    var(--color-gray-300)
-  );
-  --gradient-destructive: linear-gradient(
-    135deg,
-    var(--color-red-500),
-    var(--color-red-600)
-  );
-  --gradient-destructive-darker: linear-gradient(
-    135deg,
-    var(--color-red-600),
-    var(--color-red-700)
-  );
-  --gradient-accent: linear-gradient(
-    135deg,
-    var(--color-blue-700),
-    var(--color-blue-800)
-  );
+  --gradient-primary: linear-gradient(135deg, var(--color-blue-300), var(--color-blue-600));
+  --gradient-secondary: linear-gradient(135deg, var(--color-gray-50), var(--color-blue-200));
+  --gradient-primary-darker: linear-gradient(135deg, var(--color-blue-700), var(--color-blue-800));
+  --gradient-secondary-darker: linear-gradient(135deg, var(--color-gray-200), var(--color-gray-300));
+  --gradient-destructive: linear-gradient(135deg, var(--color-red-500), var(--color-red-600));
+  --gradient-destructive-darker: linear-gradient(135deg, var(--color-red-600), var(--color-red-700));
+  --gradient-accent: linear-gradient(135deg, var(--color-blue-700), var(--color-blue-800));
 
-  --gradient-destructive: linear-gradient(
-    135deg,
-    var(--color-red-500),
-    var(--color-red-600)
-  );
+  --gradient-destructive: linear-gradient(135deg, var(--color-red-500), var(--color-red-600));
 
   /* Patterns - 1px spacing and more subtle */
-  --dot-pattern: radial-gradient(
-    circle,
-    var(--color-gray-300) 0.5px,
-    transparent 0.5px
-  );
+  --dot-pattern: radial-gradient(circle, var(--color-gray-300) 0.5px, transparent 0.5px);
   --dot-size: 2px;
   --dot-space: 2px;
 
@@ -151,52 +115,16 @@
   --ring: var(--color-blue-700);
 
   /* Custom gradients for dark mode - desaturated dark blue theme */
-  --gradient-primary: linear-gradient(
-    135deg,
-    var(--color-blue-600),
-    var(--color-blue-700)
-  );
-  --gradient-secondary: linear-gradient(
-    135deg,
-    var(--color-blue-900),
-    var(--color-gray-900)
-  );
-  --gradient-primary-darker: linear-gradient(
-    135deg,
-    var(--color-blue-700),
-    var(--color-blue-800)
-  );
-  --gradient-secondary-darker: linear-gradient(
-    135deg,
-    var(--color-gray-800),
-    var(--color-gray-700)
-  );
-  --gradient-destructive: linear-gradient(
-    135deg,
-    var(--color-red-600),
-    var(--color-red-700)
-  );
-  --gradient-destructive-darker: linear-gradient(
-    135deg,
-    var(--color-red-700),
-    var(--color-red-700)
-  );
-  --gradient-accent: linear-gradient(
-    135deg,
-    var(--color-blue-600),
-    var(--color-blue-700)
-  );
+  --gradient-primary: linear-gradient(135deg, var(--color-blue-600), var(--color-blue-700));
+  --gradient-secondary: linear-gradient(135deg, var(--color-gray-900), var(--color-blue-900));
+  --gradient-primary-darker: linear-gradient(135deg, var(--color-blue-700), var(--color-blue-800));
+  --gradient-secondary-darker: linear-gradient(135deg, var(--color-gray-800), var(--color-gray-700));
+  --gradient-destructive: linear-gradient(135deg, var(--color-red-600), var(--color-red-700));
+  --gradient-destructive-darker: linear-gradient(135deg, var(--color-red-700), var(--color-red-700));
+  --gradient-accent: linear-gradient(135deg, var(--color-blue-600), var(--color-blue-700));
 
-  --gradient-destructive: linear-gradient(
-    135deg,
-    var(--color-red-600),
-    var(--color-red-700)
-  );
+  --gradient-destructive: linear-gradient(135deg, var(--color-red-600), var(--color-red-700));
 
   /* Patterns for dark mode - 1px spacing and more subtle */
-  --dot-pattern: radial-gradient(
-    circle,
-    var(--color-gray-700) 0.5px,
-    transparent 0.5px
-  );
+  --dot-pattern: radial-gradient(circle, var(--color-gray-700) 0.5px, transparent 0.5px);
 }

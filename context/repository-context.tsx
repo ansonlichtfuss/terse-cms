@@ -9,7 +9,6 @@ import { ConfigErrorDialog } from '@/components/config-error-dialog';
 interface Repository {
   id: string;
   label: string;
-  path: string;
 }
 
 interface RepositoryContextType {
