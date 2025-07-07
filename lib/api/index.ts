@@ -8,9 +8,3 @@ export {
   validateRequiredParam
 } from './shared/error-utils';
 export { getFileOperationsForRequest } from './shared/file-utils';
-export {
-  getGitInstanceForRequest,
-  type GitInstanceResult,
-  type GitValidationResult,
-  validateGitRepository
-} from './shared/git-utils';

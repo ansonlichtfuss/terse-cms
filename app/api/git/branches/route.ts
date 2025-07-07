@@ -1,16 +1,10 @@
 import { NextResponse } from 'next/server';
 
-import { getGitInstanceForRequest } from '@/lib/api';
+import { createGitInstance } from '@/lib/git';
 
 export async function GET(request: Request) {
   try {
-    const gitResult = getGitInstanceForRequest(request);
-    if (gitResult.error) {
-      return gitResult.error;
-    }
-
-    const { getGitInstanceForRepository } = await import('@/lib/git');
-    const git = getGitInstanceForRepository(gitResult.repoId);
+    const git = await createGitInstance(request);
 
     const branchSummary = await git.branchLocal();
     const branchList = branchSummary.all.map((branchName) => ({

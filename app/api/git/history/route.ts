@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 
-import { getGitInstanceForRequest, validateGitRepository } from '@/lib/api';
+import { createGitInstance } from '@/lib/git';
 
 export async function GET(request: Request) {
   try {
@@ -11,19 +11,7 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: 'filePath parameter is required' }, { status: 400 });
     }
 
-    const gitResult = getGitInstanceForRequest(request);
-    if (gitResult.error) {
-      return gitResult.error;
-    }
-
-    const { getGitInstanceForRepository } = await import('@/lib/git');
-    const git = getGitInstanceForRepository(gitResult.repoId);
-
-    // Check if directory is a git repository
-    const validation = await validateGitRepository(git);
-    if (!validation.isValid) {
-      return validation.error!;
-    }
+    const git = await createGitInstance(request);
 
     // Get commit history for the specific file
     // Construct the full path relative to the baseDir

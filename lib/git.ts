@@ -1,24 +1,50 @@
-import simpleGit, { SimpleGitOptions } from 'simple-git';
+import simpleGit, { SimpleGit } from 'simple-git';
 
-import { getRepositoryPath } from './paths';
+import { getRepositoryConfig, getRepositoryPath } from './paths';
 
 /**
- * Gets a git instance for a specific repository.
- * This function enables git operations on multiple repositories.
+ * Creates a validated git instance from an HTTP request.
+ * Handles the full pipeline: extract repo ID, validate config, create instance, validate git repo.
  *
- * @param repoId - Repository ID. Required for all git operations
- * @returns SimpleGit instance configured for the specified repository
- * @throws Error if the repository ID is not found or not provided
+ * @param request - HTTP request containing repo query parameter
+ * @returns Promise resolving to a validated SimpleGit instance
+ * @throws Error if validation fails at any step
  */
-export function getGitInstanceForRepository(repoId: string | undefined) {
+export async function createGitInstance(request: Request): Promise<SimpleGit> {
+  // Extract repo ID from request
+  const { searchParams } = new URL(request.url);
+  const repoId = searchParams.get('repo');
+
   if (!repoId) {
-    throw new Error('Repository ID is required for git operations');
+    throw new Error('Repository ID is required. Please provide a "repo" query parameter.');
   }
 
-  const repositoryPath = getRepositoryPath(repoId);
-  const repositoryOptions: Partial<SimpleGitOptions> = {
-    baseDir: repositoryPath
-  };
+  // Validate repo exists in config
+  try {
+    const repositories = getRepositoryConfig();
+    const repository = repositories.find((r) => r.id === repoId);
+    if (!repository) {
+      throw new Error(`Invalid repository ID '${repoId}'.`);
+    }
+  } catch {
+    throw new Error(
+      'No repositories configured. Please set environment variables: MARKDOWN_ROOT_DIR_1, MARKDOWN_ROOT_LABEL_1, etc.'
+    );
+  }
 
-  return simpleGit(repositoryOptions);
+  // Create git instance
+  const repositoryPath = getRepositoryPath(repoId);
+  const git = simpleGit({ baseDir: repositoryPath });
+
+  // Validate it's a git repo
+  try {
+    const isRepo = await git.checkIsRepo();
+    if (!isRepo) {
+      throw new Error('Not a git repository');
+    }
+  } catch {
+    throw new Error('Failed to validate git repository');
+  }
+
+  return git;
 }
