@@ -9,9 +9,9 @@ import { useRepository } from '@/context/repository-context';
 import { cn } from '@/lib/utils';
 
 import type { FileItem } from './file-browser'; // Import FileItem type
+import { useFileOperations } from './hooks/use-file-operations'; // Import useFileOperations
 import { SortDropdown } from './sort-dropdown';
 import type { SortConfig } from './types/sorting';
-import { useFileOperations } from './hooks/use-file-operations'; // Import useFileOperations
 
 interface FileBrowserActionsProps {
   type: 'files' | 'media';

@@ -11,6 +11,7 @@ import { MediaDialog } from '@/components/media-dialog';
 import { RenameFileDialog } from '@/components/rename-file-dialog';
 import { UnifiedSidebar } from '@/components/unified-sidebar';
 import { useGitStatus } from '@/context/git-status-context';
+import { useDialogState } from '@/hooks/ui/use-dialog-state';
 import { getUserPreferences, saveUserPreferences } from '@/lib/user-preferences';
 import type { FileData } from '@/types';
 import { formatModificationTime } from '@/utils/date-utils';
@@ -25,10 +26,10 @@ interface EditorProps {
 export function Editor({ file, onSave }: EditorProps) {
   const [content, setContent] = useState('');
   const [fileModificationTime, setFileModificationTime] = useState<string | null>(null);
-  const [isMediaDialogOpen, setIsMediaDialogOpen] = useState(false);
   const [isSidebarVisible, setIsSidebarVisible] = useState(true);
   const [fileTitle, setFileTitle] = useState('');
-  const [isRenameDialogOpen, setIsRenameDialogOpen] = useState(false);
+  const mediaDialog = useDialogState();
+  const renameDialog = useDialogState();
 
   // Reference to the textarea element
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -142,7 +143,7 @@ export function Editor({ file, onSave }: EditorProps) {
       debouncedSave(file.path, newContent);
     }
 
-    setIsMediaDialogOpen(false);
+    mediaDialog.closeDialog();
   };
 
   // Handle toolbar actions
@@ -204,7 +205,7 @@ export function Editor({ file, onSave }: EditorProps) {
           <div className="flex-1 truncate">
             <h2
               className="text-sm font-semibold truncate flex items-center cursor-pointer hover:text-primary"
-              onClick={() => setIsRenameDialogOpen(true)}
+              onClick={() => renameDialog.openDialog()}
             >
               {getFileName()} <Edit2 className="h-3 w-3 ml-1 opacity-50" />
             </h2>
@@ -221,7 +222,7 @@ export function Editor({ file, onSave }: EditorProps) {
         <div className="px-2 pt-2">
           <EditorToolbar
             onAction={handleToolbarActionClick}
-            onImageClick={() => setIsMediaDialogOpen(true)}
+            onImageClick={() => mediaDialog.openDialog()}
             textareaRef={textareaRef}
           />
         </div>
@@ -241,13 +242,17 @@ export function Editor({ file, onSave }: EditorProps) {
       />
 
       {/* Media Dialog for Image Selection */}
-      <MediaDialog open={isMediaDialogOpen} onOpenChange={setIsMediaDialogOpen} onSelect={handleMediaSelect} />
+      <MediaDialog
+        open={mediaDialog.isOpen}
+        onOpenChange={(open) => (open ? mediaDialog.openDialog() : mediaDialog.closeDialog())}
+        onSelect={handleMediaSelect}
+      />
 
       {/* Rename File Dialog */}
       {file && (
         <RenameFileDialog
-          open={isRenameDialogOpen}
-          onOpenChange={setIsRenameDialogOpen}
+          open={renameDialog.isOpen}
+          onOpenChange={(open) => (open ? renameDialog.openDialog() : renameDialog.closeDialog())}
           item={{
             key: file.path,
             type: 'file'

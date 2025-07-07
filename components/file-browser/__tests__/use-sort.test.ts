@@ -1,9 +1,9 @@
 import { act, renderHook } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { useSort } from '../hooks/use-sort';
 import type { FileItem } from '../types/file-item';
 import type { SortConfig, SortDirection, SortField } from '../types/sorting';
-import { useSort } from '../hooks/use-sort';
 
 // Mock the sorting utility
 vi.mock('../utils/sorting', () => ({

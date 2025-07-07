@@ -67,7 +67,7 @@ export function RepositorySwitcher() {
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" size="sm" className="h-7 text-xs gap-1">
             <Library className="h-3 w-3" />
-            <span className="max-w-[120px] truncate">{displayLabel}</span>
+            <span className="max-w-[120px] truncate font-bold">{displayLabel}</span>
             <ChevronDown className="h-3 w-3" />
           </Button>
         </DropdownMenuTrigger>

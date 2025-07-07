@@ -3,8 +3,8 @@ import Link from 'next/link';
 import type React from 'react';
 
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
-import { cn } from '@/lib/utils';
 import { useRepository } from '@/context/repository-context';
+import { cn } from '@/lib/utils';
 
 import type { FileItem } from './file-browser'; // Assuming FileItem type remains in the main file for now
 import { FileItemDropdown } from './file-item-dropdown';
@@ -47,10 +47,8 @@ export function FileItemRow({
 
   // Render Link for files when using URL routing and it's a text file
   if (!isFolder && type === 'files' && isTextFile) {
-    const href = currentRepositoryId 
-      ? `/edit/${itemPath}?repo=${currentRepositoryId}`
-      : `/edit/${itemPath}`;
-    
+    const href = currentRepositoryId ? `/edit/${itemPath}?repo=${currentRepositoryId}` : `/edit/${itemPath}`;
+
     return (
       <Link
         key={itemPath}

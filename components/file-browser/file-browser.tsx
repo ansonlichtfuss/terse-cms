@@ -53,18 +53,12 @@ export function FileBrowser({
     setItemToAction,
     currentPath,
     setCurrentPath,
-    expandedFolders: _expandedFolders,
     setExpandedFolders,
-    isUploading,
-    setIsUploading: _setIsUploading,
     isCreateFolderDialogOpen,
     setIsCreateFolderDialogOpen,
-    newFolderName: _newFolderName,
-    setNewFolderName: _setNewFolderName,
-    mounted: _mounted,
     sortConfig,
     updateSort
-  } = useFileBrowserState({ isMobile, selectedPath, type });
+  } = useFileBrowserState({ selectedPath, type });
 
   // Create a handler that calls both setCurrentPath and onPathChange
   const handlePathChange = (path: string) => {
@@ -79,6 +73,7 @@ export function FileBrowser({
 
   // Add state for the upload dialog
   const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
+  const [isUploading] = useState(isMobile);
 
   // Use the new Tanstack Query hook for fetching files
   const {

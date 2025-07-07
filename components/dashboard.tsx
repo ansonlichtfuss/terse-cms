@@ -24,6 +24,7 @@ import { toast } from '@/components/ui/use-toast';
 import { useGitStatus } from '@/context/git-status-context';
 import { useCommitChangesMutation } from '@/hooks/api/use-commit-changes-mutation';
 import { useRevertChangesMutation } from '@/hooks/api/use-revert-changes-mutation';
+import { useDialogState } from '@/hooks/ui/use-dialog-state';
 import { useMediaQuery } from '@/hooks/use-media-query';
 import { cn } from '@/lib/utils'; // Import cn utility
 
@@ -53,8 +54,8 @@ export function Dashboard({ selectedFilePath, children }: { selectedFilePath?: s
   const [selectedTab, setSelectedTab] = useState('files');
   const [contentBrowserPath, setContentBrowserPath] = useState(selectedFilePath); // State for content file browser path
   const [mediaBrowserPath, setMediaBrowserPath] = useState(''); // State for media file browser path
-  const [isCommitDialogOpen, setIsCommitDialogOpen] = useState(false);
-  const [isRevertDialogOpen, setIsRevertDialogOpen] = useState(false);
+  const commitDialog = useDialogState();
+  const revertDialog = useDialogState();
   const isMobile = useMediaQuery('(max-width: 768px)');
 
   // Use the context to get modified files
@@ -89,7 +90,7 @@ export function Dashboard({ selectedFilePath, children }: { selectedFilePath?: s
   const handleCommit = (message: string) => {
     commitChanges(message, {
       onSuccess: () => {
-        setIsCommitDialogOpen(false);
+        commitDialog.closeDialog();
         toast({
           title: 'Changes committed'
         });
@@ -100,7 +101,7 @@ export function Dashboard({ selectedFilePath, children }: { selectedFilePath?: s
   const handleRevert = () => {
     revertChanges(undefined, {
       onSuccess: () => {
-        setIsRevertDialogOpen(false);
+        revertDialog.closeDialog();
         toast({
           title: 'Changes reverted'
         });
@@ -166,7 +167,7 @@ export function Dashboard({ selectedFilePath, children }: { selectedFilePath?: s
           <Button
             variant="outline"
             size="sm"
-            onClick={() => setIsCommitDialogOpen(true)}
+            onClick={() => commitDialog.openDialog()}
             disabled={(modifiedFiles?.length || 0) === 0 || isCommitting}
             className="flex items-center gap-1 h-7 text-xs bg-gradient-secondary transition-all"
           >
@@ -191,7 +192,7 @@ export function Dashboard({ selectedFilePath, children }: { selectedFilePath?: s
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem
-                onClick={() => setIsRevertDialogOpen(true)}
+                onClick={() => revertDialog.openDialog()}
                 className="dropdown-menu-item-destructive"
                 disabled={isReverting}
               >
@@ -242,16 +243,16 @@ export function Dashboard({ selectedFilePath, children }: { selectedFilePath?: s
       )}
 
       <GitCommitDialog
-        open={isCommitDialogOpen}
-        onOpenChange={setIsCommitDialogOpen}
+        open={commitDialog.isOpen}
+        onOpenChange={(open) => (open ? commitDialog.openDialog() : commitDialog.closeDialog())}
         onCommit={handleCommit}
         isCommitting={isCommitting}
       />
 
       {/* Revert Changes Dialog */}
       <ReverseChangesDialog
-        open={isRevertDialogOpen}
-        onOpenChange={setIsRevertDialogOpen}
+        open={revertDialog.isOpen}
+        onOpenChange={(open) => (open ? revertDialog.openDialog() : revertDialog.closeDialog())}
         onRevert={handleRevert}
         isReverting={isReverting}
       />
