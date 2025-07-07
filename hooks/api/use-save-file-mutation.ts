@@ -1,6 +1,8 @@
 import { useMutation } from '@tanstack/react-query';
-import { ApiClient, useQueryInvalidation } from './shared';
+
 import { useRepository } from '@/context/repository-context';
+
+import { ApiClient, useQueryInvalidation } from './shared';
 
 interface SaveFileArgs {
   path: string;
@@ -8,7 +10,7 @@ interface SaveFileArgs {
 }
 
 const saveFile = async ({ path, content }: SaveFileArgs, client: ApiClient): Promise<void> => {
-  await client.post('/api/files', { path, content });
+  await client.request('POST', '/api/files', { path, content });
 };
 
 export const useSaveFileMutation = () => {

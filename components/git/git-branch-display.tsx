@@ -15,17 +15,12 @@ import {
 import { useGitBranchesQuery, useSwitchGitBranchMutation } from '@/hooks/api/use-git-branches';
 import { cn } from '@/lib/utils';
 
-interface Branch {
-  name: string;
-  isCurrent: boolean;
-}
-
 export function GitBranchDisplay() {
   // Use the new Tanstack Query hook for fetching branches
   const { data: branches, isLoading, error } = useGitBranchesQuery();
 
   // Use the new Tanstack Query mutation hook for switching branches
-  const { mutate: switchBranch, isPending: isSwitching, error: switchError } = useSwitchGitBranchMutation();
+  const { mutate: switchBranch, isPending: isSwitching } = useSwitchGitBranchMutation();
 
   const [isWarningDialogOpen, setIsWarningDialogOpen] = useState(false); // State for warning dialog
   const [warningDialogMessage, setWarningDialogMessage] = useState(''); // State for warning message
@@ -56,8 +51,6 @@ export function GitBranchDisplay() {
 
   return (
     <>
-      {' '}
-      {/* Use a fragment to include the dialog */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button

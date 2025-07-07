@@ -14,10 +14,9 @@ interface UnifiedSidebarProps {
   filePath: string;
   isVisible: boolean;
   onToggle: () => void;
-  lastSaved?: Date | null;
 }
 
-export function UnifiedSidebar({ content, filePath, isVisible, onToggle, lastSaved }: UnifiedSidebarProps) {
+export function UnifiedSidebar({ content, filePath, isVisible, onToggle }: UnifiedSidebarProps) {
   const [activeTab, setActiveTab] = useState<string>('metadata');
   const [frontMatter, setFrontMatter] = useState<Record<string, string>>({});
   const [frontMatterError, setFrontMatterError] = useState<string | null>(null);
@@ -94,7 +93,7 @@ export function UnifiedSidebar({ content, filePath, isVisible, onToggle, lastSav
           <TabsContent value="history" className="m-0 p-0">
             <div className="h-full overflow-y-auto">
               <div className="px-4 pt-1">
-                <GitHistorySidebar filePath={filePath} isVisible={isVisible} onClose={onToggle} lastSaved={lastSaved} />
+                <GitHistorySidebar filePath={filePath} isVisible={isVisible} />
               </div>
             </div>
           </TabsContent>

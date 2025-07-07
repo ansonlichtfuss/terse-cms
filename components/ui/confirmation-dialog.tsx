@@ -22,7 +22,7 @@ interface ConfirmationDialogProps {
   destructive?: boolean;
   itemsList?: string[];
   hideCancelButton?: boolean; // New prop
-  isDeleting: boolean; // Add isDeleting prop
+  isDeleting?: boolean; // Add isDeleting prop
 }
 
 export function ConfirmationDialog({

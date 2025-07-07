@@ -183,9 +183,7 @@ export function FileBrowser({
           onSelect(itemPath);
         }
       } else {
-        const href = currentRepositoryId 
-          ? `/edit/${item.path}?repo=${currentRepositoryId}`
-          : `/edit/${item.path}`;
+        const href = currentRepositoryId ? `/edit/${item.path}?repo=${currentRepositoryId}` : `/edit/${item.path}`;
         router.push(href);
         // For media items, always use the callback
         if (typeof onSelect === 'function') {

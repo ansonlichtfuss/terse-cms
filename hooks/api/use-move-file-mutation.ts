@@ -1,4 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
+
 import { ApiClient, useApiClient, useStandardInvalidation } from './shared';
 
 interface MoveFileArgs {
@@ -8,7 +9,7 @@ interface MoveFileArgs {
 }
 
 const moveFile = async ({ sourcePath, destinationPath, type }: MoveFileArgs, client: ApiClient): Promise<void> => {
-  await client.post('/api/files/move', {
+  await client.request('POST', '/api/files/move', {
     sourcePath,
     destinationPath,
     type
@@ -18,7 +19,7 @@ const moveFile = async ({ sourcePath, destinationPath, type }: MoveFileArgs, cli
 export const useMoveFileMutation = () => {
   const apiClient = useApiClient();
   const { invalidateFiles } = useStandardInvalidation();
-  
+
   return useMutation({
     mutationFn: (args: MoveFileArgs) => moveFile(args, apiClient),
     onSuccess: () => invalidateFiles()

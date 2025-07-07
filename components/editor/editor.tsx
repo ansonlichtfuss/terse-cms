@@ -238,7 +238,6 @@ export function Editor({ file, onSave }: EditorProps) {
         filePath={file?.path || ''}
         isVisible={isSidebarVisible}
         onToggle={toggleSidebar}
-        lastSaved={fileModificationTime ? new Date(fileModificationTime) : null}
       />
 
       {/* Media Dialog for Image Selection */}

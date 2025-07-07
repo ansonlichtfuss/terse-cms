@@ -1,6 +1,5 @@
 'use client';
 
-import { format } from 'date-fns';
 import { Clock, FileText, GitCommit, User } from 'lucide-react';
 import { useEffect } from 'react';
 
@@ -11,11 +10,9 @@ import { formatRelativeTime } from '@/utils/date-utils';
 interface GitHistorySidebarProps {
   filePath: string;
   isVisible: boolean;
-  onClose: () => void;
-  lastSaved?: Date | null;
 }
 
-export function GitHistorySidebar({ filePath, isVisible, onClose, lastSaved }: GitHistorySidebarProps) {
+export function GitHistorySidebar({ filePath, isVisible }: GitHistorySidebarProps) {
   const { data: commits, isLoading, error } = useGitHistoryQuery(isVisible ? filePath : ''); // Only fetch if visible and filePath exists
 
   // Handle error from fetching history
@@ -27,29 +24,6 @@ export function GitHistorySidebar({ filePath, isVisible, onClose, lastSaved }: G
   }, [error]);
 
   if (!isVisible) return null;
-
-  const formatDate = (dateString: string) => {
-    try {
-      const date = new Date(dateString);
-      const now = new Date();
-      const diffMs = now.getTime() - date.getTime();
-      const diffMins = Math.round(diffMs / (1000 * 60));
-      const diffHours = Math.round(diffMs / (1000 * 60 * 60));
-      const diffDays = Math.round(diffMs / (1000 * 60 * 60 * 24));
-
-      if (diffMins < 60) {
-        return `${diffMins} minute${diffMins !== 1 ? 's' : ''} ago`;
-      } else if (diffHours < 24) {
-        return `${diffHours} hour${diffHours !== 1 ? 's' : ''} ago`;
-      } else if (diffDays < 7) {
-        return `${diffDays} day${diffDays !== 1 ? 's' : ''} ago`;
-      } else {
-        return format(date, 'MMM d, yyyy');
-      }
-    } catch (e) {
-      return dateString;
-    }
-  };
 
   return (
     <div className="overflow-y-auto">

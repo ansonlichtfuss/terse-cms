@@ -29,8 +29,6 @@ export async function GET(request: Request) {
           const showOutput = await git.show([commit.hash, '--stat=1000', '--oneline', '--', fullPath]);
           const lines = showOutput.split('\n').map((line) => line.trim());
 
-          console.log('Git show output:', showOutput);
-
           // Parse the summary line for insertions and deletions
           const summaryLine = lines.find((line) => line.includes('insertions(+)'));
           if (summaryLine) {

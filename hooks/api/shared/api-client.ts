@@ -41,7 +41,7 @@ export class ApiClient {
   /**
    * Generic request method for all HTTP operations
    */
-  private async request<T = void, R = void>(method: HttpMethod, endpoint: string, data?: T): Promise<R> {
+  async request<R>(method: HttpMethod, endpoint: string, data?: unknown): Promise<R> {
     const options: RequestInit = {
       method
     };

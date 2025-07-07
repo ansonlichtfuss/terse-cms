@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+
 import { ApiClient } from './shared';
 
 interface DeleteS3ItemVariables {
@@ -15,13 +16,13 @@ interface MoveS3ItemVariables {
 const deleteS3Item = async ({ key, type }: DeleteS3ItemVariables): Promise<void> => {
   // S3 operations don't use repository context, so no repository ID needed
   const client = new ApiClient();
-  await client.delete('/api/s3', { key, type });
+  await client.request('DELETE', '/api/s3', { key, type });
 };
 
 const moveS3Item = async ({ sourceKey, destinationPath, type }: MoveS3ItemVariables): Promise<void> => {
   // S3 operations don't use repository context, so no repository ID needed
   const client = new ApiClient();
-  await client.post('/api/s3/operations', {
+  await client.request('POST', '/api/s3/operations', {
     operation: 'move',
     sourceKey,
     destinationPath,

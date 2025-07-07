@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import { queryKeys, ApiClient, useApiClient } from './shared';
+
+import { queryKeys, useApiClient } from './shared';
 
 interface FileTreeNode {
   name: string;
@@ -29,11 +30,11 @@ interface FolderNode {
 
 export const useFileTreeQuery = () => {
   const apiClient = useApiClient();
-  
+
   return useQuery({
     queryKey: queryKeys.fileTree(apiClient.getRepositoryId()),
     queryFn: async () => {
-      const data = await apiClient.get<{ files: FileTreeNode[] }>('/api/files/tree');
+      const data = await apiClient.request<{ files: FileTreeNode[] }>('GET', '/api/files/tree');
       const rootNode: FolderNode = {
         key: '',
         name: 'Root',
