@@ -310,7 +310,7 @@ export function FileBrowser({
           currentPath={
             type === 'files' ? getItemPath(moveDialog.item).split('/').slice(0, -1).join('/') + '/' : currentPath
           }
-          onMove={(destinationPath) => handleMove(moveDialog.item, destinationPath)} // Call handleMove from operations hook
+          onMove={(destinationPath) => moveDialog.item && handleMove(moveDialog.item, destinationPath)} // Call handleMove from operations hook
           isMarkdownFile={type === 'files'}
           isMoving={isMovingFile || isMovingS3} // Pass combined loading state
         />
@@ -325,7 +325,7 @@ export function FileBrowser({
             key: getItemPath(renameDialog.item),
             type: renameDialog.item.type === 'directory' || renameDialog.item.type === 'folder' ? 'folder' : 'file'
           }}
-          onRename={(newName: string) => handleRename(renameDialog.item, newName)} // Call handleRename from operations hook
+          onRename={(newName: string) => renameDialog.item && handleRename(renameDialog.item, newName)} // Call handleRename from operations hook
           isMarkdownFile={type === 'files'}
           isRenaming={isRenamingFile} // Pass loading state
         />
@@ -339,7 +339,7 @@ export function FileBrowser({
           title={`Delete ${deleteDialog.item.type === 'directory' || deleteDialog.item.type === 'folder' ? 'Folder' : 'File'}`}
           description={`Are you sure you want to delete ${getItemName(deleteDialog.item)}? This action cannot be undone.`}
           confirmLabel="Delete"
-          onConfirm={() => handleDelete(deleteDialog.item)} // Call handleDelete from operations hook
+          onConfirm={() => deleteDialog.item && handleDelete(deleteDialog.item)} // Call handleDelete from operations hook
           destructive={true}
           isDeleting={isDeletingFile || isDeletingS3} // Pass combined loading state
         />
