@@ -1,5 +1,7 @@
 import crypto from 'crypto';
 
+import { shouldUseMockApi } from './env';
+
 /**
  * Configuration for a single repository
  */
@@ -30,24 +32,13 @@ function encodeId(id: string) {
  * @throws Error if no repositories are configured
  */
 export function getRepositoryConfig(): RepositoryConfig[] {
-  const USE_MOCK_API = process.env.USE_MOCK_API === 'true';
   const repositories: RepositoryConfig[] = [];
 
-  if (USE_MOCK_API) {
-    // For mock API, return multiple mock repositories for testing
+  if (shouldUseMockApi()) {
+    // For mock API, return single mock repository
     repositories.push({
-      id: '1',
-      label: 'Main Documentation',
-      path: './mock-data/filesystem'
-    });
-    repositories.push({
-      id: '2',
-      label: 'API Documentation',
-      path: './mock-data/filesystem'
-    });
-    repositories.push({
-      id: '3',
-      label: 'User Guides',
+      id: 'mock',
+      label: 'Mock Repository',
       path: './mock-data/filesystem'
     });
     return repositories;

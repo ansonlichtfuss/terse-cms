@@ -23,6 +23,7 @@ export default defineConfig({
     alias: {
       // Configure path aliases to match your tsconfig.json
       '@/components': path.resolve(__dirname, './components'),
+      '@/context': path.resolve(__dirname, './context'),
       '@/lib': path.resolve(__dirname, './lib'),
       '@/hooks': path.resolve(__dirname, './hooks'),
       '@/app': path.resolve(__dirname, './app')
@@ -32,6 +33,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@/components': path.resolve(__dirname, './components'),
+      '@/context': path.resolve(__dirname, './context'),
       '@/lib': path.resolve(__dirname, './lib'),
       '@/hooks': path.resolve(__dirname, './hooks'),
       '@/app': path.resolve(__dirname, './app')

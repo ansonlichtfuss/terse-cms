@@ -28,27 +28,27 @@ describe('Multi-Repository Integration', () => {
     expect(repositories).toHaveLength(3);
 
     expect(repositories[0]).toEqual({
-      id: '1',
+      id: '6b86b273ff34',
       label: 'Documentation',
       path: '/path/to/docs'
     });
 
     expect(repositories[1]).toEqual({
-      id: '2',
+      id: 'd4735e3a265e',
       label: 'API Reference',
       path: '/path/to/api'
     });
 
     expect(repositories[2]).toEqual({
-      id: '3',
+      id: '4e07408562be',
       label: 'User Guides',
       path: '/path/to/guides'
     });
 
     // Test individual repository access
-    expect(getRepositoryPath('1')).toBe('/path/to/docs');
-    expect(getRepositoryPath('2')).toBe('/path/to/api');
-    expect(getRepositoryPath('3')).toBe('/path/to/guides');
+    expect(getRepositoryPath('6b86b273ff34')).toBe('/path/to/docs');
+    expect(getRepositoryPath('d4735e3a265e')).toBe('/path/to/api');
+    expect(getRepositoryPath('4e07408562be')).toBe('/path/to/guides');
   });
 
   it('should handle mixed configuration scenarios', () => {
@@ -63,7 +63,7 @@ describe('Multi-Repository Integration', () => {
     const repositories = getRepositoryConfig();
     expect(repositories).toHaveLength(1); // Should stop at first gap
     expect(repositories[0]).toEqual({
-      id: '1',
+      id: '6b86b273ff34',
       label: 'First Repo',
       path: '/repo1'
     });

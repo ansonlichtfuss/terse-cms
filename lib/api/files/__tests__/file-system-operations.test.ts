@@ -30,7 +30,8 @@ describe('FileSystemOperations', () => {
       expect(result.success).toBe(true);
       expect(result.data).toEqual({
         path: 'test.md',
-        content: 'test content'
+        content: 'test content',
+        lastModified: expect.any(String)
       });
     });
 

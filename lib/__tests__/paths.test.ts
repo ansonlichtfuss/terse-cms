@@ -39,12 +39,12 @@ describe('paths', () => {
 
       expect(config).toHaveLength(2);
       expect(config[0]).toEqual({
-        id: '1',
+        id: '6b86b273ff34',
         label: 'Repository One',
         path: '/repo1/path'
       });
       expect(config[1]).toEqual({
-        id: '2',
+        id: 'd4735e3a265e',
         label: 'Repository Two',
         path: '/repo2/path'
       });
@@ -73,8 +73,8 @@ describe('paths', () => {
     });
 
     it('should return correct path for valid repository ID', () => {
-      expect(getRepositoryPath('1')).toBe('/repo1/path');
-      expect(getRepositoryPath('2')).toBe('/repo2/path');
+      expect(getRepositoryPath('6b86b273ff34')).toBe('/repo1/path');
+      expect(getRepositoryPath('d4735e3a265e')).toBe('/repo2/path');
     });
 
     it('should throw error for invalid repository ID', () => {

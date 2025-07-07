@@ -13,7 +13,8 @@ vi.mock('@/lib/env', () => ({
 }));
 
 vi.mock('@/lib/paths', () => ({
-  getMarkdownRootDir: vi.fn(() => '/production-root')
+  getMarkdownRootDir: vi.fn(() => '/production-root'),
+  getRepositoryPath: vi.fn(() => '/production-root')
 }));
 
 describe('FileOperations', () => {
@@ -50,7 +51,7 @@ describe('FileOperations', () => {
       const { shouldUseMockApi } = await import('@/lib/env');
       vi.mocked(shouldUseMockApi).mockReturnValue(false);
 
-      fileOps = new FileOperations();
+      fileOps = new FileOperations('1');
 
       // Setup production data
       vol.fromJSON({
@@ -264,7 +265,7 @@ describe('FileOperations', () => {
 
       // Switch to production environment
       vi.mocked(shouldUseMockApi).mockReturnValue(false);
-      const prodFileOps = new FileOperations();
+      const prodFileOps = new FileOperations('1');
 
       vol.fromJSON({
         '/production-root/prod-file.md': 'production content'
