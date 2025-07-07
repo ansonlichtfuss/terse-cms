@@ -1,12 +1,12 @@
-import type { QueryObserverResult, RefetchOptions } from '@tanstack/react-query'; // Import necessary types
-import { useRouter } from 'next/navigation'; // Import useRouter
+import type { QueryObserverResult, RefetchOptions } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
 
 import { toast } from '@/components/ui/use-toast';
-import { useRepository } from '@/context/repository-context';
 import { useQueryInvalidation } from '@/hooks/api/shared';
 // Import the new file operation mutation hooks
 import { useCreateFileMutation } from '@/hooks/api/use-create-file-mutation';
 import { useCreateFolderMutation } from '@/hooks/api/use-create-folder-mutation';
+import { useCreateS3FolderMutation } from '@/hooks/api/use-create-s3-folder-mutation';
 import { useDeleteFileMutation } from '@/hooks/api/use-delete-file-mutation';
 import { useMoveFileMutation } from '@/hooks/api/use-move-file-mutation';
 import { useRenameFileMutation } from '@/hooks/api/use-rename-file-mutation';
@@ -29,121 +29,63 @@ interface UseFileOperationsProps {
 }
 
 interface UseFileOperationsResult {
-  handleUpload: (files: FileList | null) => Promise<void>;
   handleCreateFolder: (folderName: string) => Promise<void>;
   handleDelete: (item: FileItem) => Promise<void>;
   handleRename: (item: FileItem, newName: string) => Promise<void>;
   handleMove: (item: FileItem, destinationPath: string) => Promise<void>;
   handleCreateFile: (filePath: string, content?: string) => Promise<void>;
-  isCreatingFile: boolean;
   isCreatingFolder: boolean;
   isDeletingFile: boolean;
   isRenamingFile: boolean;
   isMovingFile: boolean;
   isDeletingS3: boolean;
   isMovingS3: boolean;
+  isCreatingS3Folder: boolean;
 }
 
 export const useFileOperations = ({
   type,
   currentPath,
-  fetchItems,
+  fetchItems: _fetchItems,
   deleteDialog
 }: UseFileOperationsProps): UseFileOperationsResult => {
-  const router = useRouter(); // Initialize useRouter
-  const { currentRepositoryId } = useRepository();
+  const router = useRouter();
   const { invalidateFileQueries } = useQueryInvalidation();
 
   // Use the S3 mutation hooks
   const { mutate: deleteS3Item, isPending: isDeletingS3 } = useDeleteS3ItemMutation();
   const { mutate: moveS3Item, isPending: isMovingS3 } = useMoveS3ItemMutation();
+  const { mutate: createS3Folder, isPending: isCreatingS3Folder } = useCreateS3FolderMutation();
 
   // Use the new file operation mutation hooks
-  const { mutate: createFile, isPending: isCreatingFile } = useCreateFileMutation();
+  const { mutate: createFile } = useCreateFileMutation();
   const { mutate: createFolder, isPending: isCreatingFolder } = useCreateFolderMutation();
   const { mutate: deleteFile, isPending: isDeletingFile } = useDeleteFileMutation();
   const { mutate: renameFile, isPending: isRenamingFile } = useRenameFileMutation();
   const { mutate: moveFile, isPending: isMovingFile } = useMoveFileMutation();
-
-  const handleUpload = async (files: FileList | null) => {
-    if (!files || files.length === 0) return;
-
-    // Assuming isUploading state is managed in the main component or a separate state hook
-    // setIsUploading(true);
-
-    try {
-      const formData = new FormData();
-      formData.append('path', currentPath);
-      formData.append('file', files[0]);
-
-      const url = new URL('/api/s3/upload', window.location.origin);
-      if (currentRepositoryId) {
-        url.searchParams.set('repo', currentRepositoryId);
-      }
-
-      const response = await fetch(url.toString(), {
-        method: 'POST',
-        body: formData
-      });
-
-      if (!response.ok) {
-        throw new Error('Upload failed');
-      }
-
-      // Refresh the list using Tanstack Query's refetch
-      await fetchItems?.();
-      toast({
-        title: 'File uploaded'
-      });
-    } catch (error) {
-      console.error('Failed to upload file:', error);
-      toast({
-        title: 'Failed to upload file',
-        variant: 'destructive'
-      });
-    } finally {
-      // setIsUploading(false);
-    }
-  };
 
   const handleCreateFolder = async (folderName: string) => {
     if (!folderName.trim()) return;
 
     if (type === 'media') {
       // Use the S3 mutation hook for media folder creation
-      // Assuming a useCreateS3FolderMutation exists or create one
-      // For now, keeping the fetch call as the mutation hook was a placeholder
-      try {
-        const url = new URL('/api/s3/folder', window.location.origin);
-        if (currentRepositoryId) {
-          url.searchParams.set('repo', currentRepositoryId);
-        }
-
-        const response = await fetch(url.toString(), {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
+      createS3Folder(
+        { path: currentPath, name: folderName },
+        {
+          onSuccess: () => {
+            toast({
+              title: 'Folder created'
+            });
           },
-          body: JSON.stringify({
-            path: currentPath,
-            name: folderName
-          })
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to create folder');
+          onError: (error) => {
+            console.error('Failed to create folder:', error);
+            toast({
+              title: 'Failed to create folder',
+              variant: 'destructive'
+            });
+          }
         }
-        await fetchItems?.(); // Refresh after S3 folder creation
-        toast({
-          title: 'Folder created'
-        });
-      } catch (error) {
-        console.error('Failed to create folder:', error);
-        toast({
-          title: 'Failed to create folder',
-          variant: 'destructive'
-        });
-      }
+      );
     } else {
       // Use the file system mutation hook for folder creation
       createFolder(
@@ -241,7 +183,7 @@ export const useFileOperations = ({
             const sourceParts = sourcePath.split('/');
             sourceParts[sourceParts.length - 1] = newName;
             const newPath = sourceParts.join('/');
-            const href = currentRepositoryId ? `/edit/${newPath}?repo=${currentRepositoryId}` : `/edit/${newPath}`;
+            const href = `/edit/${newPath}`;
             router.push(href);
           },
           onError: (error) => {
@@ -279,9 +221,6 @@ export const useFileOperations = ({
               toast({
                 title: `${item.type === 'directory' || item.type === 'folder' ? 'Folder' : 'File'} moved`
               });
-              // Assuming state updates for dialog closing are handled elsewhere
-              // setIsMoveDialogOpen(false);
-              // setItemToAction(null);
             },
             onError: (error) => {
               console.error('Failed to move item:', error);
@@ -301,9 +240,6 @@ export const useFileOperations = ({
               toast({
                 title: `${item.type === 'directory' || item.type === 'folder' ? 'Folder' : 'File'} moved`
               });
-              // Assuming state updates for dialog closing are handled elsewhere
-              // setIsMoveDialogOpen(false);
-              // setItemToAction(null);
             },
             onError: (error) => {
               console.error('Failed to move item:', error);
@@ -348,18 +284,17 @@ export const useFileOperations = ({
   };
 
   return {
-    handleUpload,
     handleCreateFolder,
     handleDelete,
     handleRename,
     handleMove,
     handleCreateFile,
-    isCreatingFile,
     isCreatingFolder,
     isDeletingFile,
     isRenamingFile,
     isMovingFile,
     isDeletingS3,
-    isMovingS3
+    isMovingS3,
+    isCreatingS3Folder
   };
 };

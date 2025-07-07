@@ -129,18 +129,17 @@ export function FileBrowser({
 
   // Use the custom operations hook
   const {
-    handleUpload: _handleUpload,
     handleCreateFolder,
     handleDelete,
     handleRename,
     handleMove,
-    isCreatingFile: _isCreatingFile,
     isCreatingFolder,
     isDeletingFile,
     isRenamingFile,
     isMovingFile,
     isDeletingS3,
-    isMovingS3
+    isMovingS3,
+    isCreatingS3Folder
   } = useFileOperations({
     type,
     currentPath,
@@ -241,7 +240,7 @@ export function FileBrowser({
         onNewFolderClick={handleNewFolderButtonClick} // Call local handler
         onOpenUploadDialog={handleOpenUploadDialog} // Pass the handler to open the dialog
         currentPath={currentPath} // Pass the currentPath prop
-        isCreatingFolder={isCreatingFolder} // Pass loading state (This is the loading state from useFileOperations)
+        isCreatingFolder={isCreatingFolder || isCreatingS3Folder} // Pass loading state for both file system and S3 folder creation
         fetchItems={refetch} // Pass the refetch function from useFilesQuery
         sortConfig={sortConfig}
         onSortChange={updateSort}
@@ -296,7 +295,7 @@ export function FileBrowser({
         onOpenChange={(open) => (open ? createFolderDialog.openDialog() : createFolderDialog.closeDialog())}
         onCreate={handleCreateFolder} // Pass the handleCreateFolder function directly
         isMobile={isMobile}
-        isCreating={isCreatingFolder} // Pass loading state (This is the loading state from useFileOperations)
+        isCreating={isCreatingFolder || isCreatingS3Folder} // Pass loading state for both file system and S3 folder creation
       />
 
       {/* Move File Dialog */}
