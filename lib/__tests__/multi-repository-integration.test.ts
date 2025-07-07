@@ -1,12 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import {
-  getDefaultRepositoryId,
-  getMarkdownRootDir,
-  getRepositoryConfig,
-  getRepositoryLabel,
-  getRepositoryPath
-} from '../paths';
+import { getRepositoryConfig, getRepositoryPath } from '../paths';
 
 describe('Multi-Repository Integration', () => {
   const originalEnv = process.env;
@@ -55,13 +49,6 @@ describe('Multi-Repository Integration', () => {
     expect(getRepositoryPath('1')).toBe('/path/to/docs');
     expect(getRepositoryPath('2')).toBe('/path/to/api');
     expect(getRepositoryPath('3')).toBe('/path/to/guides');
-
-    expect(getRepositoryLabel('1')).toBe('Documentation');
-    expect(getRepositoryLabel('2')).toBe('API Reference');
-    expect(getRepositoryLabel('3')).toBe('User Guides');
-
-    // Test default repository selection
-    expect(getDefaultRepositoryId()).toBe('1');
   });
 
   it('should handle mixed configuration scenarios', () => {
@@ -100,9 +87,6 @@ describe('Multi-Repository Integration', () => {
     process.env.MARKDOWN_ROOT_DIR_1 = '/repo1';
     process.env.MARKDOWN_ROOT_DIR_2 = '/repo2';
 
-    // Legacy function should return mock path
-    expect(getMarkdownRootDir()).toBe('./mock-data/filesystem');
-
     // Repository config should return mock repository
     const repositories = getRepositoryConfig();
     expect(repositories).toHaveLength(1);
@@ -111,8 +95,6 @@ describe('Multi-Repository Integration', () => {
       label: 'Mock Repository',
       path: './mock-data/filesystem'
     });
-
-    expect(getDefaultRepositoryId()).toBe('mock');
   });
 
   it('should provide helpful error messages for invalid repository IDs', () => {
@@ -121,7 +103,5 @@ describe('Multi-Repository Integration', () => {
     process.env.MARKDOWN_ROOT_DIR_2 = '/repo2';
 
     expect(() => getRepositoryPath('invalid')).toThrow("Repository with ID 'invalid' not found.");
-
-    expect(() => getRepositoryLabel('nonexistent')).toThrow("Repository with ID 'nonexistent' not found.");
   });
 });

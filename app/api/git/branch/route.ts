@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 
 import { getGitInstanceForRequest } from '@/lib/api';
+import { getGitInstanceForRepository } from '@/lib/git';
 
 export async function GET(request: Request) {
   try {
@@ -9,7 +10,6 @@ export async function GET(request: Request) {
       return gitResult.error;
     }
 
-    const { getGitInstanceForRepository } = await import('@/lib/git');
     const git = getGitInstanceForRepository(gitResult.repoId);
 
     const branchSummary = await git.branchLocal();

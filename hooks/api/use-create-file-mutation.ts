@@ -1,4 +1,5 @@
-import { createMutationHook, ApiClient } from './shared';
+import { useMutation } from '@tanstack/react-query';
+import { ApiClient, useApiClient, useStandardInvalidation } from './shared';
 
 interface CreateFileArgs {
   filePath: string;
@@ -9,7 +10,12 @@ const createFile = async ({ filePath, content = '' }: CreateFileArgs, client: Ap
   await client.post('/api/files', { path: filePath, content });
 };
 
-export const useCreateFileMutation = createMutationHook(
-  createFile,
-  { invalidateQueries: 'file' }
-);
+export const useCreateFileMutation = () => {
+  const apiClient = useApiClient();
+  const { invalidateFiles } = useStandardInvalidation();
+  
+  return useMutation({
+    mutationFn: (args: CreateFileArgs) => createFile(args, apiClient),
+    onSuccess: () => invalidateFiles()
+  });
+};

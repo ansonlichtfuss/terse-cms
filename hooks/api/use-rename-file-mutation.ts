@@ -1,4 +1,5 @@
-import { createMutationHook, ApiClient } from './shared';
+import { useMutation } from '@tanstack/react-query';
+import { ApiClient, useApiClient, useStandardInvalidation } from './shared';
 
 interface RenameFileArgs {
   sourcePath: string;
@@ -14,7 +15,12 @@ const renameFile = async ({ sourcePath, newName, type }: RenameFileArgs, client:
   });
 };
 
-export const useRenameFileMutation = createMutationHook(
-  renameFile,
-  { invalidateQueries: 'file' }
-);
+export const useRenameFileMutation = () => {
+  const apiClient = useApiClient();
+  const { invalidateFiles } = useStandardInvalidation();
+  
+  return useMutation({
+    mutationFn: (args: RenameFileArgs) => renameFile(args, apiClient),
+    onSuccess: () => invalidateFiles()
+  });
+};

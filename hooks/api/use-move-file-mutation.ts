@@ -1,4 +1,5 @@
-import { createMutationHook, ApiClient } from './shared';
+import { useMutation } from '@tanstack/react-query';
+import { ApiClient, useApiClient, useStandardInvalidation } from './shared';
 
 interface MoveFileArgs {
   sourcePath: string;
@@ -14,7 +15,12 @@ const moveFile = async ({ sourcePath, destinationPath, type }: MoveFileArgs, cli
   });
 };
 
-export const useMoveFileMutation = createMutationHook(
-  moveFile,
-  { invalidateQueries: 'file' }
-);
+export const useMoveFileMutation = () => {
+  const apiClient = useApiClient();
+  const { invalidateFiles } = useStandardInvalidation();
+  
+  return useMutation({
+    mutationFn: (args: MoveFileArgs) => moveFile(args, apiClient),
+    onSuccess: () => invalidateFiles()
+  });
+};

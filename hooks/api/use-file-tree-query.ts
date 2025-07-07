@@ -1,4 +1,5 @@
-import { createQueryHook, queryKeys, ApiClient } from './shared';
+import { useQuery } from '@tanstack/react-query';
+import { queryKeys, ApiClient, useApiClient } from './shared';
 
 interface FileTreeNode {
   name: string;
@@ -26,16 +27,20 @@ interface FolderNode {
   isExpanded: boolean;
 }
 
-export const useFileTreeQuery = createQueryHook(
-  queryKeys.fileTree,
-  async (client: ApiClient) => {
-    const data = await client.get<{ files: FileTreeNode[] }>('/api/files/tree');
-    const rootNode: FolderNode = {
-      key: '',
-      name: 'Root',
-      children: convertToFileTree(data.files || []),
-      isExpanded: true
-    };
-    return rootNode;
-  }
-);
+export const useFileTreeQuery = () => {
+  const apiClient = useApiClient();
+  
+  return useQuery({
+    queryKey: queryKeys.fileTree(apiClient.getRepositoryId()),
+    queryFn: async () => {
+      const data = await apiClient.get<{ files: FileTreeNode[] }>('/api/files/tree');
+      const rootNode: FolderNode = {
+        key: '',
+        name: 'Root',
+        children: convertToFileTree(data.files || []),
+        isExpanded: true
+      };
+      return rootNode;
+    }
+  });
+};

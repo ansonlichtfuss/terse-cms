@@ -1,4 +1,5 @@
-import { createMutationHook, ApiClient } from './shared';
+import { useMutation } from '@tanstack/react-query';
+import { ApiClient, useApiClient, useStandardInvalidation } from './shared';
 
 interface CreateFolderArgs {
   path: string;
@@ -14,7 +15,12 @@ const createFolder = async ({ path, name }: CreateFolderArgs, client: ApiClient)
   });
 };
 
-export const useCreateFolderMutation = createMutationHook(
-  createFolder,
-  { invalidateQueries: 'file' }
-);
+export const useCreateFolderMutation = () => {
+  const apiClient = useApiClient();
+  const { invalidateFiles } = useStandardInvalidation();
+  
+  return useMutation({
+    mutationFn: (args: CreateFolderArgs) => createFolder(args, apiClient),
+    onSuccess: () => invalidateFiles()
+  });
+};

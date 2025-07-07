@@ -1,10 +1,16 @@
-import { createMutationHook, ApiClient } from './shared';
+import { useMutation } from '@tanstack/react-query';
+import { ApiClient, useApiClient, useStandardInvalidation } from './shared';
 
 const commitChanges = async (message: string, client: ApiClient): Promise<void> => {
   await client.post('/api/git/commit', { message });
 };
 
-export const useCommitChangesMutation = createMutationHook(
-  commitChanges,
-  { invalidateQueries: 'git' }
-);
+export const useCommitChangesMutation = () => {
+  const apiClient = useApiClient();
+  const { invalidateGit } = useStandardInvalidation();
+  
+  return useMutation({
+    mutationFn: (message: string) => commitChanges(message, apiClient),
+    onSuccess: () => invalidateGit()
+  });
+};

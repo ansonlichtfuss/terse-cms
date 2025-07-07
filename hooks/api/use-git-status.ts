@@ -1,4 +1,5 @@
-import { ApiClient, createMutationHook, createQueryHook, queryKeys } from './shared';
+import { useQuery, useMutation } from '@tanstack/react-query';
+import { ApiClient, queryKeys, useApiClient, useStandardInvalidation } from './shared';
 
 const fetchGitStatus = async (client: ApiClient): Promise<string[]> => {
   // Stage all changes before fetching status
@@ -12,6 +13,21 @@ const stageGitChanges = async (_: void, client: ApiClient): Promise<void> => {
   await client.post('/api/git/stage', {});
 };
 
-export const useGitStatusQuery = createQueryHook(queryKeys.gitStatus, fetchGitStatus);
+export const useGitStatusQuery = () => {
+  const apiClient = useApiClient();
+  
+  return useQuery({
+    queryKey: queryKeys.gitStatus(apiClient.getRepositoryId()),
+    queryFn: () => fetchGitStatus(apiClient)
+  });
+};
 
-export const useStageGitChangesMutation = createMutationHook(stageGitChanges, { invalidateQueries: 'git' });
+export const useStageGitChangesMutation = () => {
+  const apiClient = useApiClient();
+  const { invalidateGit } = useStandardInvalidation();
+  
+  return useMutation({
+    mutationFn: () => stageGitChanges(undefined, apiClient),
+    onSuccess: () => invalidateGit()
+  });
+};

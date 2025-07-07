@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import { getDefaultRepositoryId, getRepositoryConfig, getRepositoryLabel, getRepositoryPath } from '../paths';
+import { getRepositoryConfig, getRepositoryPath } from '../paths';
 
 describe('paths', () => {
   const originalEnv = process.env;
@@ -89,38 +89,6 @@ describe('paths', () => {
       process.env.MARKDOWN_ROOT_LABEL_1 = 'Repository One';
       process.env.MARKDOWN_ROOT_DIR_2 = '/repo2/path';
       process.env.MARKDOWN_ROOT_LABEL_2 = 'Repository Two';
-    });
-
-    it('should return correct label for valid repository ID', () => {
-      expect(getRepositoryLabel('1')).toBe('Repository One');
-      expect(getRepositoryLabel('2')).toBe('Repository Two');
-    });
-
-    it('should throw error for invalid repository ID', () => {
-      expect(() => getRepositoryLabel('invalid')).toThrow("Repository with ID 'invalid' not found.");
-    });
-  });
-
-  describe('getDefaultRepositoryId', () => {
-    it('should return first repository ID when multiple repositories are configured', () => {
-      process.env.USE_MOCK_API = 'false';
-      process.env.MARKDOWN_ROOT_DIR_1 = '/repo1/path';
-      process.env.MARKDOWN_ROOT_DIR_2 = '/repo2/path';
-
-      expect(getDefaultRepositoryId()).toBe('1');
-    });
-
-    it('should return "default" for legacy single repository configuration', () => {
-      process.env.USE_MOCK_API = 'false';
-      process.env.MARKDOWN_ROOT_DIR = '/legacy/path';
-
-      expect(getDefaultRepositoryId()).toBe('default');
-    });
-
-    it('should return "mock" when using mock API', () => {
-      process.env.USE_MOCK_API = 'true';
-
-      expect(getDefaultRepositoryId()).toBe('mock');
     });
   });
 });

@@ -10,7 +10,7 @@ import { getRepositoryPath } from './paths';
  * @returns SimpleGit instance configured for the specified repository
  * @throws Error if the repository ID is not found or not provided
  */
-export function getGitInstanceForRepository(repoId: string) {
+export function getGitInstanceForRepository(repoId: string | undefined) {
   if (!repoId) {
     throw new Error('Repository ID is required for git operations');
   }

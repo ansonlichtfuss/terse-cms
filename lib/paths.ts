@@ -96,34 +96,3 @@ export function getRepositoryPath(repoId: string): string {
 
   return repository.path;
 }
-
-/**
- * Gets the label for a specific repository by ID.
- *
- * @param repoId - The repository ID to get the label for
- * @returns The display label for the repository
- * @throws Error if the repository ID is not found
- */
-export function getRepositoryLabel(repoId: string): string {
-  const repositories = getRepositoryConfig();
-  const repository = repositories.find((repo) => repo.id === repoId);
-
-  if (!repository) {
-    throw new Error(`Repository with ID '${repoId}' not found.`);
-  }
-
-  return repository.label;
-}
-
-/**
- * Gets the default repository ID.
- * This is used when no specific repository is requested.
- *
- * @returns The ID of the default repository
- * @throws Error if no repositories are configured
- */
-export function getDefaultRepositoryId(): string {
-  const repositories = getRepositoryConfig();
-  // getRepositoryConfig() now throws if no repositories, so this is safe
-  return repositories[0].id;
-}

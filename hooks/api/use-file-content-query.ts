@@ -1,13 +1,16 @@
-import { createQueryHook, queryKeys, ApiClient } from './shared';
+import { useQuery } from '@tanstack/react-query';
+import { queryKeys, ApiClient, useApiClient } from './shared';
 import type { FileData } from '@/types';
 
 export const useFileContentQuery = (filePath: string) => {
-  return createQueryHook(
-    (repositoryId) => queryKeys.fileContent(filePath, repositoryId),
-    async (client: ApiClient) => {
+  const apiClient = useApiClient();
+  
+  return useQuery({
+    queryKey: queryKeys.fileContent(filePath, apiClient.getRepositoryId()),
+    queryFn: async () => {
       // Use the ApiClient's buildUrl method by adding path as query param
       const endpoint = `/api/files?path=${encodeURIComponent(filePath)}`;
-      const data = await client.get<{ content: string; lastModified: string }>(endpoint);
+      const data = await apiClient.get<{ content: string; lastModified: string }>(endpoint);
       return {
         path: filePath,
         content: data.content,
@@ -15,6 +18,6 @@ export const useFileContentQuery = (filePath: string) => {
         lastModified: data.lastModified
       } as FileData;
     },
-    { enabled: !!filePath }
-  )();
+    enabled: !!filePath
+  });
 };
