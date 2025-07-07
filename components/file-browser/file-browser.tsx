@@ -10,13 +10,16 @@ import { RenameFileDialog } from '@/components/rename-file-dialog';
 import { ConfirmationDialog } from '@/components/ui/confirmation-dialog';
 import { useRepository } from '@/context/repository-context';
 import { useFilesQuery } from '@/hooks/api/use-files-query';
+import { useFileBrowserNavigation } from '@/hooks/file-browser/use-file-browser-navigation';
+import { useFileBrowserSorting } from '@/hooks/file-browser/use-file-browser-sorting';
+import { useFileSelection } from '@/hooks/file-browser/use-file-selection';
+import { useDialogState } from '@/hooks/ui/use-dialog-state';
 import { cn } from '@/lib/utils';
 
 import { CreateFolderDialog } from './create-folder-dialog';
 import styles from './file-browser.module.css';
 import { FileBrowserActions } from './file-browser-actions';
 import { FileItemRow } from './file-item-row';
-import { useFileBrowserState } from './hooks/use-file-browser-state';
 import { useFileOperations } from './hooks/use-file-operations';
 import { useSort } from './hooks/use-sort';
 import type { FileItem } from './types/file-item';
@@ -39,20 +42,16 @@ export function FileBrowser({
   isMobile = false,
   onPathChange // Receive onPathChange prop
 }: FileBrowserProps) {
-  // Use the custom state hook, passing selectedPath and type
-  const {
-    selectedItem,
-    setSelectedItem,
-    moveDialog,
-    renameDialog,
-    deleteDialog,
-    createFolderDialog,
-    currentPath,
-    setCurrentPath,
-    setExpandedFolders,
-    sortConfig,
-    updateSort
-  } = useFileBrowserState({ selectedPath, type });
+  const moveDialog = useDialogState<FileItem>();
+  const renameDialog = useDialogState<FileItem>();
+  const deleteDialog = useDialogState<FileItem>();
+  const createFolderDialog = useDialogState();
+
+  const { selectedItem, setSelectedItem } = useFileSelection({ selectedPath });
+  const { currentPath, setCurrentPath } = useFileBrowserNavigation({
+    selectedPath
+  });
+  const { sortConfig, updateSort } = useFileBrowserSorting({ type });
 
   // Create a handler that calls both setCurrentPath and onPathChange
   const handlePathChange = (path: string) => {
@@ -185,18 +184,6 @@ export function FileBrowser({
       // For S3, add trailing slash for folders
       const formattedPath = path ? `${path}/` : '';
       handlePathChange(formattedPath);
-    }
-
-    // Reset expanded folders when navigating to root
-    if (path === '') {
-      setExpandedFolders(new Set());
-    } else {
-      // Ensure this folder is expanded
-      setExpandedFolders((prev: Set<string>) => {
-        const newSet = new Set(prev);
-        newSet.add(path);
-        return newSet;
-      });
     }
   };
   // Local handler to open delete dialog

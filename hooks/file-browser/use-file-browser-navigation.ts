@@ -16,23 +16,8 @@ export const useFileBrowserNavigation = ({ selectedPath }: UseFileBrowserNavigat
     return '';
   });
 
-  const [expandedFolders, setExpandedFolders] = useState<Set<string>>(() => {
-    const initialExpanded = new Set<string>();
-    if (selectedPath) {
-      const parts = selectedPath.split('/');
-      let current = '';
-      for (let i = 0; i < parts.length - (selectedPath.includes('.') ? 1 : 0); i++) {
-        current = current ? `${current}/${parts[i]}` : parts[i];
-        initialExpanded.add(current);
-      }
-    }
-    return initialExpanded;
-  });
-
   return {
     currentPath,
-    setCurrentPath,
-    expandedFolders,
-    setExpandedFolders
+    setCurrentPath
   };
 };
