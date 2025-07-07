@@ -154,14 +154,16 @@ export function Dashboard({ selectedFilePath, children }: { selectedFilePath?: s
 
   return (
     <div className="h-screen flex flex-col">
-      <header className="border-b flex items-center justify-between bg-dot-pattern">
+      <header className="border-b grid grid-cols-3 items-center bg-dot-pattern">
         <div className="w-[280px] flex items-center gap-2 px-3 py-2">
           <Logo size="sm" withIcon={false} />
           <span className="text-xs text-muted-foreground">v{packageInfo.version}</span>
         </div>
-        <RepositorySwitcher />
+        <div className="flex justify-center">
+          <RepositorySwitcher />
+        </div>
 
-        <div className="flex items-center gap-2 px-3 py-2">
+        <div className="justify-end flex items-center gap-2 px-3 py-2">
           <ThemeToggle />
           <GitBranchDisplay />
           <Button
