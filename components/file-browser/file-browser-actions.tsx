@@ -11,7 +11,7 @@ import { cn } from '@/lib/utils';
 import type { FileItem } from './file-browser'; // Import FileItem type
 import { SortDropdown } from './sort-dropdown';
 import type { SortConfig } from './types/sorting';
-import { useFileOperations } from './use-file-operations'; // Import useFileOperations
+import { useFileOperations } from './hooks/use-file-operations'; // Import useFileOperations
 
 interface FileBrowserActionsProps {
   type: 'files' | 'media';

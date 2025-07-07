@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 
-import type { FileItem } from './types/file-item';
-import type { SortConfig, SortPreferences } from './types/sorting';
+import type { FileItem } from '../types/file-item';
+import type { SortConfig, SortPreferences } from '../types/sorting';
 import {
   getSortConfigForType,
   loadSortPreferences,
   saveSortPreferences,
   updateSortPreferences
-} from './utils/persistence';
+} from '../utils/persistence';
 
 interface UseFileBrowserStateProps {
   isMobile?: boolean;

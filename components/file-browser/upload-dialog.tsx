@@ -12,9 +12,9 @@ import {
 
 import { Breadcrumbs } from '../breadcrumbs/breadcrumbs';
 import { FileUploadItem } from './file-upload-item'; // Import FileUploadItem component
-import { useDragAndDrop } from './use-drag-and-drop'; // Import useDragAndDrop hook
-import { useFileUploads } from './use-file-uploads'; // Import useFileUploads hook
-import { type FileUploadState } from './use-file-uploads'; // Import FileUploadState type
+import { useDragAndDrop } from './hooks/use-drag-and-drop'; // Import useDragAndDrop hook
+import { useFileUploads } from './hooks/use-file-uploads'; // Import useFileUploads hook
+import { type FileUploadState } from './hooks/use-file-uploads'; // Import FileUploadState type
 
 interface UploadDialogProps {
   isOpen: boolean;

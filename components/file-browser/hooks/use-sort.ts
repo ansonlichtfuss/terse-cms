@@ -1,8 +1,8 @@
 import { useMemo } from 'react';
 
-import type { FileItem } from './types/file-item';
-import type { SortConfig, SortDirection, SortField } from './types/sorting';
-import { sortItems } from './utils/sorting';
+import type { FileItem } from '../types/file-item';
+import type { SortConfig, SortDirection, SortField } from '../types/sorting';
+import { sortItems } from '../utils/sorting';
 
 export interface UseSortProps {
   items: FileItem[];

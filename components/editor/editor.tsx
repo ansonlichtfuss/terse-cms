@@ -15,7 +15,7 @@ import { getUserPreferences, saveUserPreferences } from '@/lib/user-preferences'
 import type { FileData } from '@/types';
 import { formatModificationTime } from '@/utils/date-utils';
 
-import { useFileOperations } from '../file-browser/use-file-operations';
+import { useFileOperations } from '../file-browser/hooks/use-file-operations';
 
 interface EditorProps {
   file: FileData;

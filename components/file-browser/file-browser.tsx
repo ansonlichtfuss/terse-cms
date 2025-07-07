@@ -2,29 +2,26 @@
 
 import { Home } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import React, { useState } from 'react'; // Import React and useState
+import React, { useState } from 'react';
 
 import { Breadcrumbs } from '@/components/breadcrumbs/breadcrumbs';
 import { MoveFileDialog } from '@/components/file-browser/move-file-dialog';
 import { RenameFileDialog } from '@/components/rename-file-dialog';
 import { ConfirmationDialog } from '@/components/ui/confirmation-dialog';
 import { useRepository } from '@/context/repository-context';
-// Import the new Tanstack Query hook
 import { useFilesQuery } from '@/hooks/api/use-files-query';
 import { cn } from '@/lib/utils';
 
-// Import the new hooks and components
-import { CreateFolderDialog } from './create-folder-dialog'; // Assuming dialogs are also moved
+import { CreateFolderDialog } from './create-folder-dialog';
 import styles from './file-browser.module.css';
 import { FileBrowserActions } from './file-browser-actions';
 import { FileItemRow } from './file-item-row';
-// Import and re-export FileItem type from types file for backward compatibility
+import { useFileBrowserState } from './hooks/use-file-browser-state';
+import { useFileOperations } from './hooks/use-file-operations';
+import { useSort } from './hooks/use-sort';
 import type { FileItem } from './types/file-item';
-import UploadDialog from './upload-dialog'; // Import UploadDialog from the same directory
-import { useFileBrowserState } from './use-file-browser-state';
-import { useFileOperations } from './use-file-operations';
-import { useSort } from './use-sort';
-import { getItemName, getItemPath } from './utils'; // Import utility functions
+import UploadDialog from './upload-dialog';
+import { getItemName, getItemPath } from './utils';
 export type { FileItem } from './types/file-item';
 
 interface FileBrowserProps {

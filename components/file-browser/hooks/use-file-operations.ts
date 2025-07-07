@@ -13,8 +13,8 @@ import { useRenameFileMutation } from '@/hooks/api/use-rename-file-mutation';
 // Import the new S3 mutation hooks
 import { useDeleteS3ItemMutation, useMoveS3ItemMutation } from '@/hooks/api/use-s3-operations';
 
-import type { FileItem } from './file-browser'; // Assuming FileItem type remains in the main file for now
-import { getItemPath } from './utils'; // Import utility function
+import type { FileItem } from '../file-browser'; // Assuming FileItem type remains in the main file for now
+import { getItemPath } from '../utils'; // Import utility function
 
 interface UseFileOperationsProps {
   type: 'files' | 'media';

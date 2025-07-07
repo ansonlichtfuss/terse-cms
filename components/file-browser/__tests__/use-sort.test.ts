@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type { FileItem } from '../types/file-item';
 import type { SortConfig, SortDirection, SortField } from '../types/sorting';
-import { useSort } from '../use-sort';
+import { useSort } from '../hooks/use-sort';
 
 // Mock the sorting utility
 vi.mock('../utils/sorting', () => ({
