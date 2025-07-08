@@ -16,6 +16,7 @@ import { useDialogState } from '@/hooks/ui/use-dialog-state';
 import { useRepositoryFromUrl } from '@/hooks/use-repository-from-url';
 import { cn } from '@/lib/utils';
 
+import { ScrollableContainer } from '../ui/scrollable-container';
 import { CreateFolderDialog } from './create-folder-dialog';
 import { FileBrowserActions } from './file-browser-actions';
 import { FileItemRow } from './file-item-row';
@@ -241,7 +242,12 @@ export function FileBrowser({
       </div>
 
       {/* Main content area with padding at the bottom to account for the action bar */}
-      <div className="mx-4 pt-2 overflow-y-auto h-full">
+      <ScrollableContainer
+        direction="vertical"
+        gradientSize={64}
+        dependencies={[currentPath]}
+        className={cn('mx-4 pt-2 overflow-y-auto h-full')}
+      >
         <div className={cn('space-y-1 pb-20 max-h-0')}>
           {isLoading && (
             <div className="flex items-center justify-center h-20 text-muted-foreground text-xs">Loading...</div>
@@ -272,9 +278,9 @@ export function FileBrowser({
           {!isLoading && !error && displayItems.length === 0 && (
             <div className="flex items-center justify-center h-20 text-muted-foreground text-xs">No items found</div>
           )}
-          <div className="h-10"></div>
+          <div className="h-3"></div>
         </div>
-      </div>
+      </ScrollableContainer>
 
       {/* Create Folder Dialog */}
       <CreateFolderDialog

@@ -8,6 +8,9 @@ import { GitHistorySidebar } from '@/components/git-history-sidebar';
 import { MetadataDisplay } from '@/components/metadata/metadata-display';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { cn } from '@/lib/utils';
+
+import { ScrollableContainer } from './ui/scrollable-container';
 
 interface FileDetailSidebarProps {
   content: string;
@@ -81,7 +84,12 @@ export function FileDetailSidebar({ content, filePath, isVisible, onToggle }: Fi
           </Button>
         </div>
 
-        <div className="h-full overflow-y-auto ">
+        <ScrollableContainer
+          direction="vertical"
+          gradientSize={64}
+          dependencies={[Object.keys(frontMatter)]}
+          className={cn('h-full overflow-y-auto ')}
+        >
           <div className="px-4 pt-1 max-h-0">
             <TabsContent value="metadata">
               <MetadataDisplay frontMatter={frontMatter} errorMessage={frontMatterError} />
@@ -91,7 +99,7 @@ export function FileDetailSidebar({ content, filePath, isVisible, onToggle }: Fi
               <GitHistorySidebar filePath={filePath} isVisible={isVisible} />
             </TabsContent>
           </div>
-        </div>
+        </ScrollableContainer>
       </Tabs>
     </div>
   );
