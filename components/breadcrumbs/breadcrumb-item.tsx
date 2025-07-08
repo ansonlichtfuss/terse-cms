@@ -30,25 +30,12 @@ export function BreadcrumbItem({
     isClickable && styles['breadcrumb-item-clickable'],
     styles['breadcrumb-item'],
     isLast && styles['breadcrumb-current'],
-    isClickable ? 'max-w-20 truncate' : '',
     isClickable ? 'cursor-pointer' : 'cursor-default'
   );
 
-  if (type === 'files') {
-    return isLast || !isClickable ? (
-      <span className={itemClassName} title={part} style={{ minWidth: '30px' }}>
-        {part}
-      </span>
-    ) : (
-      <span className={itemClassName} title={part} onClick={handleClick} style={{ minWidth: '30px' }}>
-        {part}
-      </span>
-    );
-  }
-
   return (
-    <span className={itemClassName} onClick={handleClick} title={part} style={{ minWidth: '30px' }}>
+    <div className={itemClassName} title={part} onClick={isClickable ? handleClick : undefined}>
       {part}
-    </span>
+    </div>
   );
 }

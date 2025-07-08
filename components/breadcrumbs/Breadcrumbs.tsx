@@ -61,7 +61,7 @@ export function Breadcrumbs({
             currentAccumulatedPath={currentAccumulatedPath}
             onNavigate={onNavigate}
             type={type}
-            isClickable={isClickable}
+            isClickable={!isLast && isClickable}
           />
         </React.Fragment>
       );
