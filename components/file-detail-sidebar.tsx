@@ -62,7 +62,7 @@ export function FileDetailSidebar({ content, filePath, isVisible, onToggle }: Fi
   }
 
   return (
-    <div className="w-[280px] border rounded-md relative">
+    <div className="w-[280px] border rounded-md relative overflow-hidden">
       <Tabs
         defaultValue="metadata"
         value={activeTab}

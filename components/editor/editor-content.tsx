@@ -70,7 +70,6 @@ export function handleToolbarAction(
   const textarea = textareaRef.current;
   const start = textarea.selectionStart;
   const end = textarea.selectionEnd;
-  const selectedText = content.substring(start, end);
 
   let newContent = content;
   let newCursorPos = end;
