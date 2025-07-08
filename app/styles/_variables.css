@@ -65,7 +65,7 @@
 
   /* Custom gradients - desaturated dark blue theme */
   --gradient-primary: linear-gradient(135deg, var(--color-blue-300), var(--color-blue-600));
-  --gradient-secondary: linear-gradient(135deg, var(--color-gray-50), var(--color-blue-200));
+  --gradient-secondary: linear-gradient(135deg, var(--color-gray-50), var(--color-blue-100));
   --gradient-primary-darker: linear-gradient(135deg, var(--color-blue-700), var(--color-blue-800));
   --gradient-secondary-darker: linear-gradient(135deg, var(--color-gray-200), var(--color-gray-300));
   --gradient-destructive: linear-gradient(135deg, var(--color-red-500), var(--color-red-600));
@@ -73,6 +73,7 @@
   --gradient-accent: linear-gradient(135deg, var(--color-blue-700), var(--color-blue-800));
 
   --gradient-destructive: linear-gradient(135deg, var(--color-red-500), var(--color-red-600));
+  --gradient-transparent-cutoff: linear-gradient(0deg, var(--background), rgba(255, 255, 25, 0));
 
   /* Patterns - 1px spacing and more subtle */
   --dot-pattern: radial-gradient(circle, var(--color-gray-300) 0.5px, transparent 0.5px);
@@ -124,6 +125,8 @@
   --gradient-accent: linear-gradient(135deg, var(--color-blue-600), var(--color-blue-700));
 
   --gradient-destructive: linear-gradient(135deg, var(--color-red-600), var(--color-red-700));
+
+  --gradient-transparent-cutoff: linear-gradient(0deg, var(--background), rgba(255, 255, 25, 0));
 
   /* Patterns for dark mode - 1px spacing and more subtle */
   --dot-pattern: radial-gradient(circle, var(--color-gray-700) 0.5px, transparent 0.5px);

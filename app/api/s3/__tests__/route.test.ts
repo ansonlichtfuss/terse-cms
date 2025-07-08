@@ -398,5 +398,87 @@ describe('/api/s3', () => {
       const jsonResponse = await response.json();
       expect(jsonResponse).toHaveProperty('error', 'Failed to delete S3 object');
     });
+
+    it('should handle folder URL generation with S3_FOLDER_URL_BASE', async () => {
+      const { shouldUseMockApi } = await import('@/lib/env');
+      vi.mocked(shouldUseMockApi).mockReturnValue(false);
+
+      process.env.S3_FOLDER_URL_BASE = 'https://custom-cdn.com/';
+
+      const mockResponse = {
+        Contents: [
+          {
+            Key: 'folder/',
+            Size: 0,
+            LastModified: new Date('2023-01-01')
+          }
+        ],
+        CommonPrefixes: []
+      };
+      mockS3Send.mockResolvedValue(mockResponse);
+
+      const request = new NextRequest('http://localhost/api/s3');
+      const response = await GET(request);
+
+      expect(response.status).toBe(200);
+      const jsonResponse = await response.json();
+      expect(jsonResponse.items[0].url).toBe('https://custom-cdn.com/folder/');
+    });
+
+    it('should handle file URL generation with S3_FILE_URL_BASE', async () => {
+      const { shouldUseMockApi } = await import('@/lib/env');
+      vi.mocked(shouldUseMockApi).mockReturnValue(false);
+
+      process.env.S3_FILE_URL_BASE = 'https://custom-cdn.com/';
+
+      const mockResponse = {
+        Contents: [
+          {
+            Key: 'file.jpg',
+            Size: 1024,
+            LastModified: new Date('2023-01-01')
+          }
+        ],
+        CommonPrefixes: []
+      };
+      mockS3Send.mockResolvedValue(mockResponse);
+
+      const request = new NextRequest('http://localhost/api/s3');
+      const response = await GET(request);
+
+      expect(response.status).toBe(200);
+      const jsonResponse = await response.json();
+      expect(jsonResponse.items[0].url).toBe('https://custom-cdn.com/file.jpg');
+    });
+
+    it('should handle undefined item keys in S3 response', async () => {
+      const { shouldUseMockApi } = await import('@/lib/env');
+      vi.mocked(shouldUseMockApi).mockReturnValue(false);
+
+      const mockResponse = {
+        Contents: [
+          {
+            Key: undefined,
+            Size: 1024,
+            LastModified: new Date('2023-01-01')
+          }
+        ],
+        CommonPrefixes: []
+      };
+      mockS3Send.mockResolvedValue(mockResponse);
+
+      const request = new NextRequest('http://localhost/api/s3');
+      const response = await GET(request);
+
+      expect(response.status).toBe(200);
+      const jsonResponse = await response.json();
+      expect(jsonResponse.items[0]).toEqual({
+        key: '',
+        type: 'file',
+        size: 1024,
+        lastModified: '2023-01-01T00:00:00.000Z',
+        url: ''
+      });
+    });
   });
 });

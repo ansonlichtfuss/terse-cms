@@ -99,6 +99,7 @@ describe('/api/files', () => {
       expect(mockWriteFile).toHaveBeenCalledWith('test.md', '# Test Content');
     });
 
+
     it('should return 400 if path is missing', async () => {
       const requestBody = { content: '# Test Content' };
       const request = new NextRequest('http://localhost/api/files', {

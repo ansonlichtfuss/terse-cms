@@ -200,11 +200,11 @@ export function Editor({ file, onSave }: EditorProps) {
   };
 
   return (
-    <div className="h-full flex">
+    <div className="h-full flex gap-2 pr-2 pb-2">
       {/* Editor */}
       <div className="flex-1 flex flex-col relative">
         {/* Header */}
-        <div className="border-b p-2 flex items-center justify-between bg-gradient-secondary">
+        <div className="border rounded-md p-2 flex items-center justify-between bg-gradient-secondary mb-2">
           <div className="flex-1 truncate">
             <h2
               className="text-sm font-semibold truncate flex items-center cursor-pointer hover:text-primary"
@@ -222,18 +222,14 @@ export function Editor({ file, onSave }: EditorProps) {
         </div>
 
         {/* Editor Toolbar */}
-        <div className="px-2 pt-2">
-          <EditorToolbar
-            onAction={handleToolbarActionClick}
-            onImageClick={() => mediaDialog.openDialog()}
-            textareaRef={textareaRef}
-          />
-        </div>
+        <EditorToolbar
+          onAction={handleToolbarActionClick}
+          onImageClick={() => mediaDialog.openDialog()}
+          textareaRef={textareaRef}
+        />
 
         {/* Markdown Editor */}
-        <div className="flex-1 p-2 m-0">
-          <EditorContent content={content} onChange={handleContentChange} textareaRef={textareaRef} />
-        </div>
+        <EditorContent content={content} onChange={handleContentChange} textareaRef={textareaRef} />
       </div>
 
       {/* Unified Sidebar - now with tabs for metadata and history */}

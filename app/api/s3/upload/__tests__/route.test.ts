@@ -288,5 +288,48 @@ describe('/api/s3/upload', () => {
       expect(jsonResponse.success).toBe(true);
       expect(jsonResponse.key).toBe('large.txt');
     });
+
+    it('should handle custom S3 endpoint with region URL', async () => {
+      const { shouldUseMockApi } = await import('@/lib/env');
+      vi.mocked(shouldUseMockApi).mockReturnValue(false);
+
+      process.env.S3_REGION = 'http://localhost:9000';
+      mockS3Send.mockResolvedValue({});
+
+      const mockFile = new File(['test content'], 'test.jpg', { type: 'image/jpeg' });
+      const formData = new FormData();
+      formData.append('file', mockFile);
+
+      const request = new NextRequest('http://localhost/api/s3/upload', {
+        method: 'POST',
+        body: formData
+      });
+
+      const response = await POST(request);
+
+      expect(response.status).toBe(200);
+      const jsonResponse = await response.json();
+      expect(jsonResponse).toEqual({
+        success: true,
+        key: 'test.jpg',
+        url: 'https://test-bucket.s3.http://localhost:9000.amazonaws.com/test.jpg'
+      });
+    });
+
+    it('should handle formData parsing errors', async () => {
+      const { shouldUseMockApi } = await import('@/lib/env');
+      vi.mocked(shouldUseMockApi).mockReturnValue(false);
+
+      const request = new NextRequest('http://localhost/api/s3/upload', {
+        method: 'POST',
+        body: 'invalid form data'
+      });
+
+      const response = await POST(request);
+
+      expect(response.status).toBe(500);
+      const jsonResponse = await response.json();
+      expect(jsonResponse).toEqual({ error: 'Failed to upload file' });
+    });
   });
 });

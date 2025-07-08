@@ -22,7 +22,7 @@ export function EditorContent({ content, onChange, textareaRef }: EditorContentP
       ref={textareaRef}
       value={content}
       onChange={handleContentChange}
-      className="w-full h-full min-h-[calc(100vh-12rem)] font-mono resize-none p-2 text-xs"
+      className="flex-auto w-full h-full font-mono resize-none p-2 text-xs rounded-t-none"
       placeholder="# Start writing your markdown here..."
     />
   );

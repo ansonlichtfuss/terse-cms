@@ -317,5 +317,29 @@ describe('/api/s3/folder', () => {
       const jsonResponse = await response.json();
       expect(jsonResponse.key).toBe('documentsnew-folder/');
     });
+
+    it('should handle custom S3 endpoint', async () => {
+      const { shouldUseMockApi } = await import('@/lib/env');
+      vi.mocked(shouldUseMockApi).mockReturnValue(false);
+
+      process.env.S3_REGION = 'http://localhost:9000';
+      mockS3Send.mockResolvedValue({});
+
+      const requestBody = { path: 'documents/', name: 'new-folder' };
+      const request = new NextRequest('http://localhost/api/s3/folder', {
+        method: 'POST',
+        body: JSON.stringify(requestBody),
+        headers: { 'Content-Type': 'application/json' }
+      });
+
+      const response = await POST(request);
+
+      expect(response.status).toBe(200);
+      const jsonResponse = await response.json();
+      expect(jsonResponse).toEqual({
+        success: true,
+        key: 'documents/new-folder/'
+      });
+    });
   });
 });

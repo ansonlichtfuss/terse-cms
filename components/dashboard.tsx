@@ -154,7 +154,7 @@ export function Dashboard({ selectedFilePath, children }: { selectedFilePath?: s
 
   return (
     <div className="h-screen flex flex-col">
-      <header className="border-b grid grid-cols-3 items-center bg-dot-pattern">
+      <header className="grid grid-cols-3 items-center bg-dot-pattern">
         <div className="w-[280px] flex items-center gap-2 px-3 py-2">
           <Logo size="sm" withIcon={false} />
           <span className="text-xs text-muted-foreground">v{packageInfo.version}</span>
@@ -221,7 +221,7 @@ export function Dashboard({ selectedFilePath, children }: { selectedFilePath?: s
               </SheetContent>
             </Sheet>
           </div>
-          <div className="flex-1 overflow-auto">
+          <div className="flex-1">
             {children || (
               <div className="flex items-center justify-center h-full text-xs text-muted-foreground">
                 Select a file to edit
@@ -231,10 +231,10 @@ export function Dashboard({ selectedFilePath, children }: { selectedFilePath?: s
         </div>
       ) : (
         <div className="flex h-full">
-          <div className={cn(containerStyles['file-browser-container'], 'w-[280px] border-r max-h-full')}>
+          <div className={cn(containerStyles['file-browser-container'], 'w-[280px] max-h-full')}>
             {renderSidebarContent()}
           </div>
-          <div className="flex-1 overflow-auto">
+          <div className="flex-1">
             {children || (
               <div className="flex items-center justify-center h-full text-sm text-muted-foreground">
                 Select a file to edit

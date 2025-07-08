@@ -16,7 +16,7 @@ export function EditorToolbar({ onAction, onImageClick, textareaRef }: EditorToo
 
   return (
     <TooltipProvider delayDuration={300}>
-      <div className="flex items-center gap-1 p-1 border rounded-md bg-gradient-secondary">
+      <div className="flex items-center gap-1 p-1 border rounded-md rounded-b-none border-b-0">
         {toolbarItems.map((group, groupIndex) => (
           <div key={group.group} className="flex items-center">
             {groupIndex > 0 && <Separator orientation="vertical" className="mx-1 h-6" />}

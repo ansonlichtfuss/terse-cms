@@ -62,7 +62,7 @@ export function UnifiedSidebar({ content, filePath, isVisible, onToggle }: Unifi
   }
 
   return (
-    <div className="w-64 border-l relative unified-sidebar">
+    <div className="w-64 border rounded-md relative unified-sidebar">
       <Tabs
         defaultValue="metadata"
         value={activeTab}
