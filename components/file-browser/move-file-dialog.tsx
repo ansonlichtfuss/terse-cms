@@ -8,8 +8,6 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '
 import { useFileTreeQuery } from '@/hooks/api/use-file-tree-query';
 import { cn } from '@/lib/utils';
 
-import styles from './move-file-dialog.module.css';
-
 interface S3Item {
   key: string;
   type: 'file' | 'folder';
@@ -160,7 +158,7 @@ export function MoveFileDialog({
             <div className="w-5 mr-1" />
           )}
           <Folder className="h-4 w-4 mr-2 text-muted-foreground shrink-0" />
-          <span className={`text-xs ${styles['folder-name']}`}>{node.name}</span>
+          <span className={`text-xs text-wrap wrap-break-word`}>{node.name}</span>
         </div>
 
         {node.isExpanded && node.children.length > 0 && (

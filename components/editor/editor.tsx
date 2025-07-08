@@ -7,9 +7,8 @@ import { useDebounce } from 'use-debounce';
 
 import { EditorContent, handleToolbarAction } from '@/components/editor/editor-content';
 import { EditorToolbar } from '@/components/editor/editor-toolbar';
-import { MediaDialog } from '@/components/media-dialog';
+import { FileDetailSidebar } from '@/components/file-detail-sidebar';
 import { RenameFileDialog } from '@/components/rename-file-dialog';
-import { UnifiedSidebar } from '@/components/unified-sidebar';
 import { useGitStatus } from '@/context/git-status-context';
 import { useDialogState } from '@/hooks/ui/use-dialog-state';
 import { getUserPreferences, saveUserPreferences } from '@/lib/user-preferences';
@@ -115,37 +114,6 @@ export function Editor({ file, onSave }: EditorProps) {
     }
   };
 
-  // Handle media selection
-  const handleMediaSelect = (url: string) => {
-    if (!textareaRef.current) return;
-
-    const textarea = textareaRef.current;
-    const startPos = textarea.selectionStart;
-    const endPos = textarea.selectionEnd;
-
-    // Insert markdown image syntax at cursor position
-    const imageMarkdown = `![Alt text](${url})`;
-    const newContent = content.substring(0, startPos) + imageMarkdown + content.substring(endPos);
-
-    setContent(newContent);
-
-    // Update cursor position to after the inserted image
-    const newCursorPos = startPos + imageMarkdown.length;
-
-    // Set the new cursor position after state update
-    setTimeout(() => {
-      textarea.focus();
-      textarea.setSelectionRange(newCursorPos, newCursorPos);
-    }, 0);
-
-    // Auto-save the updated content
-    if (!initialLoadRef.current && file) {
-      debouncedSave(file.path, newContent);
-    }
-
-    mediaDialog.closeDialog();
-  };
-
   // Handle toolbar actions
   const handleToolbarActionClick = (
     action: string,
@@ -233,18 +201,11 @@ export function Editor({ file, onSave }: EditorProps) {
       </div>
 
       {/* Unified Sidebar - now with tabs for metadata and history */}
-      <UnifiedSidebar
+      <FileDetailSidebar
         content={content}
         filePath={file?.path || ''}
         isVisible={isSidebarVisible}
         onToggle={toggleSidebar}
-      />
-
-      {/* Media Dialog for Image Selection */}
-      <MediaDialog
-        open={mediaDialog.isOpen}
-        onOpenChange={(open) => (open ? mediaDialog.openDialog() : mediaDialog.closeDialog())}
-        onSelect={handleMediaSelect}
       />
 
       {/* Rename File Dialog */}

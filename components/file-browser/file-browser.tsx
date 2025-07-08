@@ -17,7 +17,6 @@ import { useRepositoryFromUrl } from '@/hooks/use-repository-from-url';
 import { cn } from '@/lib/utils';
 
 import { CreateFolderDialog } from './create-folder-dialog';
-import styles from './file-browser.module.css';
 import { FileBrowserActions } from './file-browser-actions';
 import { FileItemRow } from './file-item-row';
 import { useFileOperations } from './hooks/use-file-operations';
@@ -218,7 +217,7 @@ export function FileBrowser({
   };
 
   return (
-    <div className={styles['file-browser']}>
+    <div className="flex flex-col h-full">
       {/* Use the FileBrowserActions component */}
       <FileBrowserActions
         type={type}
@@ -242,19 +241,20 @@ export function FileBrowser({
       </div>
 
       {/* Main content area with padding at the bottom to account for the action bar */}
-      <div className={cn('px-4 pt-2 pb-8 overflow-y-auto max-h-[calc(100vh-180px)]')}>
-        {isLoading && (
-          <div className="flex items-center justify-center h-20 text-muted-foreground text-xs">Loading...</div>
-        )}
-        {error && (
-          <div className="flex items-center justify-center h-20 text-destructive text-xs">
-            Error loading files: {error.message}
-          </div>
-        )}
-        {!isLoading && !error && displayItems.length > 0 && (
-          // Render list view using FileItemRow component
-          <div className="space-y-1 px-0 max-h-full">
-            {displayItems.map((item) => (
+      <div className="mx-4 pt-2 overflow-y-auto h-full">
+        <div className={cn('space-y-1 pb-20 max-h-0')}>
+          {isLoading && (
+            <div className="flex items-center justify-center h-20 text-muted-foreground text-xs">Loading...</div>
+          )}
+          {error && (
+            <div className="flex items-center justify-center h-20 text-destructive text-xs">
+              Error loading files: {error.message}
+            </div>
+          )}
+          {!isLoading &&
+            !error &&
+            displayItems.length > 0 &&
+            displayItems.map((item) => (
               <FileItemRow
                 key={getItemPath(item)}
                 item={item}
@@ -269,11 +269,11 @@ export function FileBrowser({
                 isMoving={isMovingFile || isMovingS3} // Pass combined loading state
               />
             ))}
-          </div>
-        )}
-        {!isLoading && !error && displayItems.length === 0 && (
-          <div className="flex items-center justify-center h-20 text-muted-foreground text-xs">No items found</div>
-        )}
+          {!isLoading && !error && displayItems.length === 0 && (
+            <div className="flex items-center justify-center h-20 text-muted-foreground text-xs">No items found</div>
+          )}
+          <div className="h-10"></div>
+        </div>
       </div>
 
       {/* Create Folder Dialog */}

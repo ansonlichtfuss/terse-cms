@@ -8,7 +8,6 @@ import { useEffect, useState } from 'react';
 import { FileBrowser } from '@/components/file-browser/file-browser';
 import { GitBranchDisplay } from '@/components/git/git-branch-display';
 import { Logo } from '@/components/logo';
-import { MediaManager } from '@/components/media-manager';
 import { RepositorySwitcher } from '@/components/repository-switcher';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -26,10 +25,10 @@ import { useCommitChangesMutation } from '@/hooks/api/use-commit-changes-mutatio
 import { useRevertChangesMutation } from '@/hooks/api/use-revert-changes-mutation';
 import { useDialogState } from '@/hooks/ui/use-dialog-state';
 import { useMediaQuery } from '@/hooks/use-media-query';
-import { cn } from '@/lib/utils'; // Import cn utility
 
+// Import cn utility
 import packageInfo from '../package.json';
-import containerStyles from './file-browser/file-browser-container.module.css'; // Import the container styles
+// Import the container styles
 import { GitCommitDialog } from './git/git-commit-dialog';
 import { ReverseChangesDialog } from './git/reverse-changes-dialog';
 
@@ -110,50 +109,48 @@ export function Dashboard({ selectedFilePath, children }: { selectedFilePath?: s
   };
 
   const renderSidebarContent = () => (
-    <div className={containerStyles['file-browser-container']}>
-      <Tabs defaultValue="files" value={selectedTab} onValueChange={setSelectedTab}>
-        <div className="m-2">
-          <TabsList className="inline-grid w-full grid-cols-2">
-            <TabsTrigger value="files" className="text-sm">
-              Files
-            </TabsTrigger>
-            <TabsTrigger value="media" className="text-sm">
-              Media
-            </TabsTrigger>
-          </TabsList>
-        </div>
-        <TabsContent value="files">
-          <FileBrowser
-            selectedPath={contentBrowserPath} // Pass content path state
-            onPathChange={(path, _type) => {
-              // Receive type parameter
-              setContentBrowserPath(path);
-            }}
-            type="files"
-          />
-        </TabsContent>
-        <TabsContent value="media">
-          <MediaManager
-            selectedPath={mediaBrowserPath} // Pass media path state
-            onPathChange={(path, type) => {
-              // Receive type parameter
-              // Ensure media paths have a trailing slash for folders (except root)
-              const formattedPath = path && type === 'media' && !path.endsWith('/') ? `${path}/` : path;
-              setMediaBrowserPath(formattedPath);
-            }}
-            onSelect={(_url) => {
-              // if (selectedFile) {
-              // Logic to insert media URL into editor or YAML front matter
-              // }
-            }}
-          />
-        </TabsContent>
-      </Tabs>
-    </div>
+    <Tabs className="w-[280px] flex flex-col" defaultValue="files" value={selectedTab} onValueChange={setSelectedTab}>
+      <TabsList className="px-3 inline-grid w-full grid-cols-2">
+        <TabsTrigger value="files" className="text-sm">
+          Files
+        </TabsTrigger>
+        <TabsTrigger value="media" className="text-sm">
+          Media
+        </TabsTrigger>
+      </TabsList>
+      <TabsContent value="files" className="flex flex-col flex-auto">
+        <FileBrowser
+          type="files"
+          selectedPath={contentBrowserPath} // Pass content path state
+          onPathChange={(path, _type) => {
+            // Receive type parameter
+            setContentBrowserPath(path);
+          }}
+        />
+      </TabsContent>
+      <TabsContent value="media" className="flex flex-col flex-auto">
+        <FileBrowser
+          type="media"
+          selectedPath={mediaBrowserPath}
+          isMobile={isMobile}
+          onPathChange={(path, type) => {
+            // Receive type parameter
+            // Ensure media paths have a trailing slash for folders (except root)
+            const formattedPath = path && type === 'media' && !path.endsWith('/') ? `${path}/` : path;
+            setMediaBrowserPath(formattedPath);
+          }}
+          onSelect={(_url) => {
+            // if (selectedFile) {
+            // Logic to insert media URL into editor or YAML front matter
+            // }
+          }}
+        />
+      </TabsContent>
+    </Tabs>
   );
 
   return (
-    <div className="h-screen flex flex-col">
+    <>
       <header className="grid grid-cols-3 items-center bg-dot-pattern">
         <div className="w-[280px] flex items-center gap-2 px-3 py-2">
           <Logo size="sm" withIcon={false} />
@@ -207,7 +204,7 @@ export function Dashboard({ selectedFilePath, children }: { selectedFilePath?: s
       </header>
 
       {isMobile ? (
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col">
           <div className="p-2">
             <Sheet>
               <SheetTrigger asChild>
@@ -230,11 +227,9 @@ export function Dashboard({ selectedFilePath, children }: { selectedFilePath?: s
           </div>
         </div>
       ) : (
-        <div className="flex h-full">
-          <div className={cn(containerStyles['file-browser-container'], 'w-[280px] max-h-full')}>
-            {renderSidebarContent()}
-          </div>
-          <div className="flex-1">
+        <div className="flex flex-auto">
+          {renderSidebarContent()}
+          <div className="flex-auto">
             {children || (
               <div className="flex items-center justify-center h-full text-sm text-muted-foreground">
                 Select a file to edit
@@ -258,6 +253,6 @@ export function Dashboard({ selectedFilePath, children }: { selectedFilePath?: s
         onRevert={handleRevert}
         isReverting={isReverting}
       />
-    </div>
+    </>
   );
 }

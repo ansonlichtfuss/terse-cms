@@ -8,6 +8,7 @@ import { ReactQueryClientProvider } from '@/components/react-query-client-provid
 import { ThemeProvider } from '@/components/theme-provider';
 import { Toaster } from '@/components/ui/toaster';
 import { GitStatusProvider } from '@/context/git-status-context';
+import { cn } from '@/lib/utils';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -20,7 +21,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <ReactQueryClientProvider>
       <html lang="en" suppressHydrationWarning>
-        <body className={inter.className}>
+        <body className={cn(inter.className, 'max-h-screen min-h-screen flex flex-col')}>
           <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
             <GitStatusProvider>{children}</GitStatusProvider>
           </ThemeProvider>

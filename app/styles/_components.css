@@ -56,11 +56,11 @@
 }
 
 /* Add compact-tabs class */
-.compact-tabs [role="tablist"] {
+.compact-tabs [role='tablist'] {
   height: 28px; /* Even more compact */
 }
 
-.compact-tabs [role="tab"] {
+.compact-tabs [role='tab'] {
   height: 28px;
   padding: 0.15rem 0.4rem;
   font-size: 0.65rem;
@@ -68,7 +68,7 @@
 }
 
 /* Override any remaining border-radius on tabs */
-[role="tab"] {
+[role='tab'] {
   border-radius: 0 !important;
 }
 
@@ -90,14 +90,17 @@
   border: 1px solid var(--border);
   background-color: var(--muted);
   cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
   width: 100%;
   max-width: 100%;
 }
 
 .media-item:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
     0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
@@ -124,12 +127,6 @@
   text-overflow: ellipsis;
   width: 100%;
   max-width: 100%;
-}
-
-/* Unified sidebar styles */
-.unified-sidebar [role="tab"],
-.unified-sidebar [role="tablist"] {
-  border-radius: 0 !important;
 }
 
 /* Floating action buttons */

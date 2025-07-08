@@ -9,14 +9,14 @@ import { MetadataDisplay } from '@/components/metadata/metadata-display';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
-interface UnifiedSidebarProps {
+interface FileDetailSidebarProps {
   content: string;
   filePath: string;
   isVisible: boolean;
   onToggle: () => void;
 }
 
-export function UnifiedSidebar({ content, filePath, isVisible, onToggle }: UnifiedSidebarProps) {
+export function FileDetailSidebar({ content, filePath, isVisible, onToggle }: FileDetailSidebarProps) {
   const [activeTab, setActiveTab] = useState<string>('metadata');
   const [frontMatter, setFrontMatter] = useState<Record<string, string>>({});
   const [frontMatterError, setFrontMatterError] = useState<string | null>(null);
@@ -62,16 +62,16 @@ export function UnifiedSidebar({ content, filePath, isVisible, onToggle }: Unifi
   }
 
   return (
-    <div className="w-64 border rounded-md relative unified-sidebar">
+    <div className="w-[280px] border rounded-md relative">
       <Tabs
         defaultValue="metadata"
         value={activeTab}
         onValueChange={(value) => {
           setActiveTab(value);
         }}
-        className="h-full"
+        className="h-full flex flex-col"
       >
-        <div className="p-2 flex items-center justify-between">
+        <div className="p-2 pb-0 flex items-center justify-between">
           <TabsList className="grid w-full grid-cols-2" variant="minimal">
             <TabsTrigger value="metadata">Metadata</TabsTrigger>
             <TabsTrigger value="history">History</TabsTrigger>
@@ -81,22 +81,16 @@ export function UnifiedSidebar({ content, filePath, isVisible, onToggle }: Unifi
           </Button>
         </div>
 
-        <div>
-          <TabsContent value="metadata" className="m-0 p-0">
-            <div className="h-full overflow-y-auto">
-              <div className="px-4 pt-1">
-                <MetadataDisplay frontMatter={frontMatter} errorMessage={frontMatterError} />
-              </div>
-            </div>
-          </TabsContent>
+        <div className="h-full overflow-y-auto ">
+          <div className="px-4 pt-1 max-h-0">
+            <TabsContent value="metadata">
+              <MetadataDisplay frontMatter={frontMatter} errorMessage={frontMatterError} />
+            </TabsContent>
 
-          <TabsContent value="history" className="m-0 p-0">
-            <div className="h-full overflow-y-auto">
-              <div className="px-4 pt-1">
-                <GitHistorySidebar filePath={filePath} isVisible={isVisible} />
-              </div>
-            </div>
-          </TabsContent>
+            <TabsContent value="history">
+              <GitHistorySidebar filePath={filePath} isVisible={isVisible} />
+            </TabsContent>
+          </div>
         </div>
       </Tabs>
     </div>
