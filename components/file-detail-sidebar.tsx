@@ -98,6 +98,7 @@ export function FileDetailSidebar({ content, filePath, isVisible, onToggle }: Fi
             <TabsContent value="history">
               <GitHistorySidebar filePath={filePath} isVisible={isVisible} />
             </TabsContent>
+            <div className="h-3"></div>
           </div>
         </ScrollableContainer>
       </Tabs>
