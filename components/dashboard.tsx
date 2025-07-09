@@ -160,7 +160,7 @@ export function Dashboard({ selectedFilePath, children }: { selectedFilePath?: s
           <RepositorySwitcher />
         </div>
 
-        <div className="justify-end flex items-center gap-2 px-3 py-2">
+        <div className="justify-end flex items-center gap-2 px-2 py-2">
           <ThemeToggle />
           <GitBranchDisplay />
           <Button
@@ -195,7 +195,7 @@ export function Dashboard({ selectedFilePath, children }: { selectedFilePath?: s
                 className="dropdown-menu-item-destructive"
                 disabled={isReverting}
               >
-                <RotateCcw className="h-3 w-3 mr-2" />
+                <RotateCcw className="h-3 w-3" />
                 <span className="text-xs">Revert Changes</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
