@@ -12,6 +12,7 @@ import { useMoveFileMutation } from '@/hooks/api/use-move-file-mutation';
 import { useRenameFileMutation } from '@/hooks/api/use-rename-file-mutation';
 // Import the new S3 mutation hooks
 import { useDeleteS3ItemMutation, useMoveS3ItemMutation } from '@/hooks/api/use-s3-operations';
+import { useRepositoryFromUrl } from '@/hooks/use-repository-from-url';
 
 import type { FileItem } from '../file-browser'; // Assuming FileItem type remains in the main file for now
 import { getItemPath } from '../utils'; // Import utility function
@@ -50,7 +51,8 @@ export const useFileOperations = ({
   deleteDialog
 }: UseFileOperationsProps): UseFileOperationsResult => {
   const router = useRouter();
-  const { invalidateFileQueries } = useQueryInvalidation();
+  const { currentRepositoryId } = useRepositoryFromUrl();
+  const { invalidateFileQueries, invalidateGitQueries } = useQueryInvalidation();
 
   // Use the S3 mutation hooks
   const { mutate: deleteS3Item, isPending: isDeletingS3 } = useDeleteS3ItemMutation();
@@ -178,13 +180,16 @@ export const useFileOperations = ({
             toast({
               title: `${item.type === 'directory' || item.type === 'folder' ? 'Folder' : 'File'} renamed`
             });
+
+            invalidateFileQueries();
+            invalidateGitQueries();
+
             // Construct the new path and navigate
             const sourcePath = getItemPath(item);
             const sourceParts = sourcePath.split('/');
             sourceParts[sourceParts.length - 1] = newName;
             const newPath = sourceParts.join('/');
-            const href = `/edit/${newPath}`;
-            router.push(href);
+            router.push(`/edit/${newPath}?repo=${currentRepositoryId}`);
           },
           onError: (error) => {
             console.error('Failed to rename item:', error);

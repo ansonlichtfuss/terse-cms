@@ -1,6 +1,5 @@
 'use client';
 
-import matter from 'gray-matter';
 import { Clock, Edit2 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { useDebounce } from 'use-debounce';
@@ -26,9 +25,9 @@ export function Editor({ file, onSave }: EditorProps) {
   const [content, setContent] = useState('');
   const [fileModificationTime, setFileModificationTime] = useState<string | null>(null);
   const [isSidebarVisible, setIsSidebarVisible] = useState(true);
-  const [fileTitle, setFileTitle] = useState('');
   const mediaDialog = useDialogState();
   const renameDialog = useDialogState();
+  const { updateGitStatus } = useGitStatus();
 
   // Reference to the textarea element
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -49,6 +48,40 @@ export function Editor({ file, onSave }: EditorProps) {
       isSavingRef.current = false;
     }, 100);
   }, 1000);
+
+  const handleContentChange = (newContent: string) => {
+    setContent(newContent);
+
+    // Only auto-save if we're past the initial load
+    if (!initialLoadRef.current && file) {
+      debouncedSave(file.path, newContent);
+    }
+  };
+
+  const handleToolbarActionClick = (
+    action: string,
+    value?: string,
+    toolbarTextareaRef?: React.RefObject<HTMLTextAreaElement | null>
+  ) => {
+    if (!toolbarTextareaRef?.current) {
+      console.error('Textarea ref is null');
+      return;
+    }
+
+    const newContent = handleToolbarAction(action, value, toolbarTextareaRef, content, handleContentChange);
+
+    // Auto-save the updated content
+    if (!initialLoadRef.current && file && newContent !== content) {
+      debouncedSave(file.path, newContent);
+    }
+  };
+
+  // Safely get the filename from the path
+  const getFileName = () => {
+    if (!file || !file.path) return 'Untitled';
+    const pathParts = file.path.split('/');
+    return pathParts[pathParts.length - 1] || 'Untitled';
+  };
 
   // Load user preferences on mount
   useEffect(() => {
@@ -91,63 +124,6 @@ export function Editor({ file, onSave }: EditorProps) {
     }
   }, [file]);
 
-  // Add this effect to parse the front matter and extract the title
-  useEffect(() => {
-    if (file && file.content) {
-      try {
-        const { data } = matter(file.content || '');
-        setFileTitle(data.title || '');
-      } catch (error) {
-        console.error('Error parsing front matter:', error);
-        setFileTitle('');
-      }
-    }
-  }, [file]);
-
-  // Handle content changes from user input
-  const handleContentChange = (newContent: string) => {
-    setContent(newContent);
-
-    // Only auto-save if we're past the initial load
-    if (!initialLoadRef.current && file) {
-      debouncedSave(file.path, newContent);
-    }
-  };
-
-  // Handle toolbar actions
-  const handleToolbarActionClick = (
-    action: string,
-    value?: string,
-    toolbarTextareaRef?: React.RefObject<HTMLTextAreaElement | null>
-  ) => {
-    if (!toolbarTextareaRef?.current) {
-      console.error('Textarea ref is null');
-      return;
-    }
-
-    const newContent = handleToolbarAction(action, value, toolbarTextareaRef, content, handleContentChange);
-
-    // Auto-save the updated content
-    if (!initialLoadRef.current && file && newContent !== content) {
-      debouncedSave(file.path, newContent);
-    }
-  };
-
-  // Toggle sidebar visibility
-  const toggleSidebar = () => {
-    setIsSidebarVisible(!isSidebarVisible);
-  };
-
-  // Clean up the debounced function on unmount
-  useEffect(() => {
-    return () => {
-      // use-debounce does not require explicit cancel on unmount
-    };
-  }, []);
-
-  // Use the git status context
-  const { updateGitStatus } = useGitStatus();
-
   // Use the file operations hook
   const { handleRename, isRenamingFile } = useFileOperations({
     type: 'files', // Assuming editor only deals with 'files' type
@@ -159,17 +135,8 @@ export function Editor({ file, onSave }: EditorProps) {
       closeDialog: () => {}
     } // Dummy dialog object
   });
-
-  // Safely get the filename from the path
-  const getFileName = () => {
-    if (!file || !file.path) return 'Untitled';
-    const pathParts = file.path.split('/');
-    return pathParts[pathParts.length - 1] || 'Untitled';
-  };
-
   return (
     <div className="h-full flex gap-2 pr-2 pb-2">
-      {/* Editor */}
       <div className="flex-1 flex flex-col relative">
         {/* Header */}
         <div className="border rounded-md p-2 flex items-center justify-between bg-gradient-secondary mb-2">
@@ -180,7 +147,6 @@ export function Editor({ file, onSave }: EditorProps) {
             >
               {getFileName()} <Edit2 className="h-3 w-3 ml-1 opacity-50" />
             </h2>
-            {fileTitle && <p className="text-xs text-muted-foreground truncate">{fileTitle}</p>}
           </div>
           {/* File modification timestamp */}
           <span className="flex items-center text-xs text-muted-foreground">
@@ -189,23 +155,22 @@ export function Editor({ file, onSave }: EditorProps) {
           </span>
         </div>
 
-        {/* Editor Toolbar */}
         <EditorToolbar
           onAction={handleToolbarActionClick}
           onImageClick={() => mediaDialog.openDialog()}
           textareaRef={textareaRef}
         />
 
-        {/* Markdown Editor */}
         <EditorContent content={content} onChange={handleContentChange} textareaRef={textareaRef} />
       </div>
 
-      {/* Unified Sidebar - now with tabs for metadata and history */}
       <FileDetailSidebar
         content={content}
         filePath={file?.path || ''}
         isVisible={isSidebarVisible}
-        onToggle={toggleSidebar}
+        onToggle={() => {
+          setIsSidebarVisible(!isSidebarVisible);
+        }}
       />
 
       {/* Rename File Dialog */}

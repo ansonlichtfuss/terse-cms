@@ -42,7 +42,8 @@ export function RenameFileDialog({
       const name = getItemName(item.key);
       setNewName(name);
     }
-  }, [open, item]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
 
   const getItemName = (key: string): string => {
     if (isMarkdownFile) {
@@ -69,7 +70,7 @@ export function RenameFileDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Rename {item.type === 'folder' ? 'Folder' : 'File'}</DialogTitle>
+          <DialogTitle>Rename {item.type === 'folder' ? 'folder' : 'file'}</DialogTitle>
         </DialogHeader>
         <div className="py-4">
           <div className="space-y-2">

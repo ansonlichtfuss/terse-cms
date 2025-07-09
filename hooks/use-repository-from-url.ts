@@ -30,18 +30,10 @@ const fetchRepositories = async (): Promise<Repository[]> => {
 export function useRepositoryFromUrl(): UseRepositoryFromUrlResult {
   const router = useRouter();
   const pathname = usePathname();
-  
+
   // Handle the case when useSearchParams might not be available during SSR
-  let searchParams: URLSearchParams | null = null;
-  let currentRepositoryId: string | null = null;
-  
-  try {
-    searchParams = useSearchParams();
-    currentRepositoryId = searchParams?.get('repo') || null;
-  } catch (error) {
-    // During SSR or static generation, searchParams might not be available
-    currentRepositoryId = null;
-  }
+  const searchParams: URLSearchParams | null = useSearchParams();
+  const currentRepositoryId: string | null = searchParams?.get('repo') || null;
 
   // Fetch repositories using React Query
   const {
@@ -51,7 +43,7 @@ export function useRepositoryFromUrl(): UseRepositoryFromUrlResult {
   } = useQuery<Repository[], Error>({
     queryKey: ['repositories'],
     queryFn: fetchRepositories,
-    retry: (failureCount, error) => {
+    retry: (failureCount) => {
       // Don't retry on configuration errors
       if (failureCount >= 1) {
         return false;
