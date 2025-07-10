@@ -1,26 +1,22 @@
-import type { QueryObserverResult, RefetchOptions } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 
 import { toast } from '@/components/ui/use-toast';
 import { useQueryInvalidation } from '@/hooks/api/shared';
-// Import the new file operation mutation hooks
 import { useCreateFileMutation } from '@/hooks/api/use-create-file-mutation';
 import { useCreateFolderMutation } from '@/hooks/api/use-create-folder-mutation';
 import { useCreateS3FolderMutation } from '@/hooks/api/use-create-s3-folder-mutation';
 import { useDeleteFileMutation } from '@/hooks/api/use-delete-file-mutation';
 import { useMoveFileMutation } from '@/hooks/api/use-move-file-mutation';
 import { useRenameFileMutation } from '@/hooks/api/use-rename-file-mutation';
-// Import the new S3 mutation hooks
 import { useDeleteS3ItemMutation, useMoveS3ItemMutation } from '@/hooks/api/use-s3-operations';
 import { useRepositoryFromUrl } from '@/hooks/use-repository-from-url';
 
-import type { FileItem } from '../file-browser'; // Assuming FileItem type remains in the main file for now
-import { getItemPath } from '../utils'; // Import utility function
+import type { FileItem } from '../file-browser';
+import { getItemPath } from '../utils';
 
 interface UseFileOperationsProps {
   type: 'files' | 'media';
   currentPath: string; // Needed for refreshing after operations
-  fetchItems?: (options?: RefetchOptions) => Promise<QueryObserverResult<FileItem[], Error>>; // Function to refresh the file list using Tanstack Query's refetch signature
   deleteDialog: {
     isOpen: boolean;
     item: FileItem | null;
@@ -47,12 +43,11 @@ interface UseFileOperationsResult {
 export const useFileOperations = ({
   type,
   currentPath,
-  fetchItems: _fetchItems,
   deleteDialog
 }: UseFileOperationsProps): UseFileOperationsResult => {
   const router = useRouter();
   const { currentRepositoryId } = useRepositoryFromUrl();
-  const { invalidateFileQueries, invalidateGitQueries } = useQueryInvalidation();
+  const { invalidateFileQueries, invalidateGitQueries, invalidateDirectoryQueries } = useQueryInvalidation();
 
   // Use the S3 mutation hooks
   const { mutate: deleteS3Item, isPending: isDeletingS3 } = useDeleteS3ItemMutation();
@@ -69,9 +64,9 @@ export const useFileOperations = ({
   const handleCreateFolder = async (folderName: string) => {
     if (!folderName.trim()) return;
 
-    if (type === 'media') {
-      // Use the S3 mutation hook for media folder creation
-      createS3Folder(
+    if (type === 'files') {
+      // Use the file system mutation hook for folder creation
+      createFolder(
         { path: currentPath, name: folderName },
         {
           onSuccess: () => {
@@ -88,9 +83,9 @@ export const useFileOperations = ({
           }
         }
       );
-    } else {
-      // Use the file system mutation hook for folder creation
-      createFolder(
+    } else if (type === 'media') {
+      // Use the S3 mutation hook for media folder creation
+      createS3Folder(
         { path: currentPath, name: folderName },
         {
           onSuccess: () => {
@@ -133,7 +128,7 @@ export const useFileOperations = ({
             }
           }
         );
-      } else {
+      } else if (type === 'media') {
         // Use the S3 mutation hook for media deletion
         deleteS3Item(
           { key: item.key, type: item.type },
@@ -181,7 +176,13 @@ export const useFileOperations = ({
               title: `${item.type === 'directory' || item.type === 'folder' ? 'Folder' : 'File'} renamed`
             });
 
-            invalidateFileQueries();
+            if (type === 'files') {
+              // Use more targeted directory invalidation for files
+              invalidateDirectoryQueries(getItemPath(item), currentRepositoryId);
+            } else {
+              // For media, still use broad invalidation
+              invalidateFileQueries();
+            }
             invalidateGitQueries();
 
             // Construct the new path and navigate
@@ -236,7 +237,7 @@ export const useFileOperations = ({
             }
           }
         );
-      } else {
+      } else if (type === 'media') {
         // Use the S3 mutation hook for media move
         moveS3Item(
           { sourceKey: item.key, destinationPath, type: item.type },
@@ -274,7 +275,13 @@ export const useFileOperations = ({
           toast({
             title: 'File created'
           });
-          invalidateFileQueries();
+          if (type === 'files') {
+            // Use more targeted directory invalidation for files
+            invalidateDirectoryQueries(filePath, currentRepositoryId);
+          } else {
+            // For media, still use broad invalidation
+            invalidateFileQueries();
+          }
         },
         onError: (error) => {
           toast({

@@ -1,5 +1,7 @@
 import { useMemo } from 'react';
 
+import { FileNode } from '@/types';
+
 import type { FileItem } from '../types/file-item';
 import type { SortConfig, SortDirection, SortField } from '../types/sorting';
 import { sortItems } from '../utils/sorting';
@@ -11,7 +13,7 @@ export interface UseSortProps {
 }
 
 export interface UseSortResult {
-  sortedItems: FileItem[];
+  sortedItems: FileItem[] | FileNode[] | undefined;
   toggleSort: (field: SortField) => void;
   updateSortDirection: (direction: SortDirection) => void;
   updateFoldersFirst: (foldersFirst: boolean) => void;

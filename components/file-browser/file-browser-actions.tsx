@@ -31,24 +31,18 @@ export function FileBrowserActions({
   isUploading,
   onRefresh,
   onNewFolderClick,
-  onOpenUploadDialog, // Destructure the new prop
-  currentPath, // Destructure currentPath
-  isCreatingFolder, // Destructure isCreatingFolder
-  fetchItems, // Destructure fetchItems
+  onOpenUploadDialog,
+  currentPath,
+  isCreatingFolder,
+  fetchItems,
   sortConfig,
   onSortChange
 }: FileBrowserActionsProps) {
-  const router = useRouter(); // Initialize useRouter
+  const router = useRouter();
   const { currentRepositoryId } = useRepositoryFromUrl();
-  // Remove useFileFetching and its usage
-  // const { currentDirContents, fetchItems } = useFileFetching({
-  //   currentPath,
-  //   type,
-  // }); // Get current directory contents and fetchItems
   const { handleCreateFile } = useFileOperations({
     currentPath,
     type,
-    fetchItems, // Pass fetchItems received as prop
     deleteDialog: {
       isOpen: false,
       item: null,

@@ -59,9 +59,7 @@ describe('/api/repositories', () => {
       expect(response.status).toBe(200);
       const jsonResponse = await response.json();
       expect(jsonResponse).toEqual({
-        repositories: [
-          { id: 'single-repo', label: 'Single Repository' }
-        ]
+        repositories: [{ id: 'single-repo', label: 'Single Repository' }]
       });
     });
 
@@ -93,9 +91,7 @@ describe('/api/repositories', () => {
       expect(response.status).toBe(200);
       const jsonResponse = await response.json();
       expect(jsonResponse).toEqual({
-        repositories: [
-          { id: 'mock', label: 'Mock Repository' }
-        ]
+        repositories: [{ id: 'mock', label: 'Mock Repository' }]
       });
     });
 
@@ -115,9 +111,7 @@ describe('/api/repositories', () => {
       expect(response.status).toBe(200);
       const jsonResponse = await response.json();
       expect(jsonResponse).toEqual({
-        repositories: [
-          { id: 'repo-with-special', label: 'Repository with Special Characters & Symbols!' }
-        ]
+        repositories: [{ id: 'repo-with-special', label: 'Repository with Special Characters & Symbols!' }]
       });
     });
 
@@ -178,13 +172,11 @@ describe('/api/repositories', () => {
 
       expect(response.status).toBe(200);
       const jsonResponse = await response.json();
-      
+
       // Verify path is not included in response
       expect(jsonResponse.repositories[0]).not.toHaveProperty('path');
       expect(jsonResponse).toEqual({
-        repositories: [
-          { id: 'test-repo', label: 'Test Repository' }
-        ]
+        repositories: [{ id: 'test-repo', label: 'Test Repository' }]
       });
     });
 
