@@ -12,7 +12,7 @@ interface Repository {
 interface UseRepositoryFromUrlResult {
   repositories: Repository[] | undefined;
   currentRepository: Repository | undefined;
-  currentRepositoryId: string | null;
+  currentRepositoryId: string | undefined;
   isLoading: boolean;
   error: Error | null;
   switchRepository: (repositoryId: string) => void;
@@ -33,7 +33,7 @@ export function useRepositoryFromUrl(): UseRepositoryFromUrlResult {
 
   // Handle the case when useSearchParams might not be available during SSR
   const searchParams: URLSearchParams | null = useSearchParams();
-  const currentRepositoryId: string | null = searchParams?.get('repo') || null;
+  const currentRepositoryId: string | undefined = searchParams?.get('repo') ?? undefined;
 
   // Fetch repositories using React Query
   const {
