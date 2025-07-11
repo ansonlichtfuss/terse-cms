@@ -52,3 +52,17 @@ export interface FileNode {
   /** ISO date string of when the file/directory was last modified */
   lastModified?: string;
 }
+
+/**
+ * Represents the contents of a single directory.
+ */
+export interface DirectoryContents {
+  /** The current directory path */
+  currentPath: string;
+  /** Items in the current directory */
+  items: FileNode[];
+  /** Whether this directory has a parent directory */
+  hasParent: boolean;
+  /** The parent directory path (if hasParent is true) */
+  parentPath?: string;
+}
