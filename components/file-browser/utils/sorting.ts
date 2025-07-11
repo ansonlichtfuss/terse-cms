@@ -3,6 +3,8 @@ import type { SortConfig, SortDirection, SortField } from '../types/sorting';
 
 // Main sorting function
 export const sortItems = (items: FileItem[], config: SortConfig): FileItem[] => {
+  if (!items) return [];
+
   const { field, direction, foldersFirst } = config;
 
   return [...items].sort((a, b) => {
