@@ -107,7 +107,7 @@ describe('FileOperations', () => {
       expect(renameResult.success).toBe(true);
     });
 
-    it('should handle getFileTree operation', async () => {
+    it('should handle getDirectoryContents operation', async () => {
       // Create test file structure
       vol.fromJSON({
         'mock-data/filesystem/file1.md': 'content1',
@@ -117,26 +117,24 @@ describe('FileOperations', () => {
         'mock-data/filesystem/.hidden.md': 'hidden'
       });
 
-      const result = await fileOps.getFileTree();
+      const result = await fileOps.getDirectoryContents('');
 
       expect(result.success).toBe(true);
       expect(result.data).toBeDefined();
-      expect(result.data!.files).toBeDefined();
+      expect(result.data!.items).toBeDefined();
 
-      const files = result.data!.files;
+      const items = result.data!.items;
 
       // Should have folder (directory) and 2 markdown files
-      expect(files).toHaveLength(3);
+      expect(items).toHaveLength(3);
 
       // Check directory structure
-      const folder = files.find((f) => f.type === 'directory');
+      const folder = items.find((f) => f.type === 'directory');
       expect(folder).toBeDefined();
       expect(folder!.name).toBe('folder');
-      expect(folder!.children).toBeDefined();
-      expect(folder!.children!).toHaveLength(1); // Only nested.md, not ignored.txt
 
       // Check markdown files
-      const markdownFiles = files.filter((f) => f.type === 'file');
+      const markdownFiles = items.filter((f) => f.type === 'file');
       expect(markdownFiles).toHaveLength(2);
       expect(markdownFiles.map((f) => f.name).sort()).toEqual(['file1.md', 'file2.md']);
     });
@@ -159,11 +157,11 @@ describe('FileOperations', () => {
       const createResult = await fileOps.writeFile('workflow.md', '# Workflow Test\n\nInitial content');
       expect(createResult.success).toBe(true);
 
-      // Verify file appears in tree
-      const treeResult1 = await fileOps.getFileTree();
+      // Verify file appears in directory contents
+      const treeResult1 = await fileOps.getDirectoryContents('');
       expect(treeResult1.success).toBe(true);
-      expect(treeResult1.data!.files).toHaveLength(1);
-      expect(treeResult1.data!.files[0].name).toBe('workflow.md');
+      expect(treeResult1.data!.items).toHaveLength(1);
+      expect(treeResult1.data!.items[0].name).toBe('workflow.md');
 
       // Read and modify the file
       const readResult = await fileOps.readFile('workflow.md');
@@ -177,15 +175,14 @@ describe('FileOperations', () => {
       await fileOps.writeFile('docs/api.md', '# API Documentation');
       await fileOps.writeFile('docs/guides/setup.md', '# Setup Guide');
 
-      // Verify folder structure in tree
-      const treeResult2 = await fileOps.getFileTree();
+      // Verify folder structure in directory contents
+      const treeResult2 = await fileOps.getDirectoryContents('');
       expect(treeResult2.success).toBe(true);
-      expect(treeResult2.data!.files).toHaveLength(2); // workflow.md and docs folder
+      expect(treeResult2.data!.items).toHaveLength(2); // workflow.md and docs folder
 
-      const docsFolder = treeResult2.data!.files.find((f) => f.name === 'docs');
+      const docsFolder = treeResult2.data!.items.find((f) => f.name === 'docs');
       expect(docsFolder).toBeDefined();
       expect(docsFolder!.type).toBe('directory');
-      expect(docsFolder!.children).toHaveLength(2); // api.md and guides folder
 
       // Move file to subfolder
       const moveResult = await fileOps.moveFile('workflow.md', 'docs');
@@ -210,9 +207,9 @@ describe('FileOperations', () => {
       expect(deleteResult.success).toBe(true);
 
       // Verify everything is cleaned up
-      const finalTreeResult = await fileOps.getFileTree();
+      const finalTreeResult = await fileOps.getDirectoryContents('');
       expect(finalTreeResult.success).toBe(true);
-      expect(finalTreeResult.data!.files).toHaveLength(0);
+      expect(finalTreeResult.data!.items).toHaveLength(0);
     });
 
     it('should handle concurrent operations safely', async () => {
@@ -235,10 +232,10 @@ describe('FileOperations', () => {
         expect(result.success).toBe(true);
       });
 
-      // Verify file tree shows all created items
-      const treeResult = await fileOps.getFileTree();
+      // Verify directory contents shows all created items
+      const treeResult = await fileOps.getDirectoryContents('');
       expect(treeResult.success).toBe(true);
-      expect(treeResult.data!.files.length).toBeGreaterThanOrEqual(8); // 5 files + 3 folders
+      expect(treeResult.data!.items.length).toBeGreaterThanOrEqual(8); // 5 files + 3 folders
 
       // Verify specific files can be read
       for (let i = 0; i < 5; i++) {
@@ -312,17 +309,22 @@ describe('FileOperations', () => {
       expect(invalidPathError.statusCode).toBe(400);
     });
 
-    it('should handle file tree errors gracefully', async () => {
-      // Mock fs.readdirSync to throw an error for getFileTree
+    it('should handle directory contents errors gracefully', async () => {
+      // Create a directory first to pass the existence check
+      vol.fromJSON({
+        'mock-data/filesystem': null
+      });
+
+      // Mock fs.readdirSync to throw an error for getDirectoryContents
       vi.spyOn(vol, 'readdirSync').mockImplementation(() => {
         throw new Error('Permission denied');
       });
 
-      const treeResult = await fileOps.getFileTree();
+      const treeResult = await fileOps.getDirectoryContents('');
 
       expect(treeResult.success).toBe(false);
       expect(treeResult.statusCode).toBe(500);
-      expect(treeResult.error).toBe('Failed to read file tree');
+      expect(treeResult.error).toBe('Failed to read directory contents');
 
       // Restore original function
       vi.restoreAllMocks();
@@ -369,7 +371,7 @@ describe('FileOperations', () => {
       expect(typeof instance.exists).toBe('function');
       expect(typeof instance.moveFile).toBe('function');
       expect(typeof instance.renameFile).toBe('function');
-      expect(typeof instance.getFileTree).toBe('function');
+      expect(typeof instance.getDirectoryContents).toBe('function');
     });
   });
 
@@ -383,7 +385,9 @@ describe('FileOperations', () => {
     it('should maintain the same API as the original monolithic file', async () => {
       // Create test data
       vol.fromJSON({
+        'mock-data/filesystem': null,
         'mock-data/filesystem/api-test.md': 'API content',
+        'mock-data/filesystem/folder': null,
         'mock-data/filesystem/folder/nested.md': 'nested content'
       });
 
@@ -414,19 +418,19 @@ describe('FileOperations', () => {
         }
       });
 
-      const treeResult = await fileOps.getFileTree();
+      const treeResult = await fileOps.getDirectoryContents('');
       expect(treeResult).toMatchObject({
         success: true,
         statusCode: 200,
         data: {
-          files: expect.any(Array)
+          items: expect.any(Array)
         }
       });
 
-      // Verify file tree structure matches expected format
-      const files = treeResult.data!.files;
-      files.forEach((file) => {
-        expect(file).toMatchObject({
+      // Verify directory contents structure matches expected format
+      const items = treeResult.data!.items;
+      items.forEach((item) => {
+        expect(item).toMatchObject({
           name: expect.any(String),
           path: expect.any(String),
           type: expect.stringMatching(/^(file|directory)$/)

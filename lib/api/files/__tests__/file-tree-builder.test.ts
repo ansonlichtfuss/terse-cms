@@ -16,8 +16,8 @@ describe('FileTreeBuilder', () => {
     vol.reset();
   });
 
-  describe('buildFileTree', () => {
-    it('should build file tree with markdown files only', async () => {
+  describe('buildDirectoryContents', () => {
+    it('should build directory contents with markdown files only', async () => {
       // Create a mock file structure
       vol.fromJSON({
         '/test-root/file1.md': 'content1',
@@ -29,29 +29,26 @@ describe('FileTreeBuilder', () => {
         '/test-root/.git/config': 'git config'
       });
 
-      const result = await FileTreeBuilder.buildFileTree('/test-root');
+      const result = await FileTreeBuilder.buildDirectoryContents('/test-root', '');
 
       expect(result.success).toBe(true);
       expect(result.statusCode).toBe(200);
       expect(result.data).toBeDefined();
 
-      const files = result.data!.files;
-      expect(files).toHaveLength(3); // 2 files + 1 directory
+      const items = result.data!.items;
+      expect(items).toHaveLength(3); // 2 files + 1 directory
 
       // Check that files are sorted with directories first
-      const dirNode = files.find((f) => f.type === 'directory');
-      const fileNodes = files.filter((f) => f.type === 'file');
+      const dirNode = items.find((f) => f.type === 'directory');
+      const fileNodes = items.filter((f) => f.type === 'file');
 
       expect(dirNode).toBeDefined();
       expect(dirNode!.name).toBe('subfolder');
-      expect(dirNode!.children).toHaveLength(1);
-      expect(dirNode!.children![0].name).toBe('nested.md');
+      expect(dirNode!.path).toBe('subfolder');
 
       // Check that lastModified is present
       expect(dirNode!.lastModified).toBeDefined();
       expect(dirNode!.lastModified).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/);
-      expect(dirNode!.children![0].lastModified).toBeDefined();
-      expect(dirNode!.children![0].lastModified).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/);
 
       expect(fileNodes).toHaveLength(2);
       expect(fileNodes.map((f) => f.name).sort()).toEqual(['file1.md', 'file2.md']);
@@ -68,20 +65,21 @@ describe('FileTreeBuilder', () => {
         '/empty-root': null
       });
 
-      const result = await FileTreeBuilder.buildFileTree('/empty-root');
+      const result = await FileTreeBuilder.buildDirectoryContents('/empty-root', '');
 
       expect(result.success).toBe(true);
-      expect(result.data!.files).toHaveLength(0);
+      expect(result.data!.items).toHaveLength(0);
     });
 
-    it('should create directory if it does not exist', async () => {
-      const result = await FileTreeBuilder.buildFileTree('/non-existent');
+    it('should return 404 for non-existent root directory', async () => {
+      const result = await FileTreeBuilder.buildDirectoryContents('/non-existent', '');
 
-      expect(result.success).toBe(true);
-      expect(result.data!.files).toHaveLength(0);
+      expect(result.success).toBe(false);
+      expect(result.statusCode).toBe(404);
+      expect(result.error).toBe('Directory not found: ');
     });
 
-    it('should handle deeply nested structure', async () => {
+    it('should handle deeply nested directory navigation', async () => {
       vol.fromJSON({
         '/deep-root/level1/level2/level3/deep.md': 'deep content',
         '/deep-root/level1/level2/another.md': 'another content',
@@ -89,30 +87,30 @@ describe('FileTreeBuilder', () => {
         '/deep-root/root.md': 'root content'
       });
 
-      const result = await FileTreeBuilder.buildFileTree('/deep-root');
+      // Test root level
+      const rootResult = await FileTreeBuilder.buildDirectoryContents('/deep-root', '');
+      expect(rootResult.success).toBe(true);
+      const rootItems = rootResult.data!.items;
+      expect(rootItems).toHaveLength(2); // level1 directory and root.md file
 
-      expect(result.success).toBe(true);
-      const files = result.data!.files;
+      // Test level1 directory
+      const level1Result = await FileTreeBuilder.buildDirectoryContents('/deep-root', 'level1');
+      expect(level1Result.success).toBe(true);
+      const level1Items = level1Result.data!.items;
+      expect(level1Items).toHaveLength(2); // first.md and level2 directory
 
-      // Should have level1 directory and root.md file
-      expect(files).toHaveLength(2);
+      // Test level2 directory
+      const level2Result = await FileTreeBuilder.buildDirectoryContents('/deep-root', 'level1/level2');
+      expect(level2Result.success).toBe(true);
+      const level2Items = level2Result.data!.items;
+      expect(level2Items).toHaveLength(2); // another.md and level3 directory
 
-      const level1Dir = files.find((f) => f.name === 'level1');
-      expect(level1Dir).toBeDefined();
-      expect(level1Dir!.type).toBe('directory');
-      expect(level1Dir!.children).toHaveLength(2); // first.md and level2 directory
-
-      // Navigate to level2
-      const level2Dir = level1Dir!.children!.find((f) => f.name === 'level2');
-      expect(level2Dir).toBeDefined();
-      expect(level2Dir!.type).toBe('directory');
-      expect(level2Dir!.children).toHaveLength(2); // another.md and level3 directory
-
-      // Navigate to level3
-      const level3Dir = level2Dir!.children!.find((f) => f.name === 'level3');
-      expect(level3Dir).toBeDefined();
-      expect(level3Dir!.type).toBe('directory');
-      expect(level3Dir!.children).toHaveLength(1); // deep.md
+      // Test level3 directory
+      const level3Result = await FileTreeBuilder.buildDirectoryContents('/deep-root', 'level1/level2/level3');
+      expect(level3Result.success).toBe(true);
+      const level3Items = level3Result.data!.items;
+      expect(level3Items).toHaveLength(1); // deep.md
+      expect(level3Items[0].name).toBe('deep.md');
     });
 
     it('should sort files and directories correctly', async () => {
@@ -125,17 +123,17 @@ describe('FileTreeBuilder', () => {
         '/sort-test/m-dir/file.md': 'content'
       });
 
-      const result = await FileTreeBuilder.buildFileTree('/sort-test');
+      const result = await FileTreeBuilder.buildDirectoryContents('/sort-test', '');
 
       expect(result.success).toBe(true);
-      const files = result.data!.files;
+      const items = result.data!.items;
 
       // Directories should come first, then files
-      const names = files.map((f) => f.name);
+      const names = items.map((f) => f.name);
       expect(names).toEqual(['a-dir', 'm-dir', 'z-dir', 'a-file.md', 'm-file.md', 'z-file.md']);
 
       // Check types
-      const types = files.map((f) => f.type);
+      const types = items.map((f) => f.type);
       expect(types).toEqual(['directory', 'directory', 'directory', 'file', 'file', 'file']);
     });
 
@@ -147,10 +145,10 @@ describe('FileTreeBuilder', () => {
         '/hidden-test/normal-dir/file.md': 'normal content'
       });
 
-      const result = await FileTreeBuilder.buildFileTree('/hidden-test');
+      const result = await FileTreeBuilder.buildDirectoryContents('/hidden-test', '');
 
       expect(result.success).toBe(true);
-      const files = result.data!.files;
+      const files = result.data!.items;
 
       // Should only have visible.md and normal-dir
       expect(files).toHaveLength(2);
@@ -167,10 +165,10 @@ describe('FileTreeBuilder', () => {
         '/filter-test/README.txt': 'text content'
       });
 
-      const result = await FileTreeBuilder.buildFileTree('/filter-test');
+      const result = await FileTreeBuilder.buildDirectoryContents('/filter-test', '');
 
       expect(result.success).toBe(true);
-      const files = result.data!.files;
+      const files = result.data!.items;
 
       // Should only have document.md
       expect(files).toHaveLength(1);
@@ -183,31 +181,43 @@ describe('FileTreeBuilder', () => {
         '/path-test/folder/subfolder/file.md': 'content'
       });
 
-      const result = await FileTreeBuilder.buildFileTree('/path-test');
+      // Test root directory
+      const rootResult = await FileTreeBuilder.buildDirectoryContents('/path-test', '');
+      expect(rootResult.success).toBe(true);
+      const rootItems = rootResult.data!.items;
+      expect(rootItems).toHaveLength(1);
+      expect(rootItems[0].path).toBe('folder');
 
-      expect(result.success).toBe(true);
-      const files = result.data!.files;
+      // Test nested directory navigation
+      const subResult = await FileTreeBuilder.buildDirectoryContents('/path-test', 'folder');
+      expect(subResult.success).toBe(true);
+      const subItems = subResult.data!.items;
+      expect(subItems).toHaveLength(1);
+      expect(subItems[0].path).toBe('folder/subfolder');
 
-      const folder = files[0];
-      expect(folder.path).toBe('folder');
-
-      const subfolder = folder.children![0];
-      expect(subfolder.path).toBe('folder/subfolder');
-
-      const file = subfolder.children![0];
-      expect(file.path).toBe('folder/subfolder/file.md');
+      // Test deeply nested directory
+      const deepResult = await FileTreeBuilder.buildDirectoryContents('/path-test', 'folder/subfolder');
+      expect(deepResult.success).toBe(true);
+      const deepItems = deepResult.data!.items;
+      expect(deepItems).toHaveLength(1);
+      expect(deepItems[0].path).toBe('folder/subfolder/file.md');
     });
 
     it('should handle file system errors gracefully', async () => {
+      // Create a directory first to pass the existence check
+      vol.fromJSON({
+        '/error-test': null
+      });
+
       // Mock fs.readdirSync to throw an error
       vi.spyOn(vol, 'readdirSync').mockImplementation(() => {
         throw new Error('Permission denied');
       });
 
-      const result = await FileTreeBuilder.buildFileTree('/error-test');
+      const result = await FileTreeBuilder.buildDirectoryContents('/error-test', '');
 
       expect(result.success).toBe(false);
-      expect(result.error).toBe('Failed to read file tree');
+      expect(result.error).toBe('Failed to read directory contents');
       expect(result.statusCode).toBe(500);
 
       // Restore original function
@@ -216,17 +226,19 @@ describe('FileTreeBuilder', () => {
 
     it('should handle empty markdown directory', async () => {
       vol.fromJSON({
+        '/empty-md-test': null,
         '/empty-md-test/non-md-file.txt': 'content'
       });
 
-      const result = await FileTreeBuilder.buildFileTree('/empty-md-test');
+      const result = await FileTreeBuilder.buildDirectoryContents('/empty-md-test', '');
 
       expect(result.success).toBe(true);
-      expect(result.data!.files).toHaveLength(0);
+      expect(result.data!.items).toHaveLength(0);
     });
 
     it('should handle mixed file extensions correctly', async () => {
       vol.fromJSON({
+        '/mixed-test': null,
         '/mixed-test/file.md': 'markdown',
         '/mixed-test/file.MD': 'uppercase markdown',
         '/mixed-test/file.markdown': 'full markdown',
@@ -234,10 +246,10 @@ describe('FileTreeBuilder', () => {
         '/mixed-test/file.txt': 'text file'
       });
 
-      const result = await FileTreeBuilder.buildFileTree('/mixed-test');
+      const result = await FileTreeBuilder.buildDirectoryContents('/mixed-test', '');
 
       expect(result.success).toBe(true);
-      const files = result.data!.files;
+      const files = result.data!.items;
 
       // Should only include .md files, not .MD, .markdown, .mdx, or .txt
       expect(files).toHaveLength(1);
@@ -250,10 +262,10 @@ describe('FileTreeBuilder', () => {
         '/timestamp-test/folder/nested.md': 'nested content'
       });
 
-      const result = await FileTreeBuilder.buildFileTree('/timestamp-test');
+      const result = await FileTreeBuilder.buildDirectoryContents('/timestamp-test', '');
 
       expect(result.success).toBe(true);
-      const files = result.data!.files;
+      const files = result.data!.items;
 
       // Check directory has lastModified
       const folder = files.find((f) => f.type === 'directory');
@@ -267,33 +279,37 @@ describe('FileTreeBuilder', () => {
       expect(file!.lastModified).toBeDefined();
       expect(file!.lastModified).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/);
 
-      // Check nested file has lastModified
-      const nestedFile = folder!.children![0];
-      expect(nestedFile.lastModified).toBeDefined();
-      expect(nestedFile.lastModified).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/);
-
       // Verify lastModified can be parsed as valid Date
       expect(new Date(folder!.lastModified!).getTime()).toBeGreaterThan(0);
       expect(new Date(file!.lastModified!).getTime()).toBeGreaterThan(0);
-      expect(new Date(nestedFile.lastModified!).getTime()).toBeGreaterThan(0);
     });
 
     it('should handle stat errors gracefully and continue processing', async () => {
       vol.fromJSON({
+        '/error-test': null,
         '/error-test/good-file.md': 'content',
+        '/error-test/folder': null,
         '/error-test/folder/nested.md': 'nested content'
       });
 
       // Mock fs.statSync to throw an error for testing error handling
       const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-      const _statSyncSpy = vi.spyOn(vol, 'statSync').mockImplementation(() => {
+
+      // Mock statSync to throw error only for individual files, not the directory check
+      const originalStatSync = vol.statSync.bind(vol);
+      vi.spyOn(vol, 'statSync').mockImplementation((path) => {
+        // Allow the initial directory check to work
+        if (path === '/error-test') {
+          return originalStatSync(path);
+        }
+        // Throw error for individual file stats
         throw new Error('Permission denied');
       });
 
-      const result = await FileTreeBuilder.buildFileTree('/error-test');
+      const result = await FileTreeBuilder.buildDirectoryContents('/error-test', '');
 
       expect(result.success).toBe(true);
-      const files = result.data!.files;
+      const files = result.data!.items;
 
       // Should still process all files even with stat errors
       expect(files).toHaveLength(2); // folder and good-file.md

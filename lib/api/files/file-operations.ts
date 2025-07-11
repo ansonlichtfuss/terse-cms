@@ -1,12 +1,18 @@
 import { shouldUseMockApi } from '@/lib/env';
 import { getRepositoryPath } from '@/lib/paths';
 
-import type { ExistenceInfo, FileContent, FileNode, FileOperationResult } from './file-operations-types';
+import type { DirectoryContents, ExistenceInfo, FileContent, FileOperationResult } from './file-operations-types';
 import { FileSystemOperations } from './file-system-operations';
 import { FileTreeBuilder } from './file-tree-builder';
 
 // Re-export types for backward compatibility
-export type { ExistenceInfo, FileContent, FileNode, FileOperationResult } from './file-operations-types';
+export type {
+  DirectoryContents,
+  ExistenceInfo,
+  FileContent,
+  FileNode,
+  FileOperationResult
+} from './file-operations-types';
 
 /**
  * A comprehensive file operations utility class that provides secure file system operations
@@ -119,15 +125,16 @@ export class FileOperations {
   }
 
   /**
-   * Builds a file tree structure from the configured root directory.
+   * Gets the contents of a specific directory.
    *
-   * This method recursively scans the file system and builds a tree structure
-   * containing only markdown files and directories. It automatically handles
-   * both mock and real file systems based on the current configuration.
+   * This method reads only the immediate contents of the specified directory,
+   * without recursively loading subdirectories. This is more efficient for
+   * large directory structures.
    *
-   * @returns A promise that resolves to a FileOperationResult containing the file tree
+   * @param directoryPath - The path to the directory to read (relative to root)
+   * @returns A promise that resolves to a FileOperationResult containing the directory contents
    */
-  async getFileTree(): Promise<FileOperationResult<{ files: FileNode[] }>> {
-    return FileTreeBuilder.buildFileTree(this.rootDir);
+  async getDirectoryContents(directoryPath: string): Promise<FileOperationResult<DirectoryContents>> {
+    return FileTreeBuilder.buildDirectoryContents(this.rootDir, directoryPath);
   }
 }
