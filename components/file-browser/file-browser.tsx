@@ -8,7 +8,7 @@ import { Breadcrumbs } from '@/components/breadcrumbs/breadcrumbs';
 import { MoveFileDialog } from '@/components/file-browser/move-file-dialog';
 import { RenameFileDialog } from '@/components/rename-file-dialog';
 import { ConfirmationDialog } from '@/components/ui/confirmation-dialog';
-import { useFilesQuery } from '@/hooks/api/use-files-query';
+import { useS3FilesQuery } from '@/hooks/api/use-s3-files-query';
 import { useFileBrowserNavigation } from '@/hooks/file-browser/use-file-browser-navigation';
 import { useFileBrowserSorting } from '@/hooks/file-browser/use-file-browser-sorting';
 import { useFileSelection } from '@/hooks/file-browser/use-file-selection';
@@ -91,6 +91,7 @@ export function FileBrowser({
         // Find the directory node that matches the current path
         const pathParts = currentPath.split('/').filter(Boolean);
         let currentDir: FileItem[] | undefined = items;
+  const mediaQuery = useS3FilesQuery({ currentPath, type: 'media' }, { enabled: type === 'media' });
 
         for (let i = 0; i < pathParts.length; i++) {
           const part = pathParts[i];
@@ -116,15 +117,10 @@ export function FileBrowser({
 
   // Use sort hook
   const { sortedItems } = useSort({
-    items: currentDirContents,
+    items,
     sortConfig,
     onSortChange: updateSort
   });
-
-  // Update currentDirContents to use sorted items
-  const displayItems = React.useMemo(() => {
-    return sortedItems;
-  }, [sortedItems]);
 
   // Use the custom operations hook
   const {
