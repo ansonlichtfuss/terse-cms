@@ -8,6 +8,7 @@ import { Breadcrumbs } from '@/components/breadcrumbs/breadcrumbs';
 import { MoveFileDialog } from '@/components/file-browser/move-file-dialog';
 import { RenameFileDialog } from '@/components/rename-file-dialog';
 import { ConfirmationDialog } from '@/components/ui/confirmation-dialog';
+import { useDirectoryQuery } from '@/hooks/api/use-directory-query';
 import { useS3FilesQuery } from '@/hooks/api/use-s3-files-query';
 import { useFileBrowserNavigation } from '@/hooks/file-browser/use-file-browser-navigation';
 import { useFileBrowserSorting } from '@/hooks/file-browser/use-file-browser-sorting';
@@ -68,52 +69,15 @@ export function FileBrowser({
   const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
   const [isUploading] = useState(isMobile);
 
-  // Use the new Tanstack Query hook for fetching files
-  const {
-    data: items,
-    isLoading,
-    error,
-    refetch
-  } = useFilesQuery({
-    currentPath,
-    type
-  });
-
-  // Filter items to get current directory contents (logic moved from useFileFetching)
-  const currentDirContents = React.useMemo(() => {
-    if (!items) return [];
-
-    if (type === 'files') {
-      if (currentPath === '') {
-        // At root level, show all top-level files and directories
-        return items.filter((item) => !item.path?.includes('/'));
-      } else {
-        // Find the directory node that matches the current path
-        const pathParts = currentPath.split('/').filter(Boolean);
-        let currentDir: FileItem[] | undefined = items;
+  // Always call hooks, but conditionally use their results
+  const directoryQuery = useDirectoryQuery(currentPath, currentRepositoryId, { enabled: type === 'files' });
   const mediaQuery = useS3FilesQuery({ currentPath, type: 'media' }, { enabled: type === 'media' });
 
-        for (let i = 0; i < pathParts.length; i++) {
-          const part = pathParts[i];
-          const nextDir: FileItem | undefined = currentDir?.find(
-            // Explicitly type nextDir
-            (node) => node.name === part && (node.type === 'directory' || node.type === 'folder')
-          );
-
-          if (nextDir && nextDir.children) {
-            currentDir = nextDir.children;
-          } else {
-            currentDir = undefined; // Directory not found
-            break;
-          }
-        }
-        return currentDir || [];
-      }
-    } else {
-      // For media files (S3), items already represent the current directory contents
-      return items;
-    }
-  }, [items, currentPath, type]);
+  // Combine results based on type
+  const items = type === 'files' ? directoryQuery.data?.items : mediaQuery.data;
+  const finalLoading = type === 'files' ? directoryQuery.isLoading : mediaQuery.isLoading;
+  const finalError = type === 'files' ? directoryQuery.error : mediaQuery.error;
+  const finalRefetch = type === 'files' ? directoryQuery.refetch : mediaQuery.refetch;
 
   // Use sort hook
   const { sortedItems } = useSort({
@@ -138,7 +102,6 @@ export function FileBrowser({
   } = useFileOperations({
     type,
     currentPath,
-    fetchItems: refetch, // Pass refetch from Tanstack Query for refreshing after operations
     deleteDialog // Pass the delete dialog object
   });
 
@@ -219,12 +182,12 @@ export function FileBrowser({
       <FileBrowserActions
         type={type}
         isUploading={isUploading} // Assuming isUploading is still managed locally or in useFileBrowserState
-        onRefresh={() => refetch()} // Call refetch from Tanstack Query
+        onRefresh={() => finalRefetch()} // Call refetch from Tanstack Query
         onNewFolderClick={handleNewFolderButtonClick} // Call local handler
         onOpenUploadDialog={handleOpenUploadDialog} // Pass the handler to open the dialog
         currentPath={currentPath} // Pass the currentPath prop
         isCreatingFolder={isCreatingFolder || isCreatingS3Folder} // Pass loading state for both file system and S3 folder creation
-        fetchItems={refetch} // Pass the refetch function from useFilesQuery
+        fetchItems={finalRefetch} // Pass the refetch function from useDirectoryQuery
         sortConfig={sortConfig}
         onSortChange={updateSort}
       />
@@ -245,18 +208,18 @@ export function FileBrowser({
         className={cn('mx-4 pt-2 overflow-y-auto h-full')}
       >
         <div className={cn('space-y-1 pb-20 max-h-0')}>
-          {isLoading && (
+          {finalLoading && (
             <div className="flex items-center justify-center h-20 text-muted-foreground text-xs">Loading...</div>
           )}
-          {error && (
+          {finalError && (
             <div className="flex items-center justify-center h-20 text-destructive text-xs">
-              Error loading files: {error.message}
+              Error loading files: {finalError.message}
             </div>
           )}
-          {!isLoading &&
-            !error &&
-            displayItems.length > 0 &&
-            displayItems.map((item) => (
+          {!finalLoading &&
+            !finalError &&
+            sortedItems.length > 0 &&
+            sortedItems.map((item) => (
               <FileItemRow
                 key={getItemPath(item)}
                 item={item}
@@ -271,7 +234,7 @@ export function FileBrowser({
                 isMoving={isMovingFile || isMovingS3} // Pass combined loading state
               />
             ))}
-          {!isLoading && !error && displayItems.length === 0 && (
+          {!finalLoading && !finalError && sortedItems.length === 0 && (
             <div className="flex items-center justify-center h-20 text-muted-foreground text-xs">No items found</div>
           )}
           <div className="h-3"></div>
