@@ -1,11 +1,13 @@
 'use client';
 
-import { ChevronDown, ChevronRight, Folder } from 'lucide-react';
+import { ChevronRight, Folder } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
+import { Breadcrumbs } from '@/components/breadcrumbs/breadcrumbs';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { useFileTreeQuery } from '@/hooks/api/use-file-tree-query';
+import { useDirectoryQuery } from '@/hooks/api/use-directory-query';
+import { useRepositoryFromUrl } from '@/hooks/use-repository-from-url';
 import { cn } from '@/lib/utils';
 
 interface S3Item {
@@ -16,13 +18,6 @@ interface S3Item {
   url?: string;
 }
 
-interface FolderNode {
-  key: string;
-  name: string;
-  children: FolderNode[];
-  isExpanded: boolean;
-}
-
 interface MoveFileDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -30,16 +25,7 @@ interface MoveFileDialogProps {
   currentPath: string;
   onMove: (destinationPath: string) => void;
   isMarkdownFile?: boolean;
-}
-
-interface MoveFileDialogProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  item: S3Item;
-  currentPath: string;
-  onMove: (destinationPath: string) => void;
-  isMarkdownFile?: boolean;
-  isMoving: boolean; // Add isMoving prop
+  isMoving: boolean;
 }
 
 export function MoveFileDialog({
@@ -49,43 +35,27 @@ export function MoveFileDialog({
   currentPath,
   onMove,
   isMarkdownFile = false,
-  isMoving // Destructure isMoving
+  isMoving
 }: MoveFileDialogProps) {
+  const [dialogPath, setDialogPath] = useState('');
   const [selectedFolder, setSelectedFolder] = useState('');
-  const [localFolderTree, setLocalFolderTree] = useState<FolderNode | null>(null);
+  const { repositoryId } = useRepositoryFromUrl();
 
-  const { data: folderTree, isLoading } = useFileTreeQuery();
+  const { data: directoryData, isLoading } = useDirectoryQuery(dialogPath, repositoryId, { enabled: open });
+
+  // Filter to show only directories
+  const folders = directoryData?.items?.filter((item) => item.type === 'directory') || [];
 
   useEffect(() => {
-    if (open && folderTree) {
-      setSelectedFolder(currentPath); // Default to current path
-      setLocalFolderTree(folderTree); // Initialize local state with fetched data
+    if (open) {
+      setDialogPath(currentPath);
+      setSelectedFolder(currentPath);
     }
-  }, [open, folderTree, currentPath]);
+  }, [open, currentPath]);
 
-  const toggleFolder = (folderKey: string) => {
-    const updateFolderExpansion = (node: FolderNode): FolderNode => {
-      if (node.key === folderKey) {
-        return { ...node, isExpanded: !node.isExpanded };
-      }
-
-      if (node.children.length > 0) {
-        return {
-          ...node,
-          children: node.children.map(updateFolderExpansion)
-        };
-      }
-
-      return node;
-    };
-
-    if (localFolderTree) {
-      setLocalFolderTree(updateFolderExpansion(localFolderTree));
-    }
-  };
-
-  const handleFolderSelect = (folderKey: string) => {
-    setSelectedFolder(folderKey);
+  const navigateToFolder = (folderPath: string) => {
+    setDialogPath(folderPath);
+    setSelectedFolder(folderPath);
   };
 
   const handleMove = () => {
@@ -123,85 +93,79 @@ export function MoveFileDialog({
     }
   };
 
-  const renderFolderTree = (node: FolderNode, level = 0) => {
-    const isSelected = selectedFolder === node.key;
-    const isItemInThisFolder = isItemInFolder(item.key, node.key);
-
-    return (
-      <div key={node.key} className="select-none">
-        <div
-          className={cn(
-            'flex items-center py-1 px-2 rounded-md cursor-pointer',
-            isSelected ? 'bg-muted' : 'hover:bg-muted/50',
-            isItemInThisFolder && 'opacity-50 cursor-not-allowed'
-          )}
-          style={{ paddingLeft: `${level * 12 + 8}px` }}
-          onClick={() => {
-            if (!isItemInThisFolder) {
-              handleFolderSelect(node.key);
-            }
-          }}
-        >
-          {node.children.length > 0 ? (
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-5 w-5 p-0 mr-1"
-              onClick={(e) => {
-                e.stopPropagation();
-                toggleFolder(node.key);
-              }}
-            >
-              {node.isExpanded ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />}
-            </Button>
-          ) : (
-            <div className="w-5 mr-1" />
-          )}
-          <Folder className="h-4 w-4 mr-2 text-muted-foreground shrink-0" />
-          <span className={`text-xs text-wrap wrap-break-word`}>{node.name}</span>
-        </div>
-
-        {node.isExpanded && node.children.length > 0 && (
-          <div>{node.children.map((child) => renderFolderTree(child, level + 1))}</div>
-        )}
-      </div>
-    );
-  };
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Move {item.type === 'folder' ? 'Folder' : 'File'}</DialogTitle>
         </DialogHeader>
-        <div className="py-4">
-          <p className="text-xs mb-2">
+        <div className="py-4 min-w-0 max-w-full overflow-hidden">
+          <p className="text-xs mb-3">
             Select destination folder for <span className="font-medium">{getItemName(item.key)}</span>:
           </p>
-          <div className="border rounded-md h-60">
+
+          <div className="mb-3 min-w-0 max-w-full overflow-hidden">
+            <Breadcrumbs
+              size="compact"
+              currentPath={dialogPath}
+              onNavigate={navigateToFolder}
+              type="files"
+              isClickable={true}
+            />
+          </div>
+
+          <div className="bg-muted/50 p-2 rounded-md mb-3 text-xs">
+            <strong>Selected:</strong> {selectedFolder || 'Root'}
+          </div>
+
+          <div className="border rounded-md h-48">
             <div className="h-full p-2 overflow-y-auto">
               {isLoading ? (
                 <div className="flex items-center justify-center h-full text-xs text-muted-foreground">Loading...</div>
-              ) : localFolderTree ? (
-                renderFolderTree(localFolderTree)
               ) : (
-                <div className="flex items-center justify-center h-full text-xs text-muted-foreground">
-                  Error loading folder tree.
+                <div className="space-y-1">
+                  {folders.map((folder) => {
+                    const isSelected = selectedFolder === folder.path;
+                    const isItemInThisFolder = isItemInFolder(item.key, folder.path);
+
+                    return (
+                      <div
+                        key={folder.path}
+                        className={cn(
+                          'flex items-start justify-between py-2 px-2 rounded-md group cursor-pointer',
+                          isSelected ? 'bg-muted' : 'hover:bg-muted/50',
+                          isItemInThisFolder && 'opacity-50 cursor-not-allowed'
+                        )}
+                        onClick={() => !isItemInThisFolder && navigateToFolder(folder.path)}
+                      >
+                        <div className="flex items-start min-w-0 flex-1">
+                          <Folder className="h-4 w-4 mr-2 text-muted-foreground shrink-0 mt-0.5" />
+                          <span className="text-xs break-words leading-relaxed">{folder.name}</span>
+                        </div>
+                        <div className="shrink-0 mt-0.5">
+                          <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                        </div>
+                      </div>
+                    );
+                  })}
+                  {folders.length === 0 && !isLoading && (
+                    <div className="flex items-center justify-center h-full text-xs text-muted-foreground">
+                      No folders in this directory
+                    </div>
+                  )}
                 </div>
               )}
             </div>
           </div>
         </div>
-        <DialogFooter>
+        <DialogFooter className="gap-2">
           <Button variant="outline" size="sm" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
           <Button
             size="sm"
             onClick={handleMove}
-            disabled={
-              !selectedFolder || isItemInFolder(item.key, selectedFolder) || isMoving // Disable while moving
-            }
+            disabled={!selectedFolder || isItemInFolder(item.key, selectedFolder) || isMoving}
           >
             {isMoving ? 'Moving...' : 'Move'}
           </Button>
