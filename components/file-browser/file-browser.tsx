@@ -265,6 +265,10 @@ export function FileBrowser({
           onMove={async (destinationPath) => {
             if (moveDialog.item) {
               await handleMove(moveDialog.item, destinationPath, () => moveDialog.closeDialog());
+
+              if (moveDialog.item.path === selectedItem) {
+                router.push(`/edit/${destinationPath}/${moveDialog.item.name}`);
+              }
             }
           }} // Call handleMove from operations hook
           isMarkdownFile={type === 'files'}
