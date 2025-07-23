@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server';
 
-export function handleApiError(error: unknown, operation: string): NextResponse {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function handleApiError(error: any, operation: string): NextResponse {
   console.error(`Error ${operation}:`, error);
-  return NextResponse.json({ error: `Failed to ${operation}` }, { status: 500 });
+  return NextResponse.json({ error: `Failed to ${operation}` }, { status: error?.statusCode ?? 500 });
 }
 
 export function validateRequiredParam(param: string | null, paramName: string): NextResponse | null {
