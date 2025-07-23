@@ -190,11 +190,7 @@ export function Dashboard({ selectedFilePath, children }: { selectedFilePath?: s
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem
-                onClick={() => revertDialog.openDialog()}
-                className="dropdown-menu-item-destructive"
-                disabled={isReverting}
-              >
+              <DropdownMenuItem onClick={() => revertDialog.openDialog()} destructive disabled={isReverting}>
                 <RotateCcw className="h-3 w-3" />
                 <span className="text-xs">Revert Changes</span>
               </DropdownMenuItem>

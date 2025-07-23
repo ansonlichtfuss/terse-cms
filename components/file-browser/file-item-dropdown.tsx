@@ -87,7 +87,7 @@ export function FileItemDropdown({
             e.preventDefault();
             onDeleteClick(item);
           }}
-          className="dropdown-menu-item-destructive"
+          destructive
           disabled={isDeleting}
         >
           Delete

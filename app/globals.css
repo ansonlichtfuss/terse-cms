@@ -1,12 +1,11 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @plugin "tailwindcss-animate";
 
-@import "./styles/_variables.css" layer(utilities);
-@import "./styles/_base.css" layer(utilities);
-@import "./styles/_utilities.css" layer(utilities);
-@import "./styles/_components.css" layer(utilities);
-@import "./styles/_legacy.css" layer(utilities);
+@import './styles/_variables.css' layer(utilities);
+@import './styles/_base.css' layer(utilities);
+@import './styles/_utilities.css' layer(utilities);
+@import './styles/_components.css' layer(utilities);
 
 @source '../*.{js,ts,jsx,tsx,mdx}';
 
