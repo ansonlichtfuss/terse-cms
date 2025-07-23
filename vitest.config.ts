@@ -1,9 +1,10 @@
 import react from '@vitejs/plugin-react';
 import path from 'path';
+import tsconfigPaths from 'vite-tsconfig-paths';
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), tsconfigPaths()],
   test: {
     environment: 'jsdom', // Use JSDOM for browser-like environment
     globals: true, // Expose Vitest APIs globally
@@ -14,6 +15,9 @@ export default defineConfig({
     coverage: {
       enabled: false, // Disable coverage by default
       reporter: ['text', 'json', 'html']
+    },
+    deps: {
+      inline: [/^(?!.*vitest).*$/]
     },
     // Override environment for specific test files
     environmentMatchGlobs: [
