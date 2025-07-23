@@ -2,7 +2,7 @@
 
 import { Home } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { Breadcrumbs } from '@/components/breadcrumbs/breadcrumbs';
 import { MoveFileDialog } from '@/components/file-browser/move-file-dialog';
@@ -47,6 +47,7 @@ export function FileBrowser({
   const renameDialog = useDialogState<FileItem>();
   const deleteDialog = useDialogState<FileItem>();
   const createFolderDialog = useDialogState();
+  const router = useRouter();
 
   const { selectedItem, setSelectedItem } = useFileSelection({ selectedPath });
   const { currentPath, setCurrentPath } = useFileBrowserNavigation({
@@ -62,8 +63,13 @@ export function FileBrowser({
     }
   };
 
-  const router = useRouter();
   const { currentRepositoryId } = useRepositoryFromUrl();
+
+  useEffect(() => {
+    if (currentRepositoryId) {
+      setCurrentPath('/');
+    }
+  }, [currentRepositoryId, setCurrentPath]);
 
   // Add state for the upload dialog
   const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
