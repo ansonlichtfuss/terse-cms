@@ -141,12 +141,13 @@ export function Editor({ file, onSave }: EditorProps) {
         {/* Header */}
         <div className="border rounded-md p-2 flex items-center justify-between bg-gradient-secondary mb-2">
           <div className="flex-1 truncate">
-            <h2
+            <button
               className="text-sm font-semibold truncate flex items-center cursor-pointer hover:text-primary"
               onClick={() => renameDialog.openDialog()}
+              aria-label="Change filename"
             >
               {getFileName()} <Edit2 className="h-3 w-3 ml-1 opacity-50" />
-            </h2>
+            </button>
           </div>
           {/* File modification timestamp */}
           <span className="flex items-center text-xs text-muted-foreground">

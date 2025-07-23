@@ -57,6 +57,7 @@ export function FileDetailSidebar({ content, filePath, isVisible, onToggle }: Fi
         variant="outline"
         size="sm"
         onClick={onToggle}
+        aria-label="Show file detail sidebar"
         className="absolute right-0 top-1/2 -translate-y-1/2 h-24 w-6 rounded-r-none rounded-l-md border-r-0 bg-gradient-secondary transition-all z-10"
       >
         <ChevronLeft className="h-4 w-4" />
@@ -79,7 +80,13 @@ export function FileDetailSidebar({ content, filePath, isVisible, onToggle }: Fi
             <TabsTrigger value="metadata">Metadata</TabsTrigger>
             <TabsTrigger value="history">History</TabsTrigger>
           </TabsList>
-          <Button variant="ghost" size="sm" onClick={onToggle} className="h-7 w-7 p-0 ml-0">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onToggle}
+            className="h-7 w-7 p-0 ml-0"
+            aria-label="Hide file detail sidebar"
+          >
             <ChevronRight className="h-4 w-4" />
           </Button>
         </div>

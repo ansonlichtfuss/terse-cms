@@ -27,6 +27,7 @@ export function EditorToolbar({ onAction, onImageClick, textareaRef }: EditorToo
                     <Button
                       variant="ghost"
                       size="sm"
+                      aria-label={item.tooltip}
                       className="h-7 w-7 p-0 hover:bg-white/20 hover:text-primary transition-colors"
                       onClick={() => {
                         if (item.onClick) {
