@@ -262,7 +262,12 @@ export function FileBrowser({
           currentPath={
             type === 'files' ? getItemPath(moveDialog.item).split('/').slice(0, -1).join('/') + '/' : currentPath
           }
-          onMove={(destinationPath) => moveDialog.item && handleMove(moveDialog.item, destinationPath)} // Call handleMove from operations hook
+          onMove={async (destinationPath) => {
+            if (moveDialog.item) {
+              await handleMove(moveDialog.item, destinationPath);
+              moveDialog.closeDialog();
+            }
+          }} // Call handleMove from operations hook
           isMarkdownFile={type === 'files'}
           isMoving={isMovingFile || isMovingS3} // Pass combined loading state
         />

@@ -39,9 +39,9 @@ export function MoveFileDialog({
 }: MoveFileDialogProps) {
   const [dialogPath, setDialogPath] = useState('');
   const [selectedFolder, setSelectedFolder] = useState('');
-  const { repositoryId } = useRepositoryFromUrl();
+  const { currentRepositoryId } = useRepositoryFromUrl();
 
-  const { data: directoryData, isLoading } = useDirectoryQuery(dialogPath, repositoryId, { enabled: open });
+  const { data: directoryData, isLoading } = useDirectoryQuery(dialogPath, currentRepositoryId, { enabled: open });
 
   // Filter to show only directories
   const folders = directoryData?.items?.filter((item) => item.type === 'directory') || [];
@@ -105,13 +105,7 @@ export function MoveFileDialog({
           </p>
 
           <div className="mb-3 min-w-0 max-w-full overflow-hidden">
-            <Breadcrumbs
-              size="compact"
-              currentPath={dialogPath}
-              onNavigate={navigateToFolder}
-              type="files"
-              isClickable={true}
-            />
+            <Breadcrumbs currentPath={dialogPath} onNavigate={navigateToFolder} type="files" isClickable={true} />
           </div>
 
           <div className="bg-muted/50 p-2 rounded-md mb-3 text-xs">

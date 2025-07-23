@@ -30,7 +30,7 @@ const uploadFile = async ({ path, file }: UploadFileVariables, repositoryId?: st
 export const useUploadFileMutation = () => {
   const queryClient = useQueryClient();
   const { currentRepositoryId } = useRepositoryFromUrl();
-  
+
   return useMutation<void, Error, UploadFileVariables>({
     mutationFn: (variables) => uploadFile(variables, currentRepositoryId),
     onSuccess: () => {

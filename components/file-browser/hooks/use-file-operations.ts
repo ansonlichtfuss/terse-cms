@@ -219,7 +219,7 @@ export const useFileOperations = ({
         moveFile(
           {
             sourcePath: getItemPath(item),
-            destinationPath,
+            destinationPath: destinationPath[0] === '/' ? destinationPath.slice(1) : destinationPath,
             type: item.type === 'directory' ? 'directory' : 'file'
           },
           {
@@ -227,6 +227,8 @@ export const useFileOperations = ({
               toast({
                 title: `${item.type === 'directory' || item.type === 'folder' ? 'Folder' : 'File'} moved`
               });
+              invalidateGitQueries();
+              invalidateFileQueries();
             },
             onError: (error) => {
               console.error('Failed to move item:', error);

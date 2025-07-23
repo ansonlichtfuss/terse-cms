@@ -32,7 +32,7 @@ const createS3Folder = async ({ path, name }: CreateS3FolderVariables, repositor
 export const useCreateS3FolderMutation = () => {
   const queryClient = useQueryClient();
   const { currentRepositoryId } = useRepositoryFromUrl();
-  
+
   return useMutation<void, Error, CreateS3FolderVariables>({
     mutationFn: (variables) => createS3Folder(variables, currentRepositoryId),
     onSuccess: () => {

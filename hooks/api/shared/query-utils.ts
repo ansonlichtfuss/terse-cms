@@ -13,7 +13,8 @@ export const createQueryKey = (type: string, repositoryId?: string | null, ...ad
 export const queryKeys = {
   fileTree: (repositoryId?: string | null) => createQueryKey('fileTree', repositoryId),
   files: (repositoryId?: string | null) => createQueryKey('files', repositoryId),
-  directory: (directoryPath: string, repositoryId?: string | null) => createQueryKey('directory', repositoryId, directoryPath),
+  directory: (directoryPath: string, repositoryId?: string | null) =>
+    createQueryKey('directory', repositoryId, directoryPath),
   gitStatus: (repositoryId?: string | null) => createQueryKey('gitStatus', repositoryId),
   gitHistory: (repositoryId?: string | null) => createQueryKey('gitHistory', repositoryId),
   gitBranches: (repositoryId?: string | null) => createQueryKey('gitBranches', repositoryId),
@@ -35,7 +36,7 @@ export const useQueryInvalidation = () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.files(repositoryId) });
       queryClient.invalidateQueries({ queryKey: queryKeys.gitStatus(repositoryId) });
       // Invalidate all directory queries for this repository
-      queryClient.invalidateQueries({ 
+      queryClient.invalidateQueries({
         predicate: (query) => {
           const [type, ...rest] = query.queryKey;
           return type === 'directory' && rest.includes(repositoryId);
@@ -49,7 +50,7 @@ export const useQueryInvalidation = () => {
     invalidateDirectoryQueries: (filePath: string, repositoryId?: string | null) => {
       const directoryPath = filePath.includes('/') ? filePath.substring(0, filePath.lastIndexOf('/')) : '';
       queryClient.invalidateQueries({ queryKey: queryKeys.directory(directoryPath, repositoryId) });
-      
+
       // Also invalidate parent directory if it exists
       if (directoryPath.includes('/')) {
         const parentPath = directoryPath.substring(0, directoryPath.lastIndexOf('/'));
