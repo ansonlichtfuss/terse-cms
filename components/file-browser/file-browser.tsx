@@ -264,8 +264,7 @@ export function FileBrowser({
           }
           onMove={async (destinationPath) => {
             if (moveDialog.item) {
-              await handleMove(moveDialog.item, destinationPath);
-              moveDialog.closeDialog();
+              await handleMove(moveDialog.item, destinationPath, () => moveDialog.closeDialog());
             }
           }} // Call handleMove from operations hook
           isMarkdownFile={type === 'files'}

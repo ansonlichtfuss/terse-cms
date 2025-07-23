@@ -55,7 +55,7 @@ export function MoveFileDialog({
 
   const navigateToFolder = (folderPath: string) => {
     setDialogPath(folderPath);
-    setSelectedFolder(folderPath);
+    setSelectedFolder(folderPath || '.'); // BE wants "." for root dir
   };
 
   const handleMove = () => {
@@ -156,11 +156,7 @@ export function MoveFileDialog({
           <Button variant="outline" size="sm" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
-          <Button
-            size="sm"
-            onClick={handleMove}
-            disabled={!selectedFolder || isItemInFolder(item.key, selectedFolder) || isMoving}
-          >
+          <Button size="sm" onClick={handleMove} disabled={isItemInFolder(item.key, selectedFolder) || isMoving}>
             {isMoving ? 'Moving...' : 'Move'}
           </Button>
         </DialogFooter>

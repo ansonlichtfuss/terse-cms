@@ -29,7 +29,7 @@ interface UseFileOperationsResult {
   handleCreateFolder: (folderName: string) => Promise<void>;
   handleDelete: (item: FileItem) => Promise<void>;
   handleRename: (item: FileItem, newName: string) => Promise<void>;
-  handleMove: (item: FileItem, destinationPath: string) => Promise<void>;
+  handleMove: (item: FileItem, destinationPath: string, closeDialogCallback: () => void) => Promise<void>;
   handleCreateFile: (filePath: string, content?: string) => Promise<void>;
   isCreatingFolder: boolean;
   isDeletingFile: boolean;
@@ -211,7 +211,7 @@ export const useFileOperations = ({
     }
   };
 
-  const handleMove = async (item: FileItem, destinationPath: string) => {
+  const handleMove = async (item: FileItem, destinationPath: string, closeDialogCallback: () => void) => {
     if (!destinationPath.trim()) return;
 
     try {
@@ -230,6 +230,7 @@ export const useFileOperations = ({
               });
               invalidateGitQueries();
               invalidateFileQueries();
+              closeDialogCallback();
             },
             onError: (error) => {
               console.error('Failed to move item:', error);
