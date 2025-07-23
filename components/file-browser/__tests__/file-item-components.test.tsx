@@ -1,5 +1,4 @@
 import { fireEvent, render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { FileItemDropdown } from '../file-item-dropdown';
@@ -24,11 +23,7 @@ vi.mock('@/hooks/use-repository-from-url', () => ({
 // Mock Radix UI components
 vi.mock('@/components/ui/button', () => ({
   Button: ({ children, onClick, className, variant, size, ...props }: any) => (
-    <button 
-      onClick={onClick} 
-      className={`${className} btn-${variant} btn-${size}`} 
-      {...props}
-    >
+    <button onClick={onClick} className={`${className} btn-${variant} btn-${size}`} {...props}>
       {children}
     </button>
   )
@@ -44,18 +39,18 @@ vi.mock('@/components/ui/dropdown-menu', () => ({
       {children}
     </div>
   ),
-  DropdownMenuItem: ({ 
-    children, 
-    onClick, 
-    disabled, 
-    destructive 
-  }: { 
-    children: React.ReactNode; 
-    onClick?: () => void; 
+  DropdownMenuItem: ({
+    children,
+    onClick,
+    disabled,
+    destructive
+  }: {
+    children: React.ReactNode;
+    onClick?: () => void;
     disabled?: boolean;
     destructive?: boolean;
   }) => (
-    <div 
+    <div
       data-testid="dropdown-item"
       onClick={onClick}
       data-disabled={disabled}
@@ -81,9 +76,21 @@ vi.mock('@/components/ui/hover-card', () => ({
 
 // Mock Lucide icons
 vi.mock('lucide-react', () => ({
-  File: (props: any) => <div data-testid="file-icon" {...props}>File</div>,
-  Folder: (props: any) => <div data-testid="folder-icon" {...props}>Folder</div>,
-  MoreHorizontal: (props: any) => <div data-testid="more-horizontal-icon" {...props}>More</div>
+  File: (props: any) => (
+    <div data-testid="file-icon" {...props}>
+      File
+    </div>
+  ),
+  Folder: (props: any) => (
+    <div data-testid="folder-icon" {...props}>
+      Folder
+    </div>
+  ),
+  MoreHorizontal: (props: any) => (
+    <div data-testid="more-horizontal-icon" {...props}>
+      More
+    </div>
+  )
 }));
 
 describe('FileItemRow', () => {
@@ -286,15 +293,7 @@ describe('FileItemRow', () => {
         type: 'file'
       };
 
-      render(
-        <FileItemRow 
-          {...baseProps} 
-          item={fileItem} 
-          isDeleting={true}
-          isRenaming={true}
-          isMoving={true}
-        />
-      );
+      render(<FileItemRow {...baseProps} item={fileItem} isDeleting={true} isRenaming={true} isMoving={true} />);
 
       expect(screen.getByTestId('dropdown-trigger')).toBeInTheDocument();
     });
@@ -503,7 +502,7 @@ describe('FileItemDropdown', () => {
       // Just verify the download button exists and is clickable
       const downloadButton = screen.getByText('Download');
       expect(downloadButton).toBeInTheDocument();
-      
+
       // The actual download functionality is tested through user interaction
       fireEvent.click(downloadButton);
       // We can't easily test the DOM manipulation in jsdom, so we just ensure it doesn't throw
@@ -520,7 +519,7 @@ describe('FileItemDropdown', () => {
 
       const downloadButton = screen.getByText('Download');
       expect(downloadButton).toBeInTheDocument();
-      
+
       // Test that clicking doesn't throw an error when properties are missing
       fireEvent.click(downloadButton);
     });

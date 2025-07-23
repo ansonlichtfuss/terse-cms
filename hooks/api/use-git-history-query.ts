@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { useApiClient } from './shared';
+import { useApiClient, queryKeys } from './shared';
 
 interface Commit {
   hash: string;
@@ -19,11 +19,11 @@ export const useGitHistoryQuery = (filePath: string) => {
   const apiClient = useApiClient();
 
   return useQuery({
-    queryKey: ['gitHistory', filePath, apiClient.getRepositoryId()],
+    queryKey: queryKeys.gitHistory(apiClient.getRepositoryId(), filePath),
     queryFn: async () => {
       const endpoint = `/api/git/history?filePath=${encodeURIComponent(filePath)}`;
       return apiClient.request<Commit[]>('GET', endpoint);
     },
-    enabled: !!filePath
+    enabled: !!filePath,
   });
 };

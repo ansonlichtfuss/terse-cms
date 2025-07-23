@@ -29,6 +29,19 @@ module.exports = {
       }
     ],
     'no-console': ['warn', { allow: ['warn', 'error'] }],
-    'unused-imports/no-unused-imports': 'error'
+    'unused-imports/no-unused-imports': 'error',
+    'no-restricted-syntax': [
+      'error',
+      {
+        selector:
+          "CallExpression[callee.name='useQuery'] > ObjectExpression > Property[key.name='queryKey'][value.type='ArrayExpression']",
+        message: 'queryKey must not be an array literal. Use a function call to generate the query key.',
+      },
+      {
+        selector:
+          "CallExpression[callee.name='useQuery'] > ObjectExpression > Property[key.name='queryKey'][value.type='Literal']",
+        message: 'queryKey must not be a string literal. Use a function call to generate the query key.',
+      },
+    ],
   }
 };

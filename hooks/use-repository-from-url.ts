@@ -4,6 +4,8 @@ import { useQuery } from '@tanstack/react-query';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
 
+import { queryKeys } from './api/shared/query-utils';
+
 interface Repository {
   id: string;
   label: string;
@@ -41,7 +43,7 @@ export function useRepositoryFromUrl(): UseRepositoryFromUrlResult {
     isLoading,
     error
   } = useQuery<Repository[], Error>({
-    queryKey: ['repositories'],
+    queryKey: queryKeys.repositories(),
     queryFn: fetchRepositories,
     retry: (failureCount) => {
       // Don't retry on configuration errors

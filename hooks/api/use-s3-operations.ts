@@ -1,6 +1,7 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 
 import { ApiClient } from './shared';
+import { useQueryInvalidation } from './shared/query-utils';
 
 interface DeleteS3ItemVariables {
   key: string;
@@ -26,28 +27,26 @@ const moveS3Item = async ({ sourceKey, destinationPath, type }: MoveS3ItemVariab
     operation: 'move',
     sourceKey,
     destinationPath,
-    type
+    type,
   });
 };
 
 export const useDeleteS3ItemMutation = () => {
-  const queryClient = useQueryClient();
+  const { invalidateS3Queries } = useQueryInvalidation();
   return useMutation<void, Error, DeleteS3ItemVariables>({
     mutationFn: deleteS3Item,
     onSuccess: () => {
-      // Invalidate the files query for media type to refetch the list
-      queryClient.invalidateQueries({ queryKey: ['files', 'media'] });
-    }
+      invalidateS3Queries();
+    },
   });
 };
 
 export const useMoveS3ItemMutation = () => {
-  const queryClient = useQueryClient();
+  const { invalidateS3Queries } = useQueryInvalidation();
   return useMutation<void, Error, MoveS3ItemVariables>({
     mutationFn: moveS3Item,
     onSuccess: () => {
-      // Invalidate the files query for media type to refetch the list
-      queryClient.invalidateQueries({ queryKey: ['files', 'media'] });
-    }
+      invalidateS3Queries();
+    },
   });
 };

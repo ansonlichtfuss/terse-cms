@@ -1,6 +1,8 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 
 import { useRepositoryFromUrl } from '@/hooks/use-repository-from-url';
+
+import { useQueryInvalidation } from './shared/query-utils';
 
 interface CreateS3FolderVariables {
   path: string;
@@ -30,14 +32,13 @@ const createS3Folder = async ({ path, name }: CreateS3FolderVariables, repositor
 };
 
 export const useCreateS3FolderMutation = () => {
-  const queryClient = useQueryClient();
   const { currentRepositoryId } = useRepositoryFromUrl();
+  const { invalidateS3Queries } = useQueryInvalidation();
 
   return useMutation<void, Error, CreateS3FolderVariables>({
     mutationFn: (variables) => createS3Folder(variables, currentRepositoryId),
     onSuccess: () => {
-      // Invalidate the files query for media type to refetch the list
-      queryClient.invalidateQueries({ queryKey: ['files', 'media'] });
+      invalidateS3Queries();
     }
   });
 };

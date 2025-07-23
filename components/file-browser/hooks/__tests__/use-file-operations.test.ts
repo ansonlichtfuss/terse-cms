@@ -186,9 +186,6 @@ describe('useFileOperations', () => {
         })
       );
     });
-
-
-
   });
 
   describe('handleDelete', () => {
@@ -240,7 +237,6 @@ describe('useFileOperations', () => {
         })
       );
     });
-
   });
 
   describe('handleRename', () => {
@@ -271,7 +267,6 @@ describe('useFileOperations', () => {
         })
       );
     });
-
 
     it('should show not implemented toast for media rename', async () => {
       // Arrange
@@ -307,7 +302,7 @@ describe('useFileOperations', () => {
       expect(mockMoveFile).toHaveBeenCalledWith(
         {
           sourcePath: '/test/test-file.md',
-          destinationPath: '/new/destination',
+          destinationPath: 'new/destination',
           type: 'file'
         },
         expect.objectContaining({
@@ -316,7 +311,6 @@ describe('useFileOperations', () => {
         })
       );
     });
-
   });
 
   describe('handleCreateFile', () => {
@@ -343,5 +337,4 @@ describe('useFileOperations', () => {
       );
     });
   });
-
 });

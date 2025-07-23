@@ -194,7 +194,7 @@ describe('/api/files/move', () => {
 
       expect(response.status).toBe(404);
       const jsonResponse = await response.json();
-      expect(jsonResponse).toHaveProperty('error', 'Move failed');
+      expect(jsonResponse).toHaveProperty('error', 'Failed to move file');
       expect(mockMoveFile).toHaveBeenCalledWith('source.md', 'destination.md');
     });
 

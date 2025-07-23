@@ -1,15 +1,16 @@
+/* eslint-disable max-lines */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-
-import { FileBrowser } from '../file-browser';
-import type { FileItem } from '../types/file-item';
 
 // Import the mocked modules to get access to the mock functions
 import { useDirectoryQuery } from '@/hooks/api/use-directory-query';
 import { useS3FilesQuery } from '@/hooks/api/use-s3-files-query';
+
+import { FileBrowser } from '../file-browser';
 import { useSort } from '../hooks/use-sort';
+import type { FileItem } from '../types/file-item';
 
 // Mock localStorage
 const mockLocalStorage = {
@@ -146,49 +147,43 @@ vi.mock('../file-item-row', () => ({
 }));
 
 vi.mock('../create-folder-dialog', () => ({
-  CreateFolderDialog: ({ open, onCreate }: { open: boolean; onCreate: () => void }) => (
+  CreateFolderDialog: ({ open, onCreate }: { open: boolean; onCreate: () => void }) =>
     open ? (
       <div data-testid="create-folder-dialog">
         <button onClick={onCreate}>Create Folder</button>
       </div>
     ) : null
-  )
 }));
 
 vi.mock('../move-file-dialog', () => ({
-  MoveFileDialog: ({ open, item, onMove }: any) => (
+  MoveFileDialog: ({ open, item, onMove }: any) =>
     open && item ? (
       <div data-testid="move-file-dialog">
         <button onClick={() => onMove('new-path')}>Move File</button>
       </div>
     ) : null
-  )
 }));
 
 vi.mock('@/components/rename-file-dialog', () => ({
-  RenameFileDialog: ({ open, item, onRename }: any) => (
+  RenameFileDialog: ({ open, item, onRename }: any) =>
     open && item ? (
       <div data-testid="rename-file-dialog">
         <button onClick={() => onRename('new-name')}>Rename File</button>
       </div>
     ) : null
-  )
 }));
 
 vi.mock('@/components/ui/confirmation-dialog', () => ({
-  ConfirmationDialog: ({ open, onConfirm }: { open: boolean; onConfirm: () => void }) => (
+  ConfirmationDialog: ({ open, onConfirm }: { open: boolean; onConfirm: () => void }) =>
     open ? (
       <div data-testid="confirmation-dialog">
         <button onClick={onConfirm}>Confirm Delete</button>
       </div>
     ) : null
-  )
 }));
 
 vi.mock('../upload-dialog', () => ({
-  default: ({ isOpen }: { isOpen: boolean }) => (
-    isOpen ? <div data-testid="upload-dialog">Upload Dialog</div> : null
-  )
+  default: ({ isOpen }: { isOpen: boolean }) => (isOpen ? <div data-testid="upload-dialog">Upload Dialog</div> : null)
 }));
 
 describe('FileBrowser', () => {
@@ -209,11 +204,7 @@ describe('FileBrowser', () => {
   });
 
   const renderWithProviders = (ui: React.ReactElement) => {
-    return render(
-      <QueryClientProvider client={queryClient}>
-        {ui}
-      </QueryClientProvider>
-    );
+    return render(<QueryClientProvider client={queryClient}>{ui}</QueryClientProvider>);
   };
 
   const mockFileItems: FileItem[] = [
@@ -347,9 +338,7 @@ describe('FileBrowser', () => {
         sortedItems: mockFileItems
       } as any);
 
-      renderWithProviders(
-        <FileBrowser type="files" onSelect={mockOnSelect} />
-      );
+      renderWithProviders(<FileBrowser type="files" onSelect={mockOnSelect} />);
 
       const fileItem = screen.getByTestId('file-item-file1.md');
       fireEvent.click(fileItem);
@@ -433,9 +422,7 @@ describe('FileBrowser', () => {
         sortedItems: []
       } as any);
 
-      renderWithProviders(
-        <FileBrowser type="files" onPathChange={mockOnPathChange} />
-      );
+      renderWithProviders(<FileBrowser type="files" onPathChange={mockOnPathChange} />);
 
       // The component renders successfully with the onPathChange prop
       expect(screen.getByTestId('breadcrumbs')).toBeInTheDocument();

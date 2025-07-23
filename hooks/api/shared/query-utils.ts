@@ -11,14 +11,20 @@ export const createQueryKey = (type: string, repositoryId?: string | null, ...ad
  * Common query keys
  */
 export const queryKeys = {
+  repositories: () => createQueryKey('repositories'),
   fileTree: (repositoryId?: string | null) => createQueryKey('fileTree', repositoryId),
-  files: (repositoryId?: string | null) => createQueryKey('files', repositoryId),
+  files: (repositoryId?: string | null, ...additionalKeys: any[]) =>
+    createQueryKey('files', repositoryId, ...additionalKeys),
+  s3Files: (currentPath: string, repositoryId?: string | null) =>
+    createQueryKey('s3-files', repositoryId, currentPath),
   directory: (directoryPath: string, repositoryId?: string | null) =>
     createQueryKey('directory', repositoryId, directoryPath),
   gitStatus: (repositoryId?: string | null) => createQueryKey('gitStatus', repositoryId),
-  gitHistory: (repositoryId?: string | null) => createQueryKey('gitHistory', repositoryId),
+  gitHistory: (repositoryId?: string | null, filePath?: string) =>
+    createQueryKey('gitHistory', repositoryId, filePath),
   gitBranches: (repositoryId?: string | null) => createQueryKey('gitBranches', repositoryId),
-  fileContent: (filePath: string, repositoryId?: string | null) => createQueryKey('fileContent', repositoryId, filePath)
+  fileContent: (filePath: string, repositoryId?: string | null) =>
+    createQueryKey('fileContent', repositoryId, filePath),
 };
 
 /**
@@ -59,6 +65,17 @@ export const useQueryInvalidation = () => {
         // If we're in a subdirectory, also invalidate root
         queryClient.invalidateQueries({ queryKey: queryKeys.directory('', repositoryId) });
       }
+    },
+
+    /**
+     * Invalidates S3-related queries.
+     */
+    invalidateS3Queries: () => {
+      // Invalidate all s3-files queries.
+      // This is broad, but S3 mutations are global and don't have repository context.
+      queryClient.invalidateQueries({
+        predicate: (query) => query.queryKey[0] === 's3-files',
+      });
     },
 
     /**

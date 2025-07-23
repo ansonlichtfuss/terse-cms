@@ -1,6 +1,7 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 
 import { useRepositoryFromUrl } from '@/hooks/use-repository-from-url';
+import { useQueryInvalidation } from './shared/query-utils';
 
 interface UploadFileVariables {
   path: string;
@@ -19,7 +20,7 @@ const uploadFile = async ({ path, file }: UploadFileVariables, repositoryId?: st
 
   const response = await fetch(url.toString(), {
     method: 'POST',
-    body: formData
+    body: formData,
   });
 
   if (!response.ok) {
@@ -28,14 +29,13 @@ const uploadFile = async ({ path, file }: UploadFileVariables, repositoryId?: st
 };
 
 export const useUploadFileMutation = () => {
-  const queryClient = useQueryClient();
   const { currentRepositoryId } = useRepositoryFromUrl();
+  const { invalidateS3Queries } = useQueryInvalidation();
 
   return useMutation<void, Error, UploadFileVariables>({
     mutationFn: (variables) => uploadFile(variables, currentRepositoryId),
     onSuccess: () => {
-      // Invalidate the files query for media type to refetch the list
-      queryClient.invalidateQueries({ queryKey: ['files', 'media'] });
-    }
+      invalidateS3Queries();
+    },
   });
 };

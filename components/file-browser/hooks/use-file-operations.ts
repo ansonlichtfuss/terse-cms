@@ -47,7 +47,8 @@ export const useFileOperations = ({
 }: UseFileOperationsProps): UseFileOperationsResult => {
   const router = useRouter();
   const { currentRepositoryId } = useRepositoryFromUrl();
-  const { invalidateFileQueries, invalidateGitQueries, invalidateDirectoryQueries } = useQueryInvalidation();
+  const { invalidateFileQueries, invalidateGitQueries, invalidateDirectoryQueries, invalidateS3Queries } =
+    useQueryInvalidation();
 
   // Use the S3 mutation hooks
   const { mutate: deleteS3Item, isPending: isDeletingS3 } = useDeleteS3ItemMutation();
@@ -248,6 +249,7 @@ export const useFileOperations = ({
               toast({
                 title: `${item.type === 'directory' || item.type === 'folder' ? 'Folder' : 'File'} moved`
               });
+              invalidateS3Queries();
             },
             onError: (error) => {
               console.error('Failed to move item:', error);
