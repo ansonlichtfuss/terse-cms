@@ -36,13 +36,13 @@ export async function POST(request: Request) {
 
     const fileOpsOrError = getFileOperationsForRequest(request);
     if (fileOpsOrError instanceof NextResponse) {
-      return fileOpsOrError;
+      throw fileOpsOrError;
     }
 
     const result = await fileOpsOrError.writeFile(filePath, content);
 
     if (!result.success) {
-      return NextResponse.json({ error: result.error }, { status: result.statusCode });
+      throw result;
     }
 
     return NextResponse.json({ success: true });
