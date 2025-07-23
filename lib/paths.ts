@@ -58,7 +58,7 @@ export function getRepositoryConfig(): RepositoryConfig[] {
     const label = process.env[labelKey] || `Repository ${index}`;
 
     repositories.push({
-      id: encodeId(index.toString()),
+      id: encodeId(path),
       label,
       path
     });
