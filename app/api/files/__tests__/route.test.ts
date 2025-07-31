@@ -134,7 +134,7 @@ describe('/api/files', () => {
 
       expect(response.status).toBe(500);
       const jsonResponse = await response.json();
-      expect(jsonResponse).toHaveProperty('error', 'Write failed');
+      expect(jsonResponse).toHaveProperty('error', 'Failed to write file');
       expect(mockWriteFile).toHaveBeenCalledWith('test.md', '# Test Content');
     });
 
@@ -147,9 +147,9 @@ describe('/api/files', () => {
 
       const response = await POST(request);
 
-      expect(response.status).toBe(400);
+      expect(response.status).toBe(500);
       const jsonResponse = await response.json();
-      expect(jsonResponse).toHaveProperty('error', 'Invalid request body');
+      expect(jsonResponse).toHaveProperty('error', 'Failed to write file');
       expect(mockWriteFile).not.toHaveBeenCalled();
     });
 

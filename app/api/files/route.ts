@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 
-import { getFileOperationsForRequest, validateRequiredParam } from '@/lib/api';
+import { getFileOperationsForRequest, handleApiError, validateRequiredParam } from '@/lib/api';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -48,7 +48,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Error parsing request:', error);
-    return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
+    return handleApiError(error, 'write file');
   }
 }
 
