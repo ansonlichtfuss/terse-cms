@@ -1,8 +1,6 @@
 <p align="center">
-<img src="./logo.png?raw=true" alt="Terse CMS logo" style="width:280px;margin:0 auto;">
+<img src="./logo.png?raw=true" alt="Terse CMS logo" style="max-width:400px;margin:0 auto;">
 </p>
-
-# Terse CMS
 
 A Next.js markdown file editor and content management system with built-in Git operations and S3 media management.
 
