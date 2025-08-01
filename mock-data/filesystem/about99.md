@@ -1,5 +1,5 @@
 ---
-title: About Ourddddd dddCompany
+title: About Our Company
 date: 2023-05-15
 isDraft: false
 thumbnail: https://example.com/imamnges/about.jpg
@@ -16,4 +16,4 @@ images:
 
 # About Us
 
-Welcome to our website. We are a team of developers passionate about creating amazing software.
+Welcome to our website. We are a team of developers passionate about creating amazing software

@@ -1,30 +1,42 @@
-# Next.js File Explorer
+![Terse CMS logo](/logo.png?raw=true)
 
-*Automatically synced with your [v0.dev](https://v0.dev) deployments*
+# Terse CMS
 
-[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/anson-lichtfuss-projects/v0-next-js-file-explorer)
-[![Built with v0](https://img.shields.io/badge/Built%20with-v0.dev-black?style=for-the-badge)](https://v0.dev/chat/projects/9ys0sISPvQB)
+A Next.js markdown file editor and content management system with built-in Git operations and S3 media management.
 
-## Overview
+![Screenshot of Terse CMS UI](/screenshot.png?raw=true)
 
-This repository will stay in sync with your deployed chats on [v0.dev](https://v0.dev).
-Any changes you make to your deployed app will be automatically pushed to this repository from [v0.dev](https://v0.dev).
+## Features
 
-## Deployment
+- Markdown editor with live preview
+- File browser with search/sort
+- Git operations (commit, branch, history)
+- S3 media uploads
+- Dark/light themes
 
-Your project is live at:
+## Quick Start
 
-**[https://vercel.com/anson-lichtfuss-projects/v0-next-js-file-explorer](https://vercel.com/anson-lichtfuss-projects/v0-next-js-file-explorer)**
+```bash
+pnpm install
+pnpm dev        # Runs in mock mode by default
+```
 
-## Build your app
+Open http://localhost:3000
 
-Continue building your app on:
+## Configuration
 
-**[https://v0.dev/chat/projects/9ys0sISPvQB](https://v0.dev/chat/projects/9ys0sISPvQB)**
+- **Mock mode**: Uses `mock-data/filesystem/` (default)
+- **Production**: Set `MARKDOWN_ROOT_DIR_*` environment variables
 
-## How It Works
+## Development Commands
 
-1. Create and modify your project using [v0.dev](https://v0.dev)
-2. Deploy your chats from the v0 interface
-3. Changes are automatically pushed to this repository
-4. Vercel deploys the latest version from this repository
+```bash
+pnpm dev      # Development server
+pnpm test     # Run tests
+pnpm build    # Production build
+pnpm lint     # Code quality
+```
+
+## Tech Stack
+
+Next.js 15, React 19, TypeScript, TanStack Query, Tailwind CSS
