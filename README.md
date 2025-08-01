@@ -1,4 +1,6 @@
-![Terse CMS logo](/logo.png?raw=true)
+<p align="center">
+<img src="./logo.png?raw=true" alt="Terse CMS logo" style="width:280px;margin:0 auto;">
+</p>
 
 # Terse CMS
 
