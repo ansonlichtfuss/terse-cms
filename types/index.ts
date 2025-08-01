@@ -52,7 +52,7 @@ export interface ImageServiceConfig {
   getThumbnailUrl: (url: string, width: number, height: number) => string;
 }
 
-export interface MarkdownCMSConfig {
+export interface TerseCMSConfig {
   imageService?: ImageServiceConfig;
   // Other config types can be added here
 }

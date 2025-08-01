@@ -1,12 +1,12 @@
 services:
-  markdown-cms:
+  terse-cms:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: markdown-cms
+    container_name: terse-cms
     restart: unless-stopped
     ports:
-      - "3000:3000"
+      - '3000:3000'
     volumes:
       - ./myDir:/cms/files
     # environment:

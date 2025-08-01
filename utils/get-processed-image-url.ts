@@ -1,22 +1,22 @@
-import { MarkdownCMSConfig } from '@/types';
+import { TerseCMSConfig } from '@/types';
 
-let config: MarkdownCMSConfig | null = null;
+let config: TerseCMSConfig | null = null;
 
 // Attempt to load the configuration file.
 // Using dynamic import to avoid issues if the file doesn't exist or has errors.
-async function loadConfig(): Promise<MarkdownCMSConfig | null> {
+async function loadConfig(): Promise<TerseCMSConfig | null> {
   if (config) {
     return config;
   }
   try {
     // Use a dynamic import to avoid bundling the config if it's not used
-    const configFile = await import('@/markdowncms.config.js');
+    const configFile = await import('@/tersecms.config.js');
     config = configFile.default || configFile; // Handle both default and non-default exports
     return config;
   } catch (error) {
     // If the config file doesn't exist or there's an error loading it,
     // we'll just proceed without the thumbnail service.
-    console.warn('Could not load markdowncms.config.js. Thumbnail service will not be available.', error);
+    console.warn('Could not load tersecms.config.js. Thumbnail service will not be available.', error);
     return null;
   }
 }

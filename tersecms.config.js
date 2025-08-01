@@ -1,5 +1,5 @@
 /**
- * @type {import('./types').MarkdownCMSConfig}
+ * @type {import('./types').TerseCMSConfig}
  */
 const config = {
   imageService: {
@@ -8,7 +8,7 @@ const config = {
      * @param {string} url - The original image URL.
      * @returns {boolean} - True if the service should handle the URL, false otherwise.
      */
-    matcher: (url) => {
+    matcher: (_url) => {
       // TODO: Implement actual URL pattern matching logic
       console.warn('Thumbnail service matcher is not implemented. All images will use original URLs.');
       return false; // Default to not matching
@@ -22,7 +22,7 @@ const config = {
      * @param {number} height - The target height of the image element.
      * @returns {string} - The processed thumbnail URL.
      */
-    getThumbnailUrl: (url, width, height) => {
+    getThumbnailUrl: (url, _width, _height) => {
       // TODO: Implement actual thumbnail URL generation logic
       console.warn('Thumbnail service getThumbnailUrl is not implemented. Using original URL.');
       return url; // Default to returning original URL
