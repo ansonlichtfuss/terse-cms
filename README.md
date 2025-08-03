@@ -8,7 +8,7 @@ An intentionally-simplistic content management system with file system Git integ
 
 ## Features
 
-- Markdown editor with live preview
+- Text editor with markdown front matter preview
 - File browser with search/sort
 - Git operations (commit, branch, history)
 - S3 media uploads
