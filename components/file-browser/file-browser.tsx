@@ -65,19 +65,13 @@ export function FileBrowser({
 
   const { currentRepositoryId } = useRepositoryFromUrl();
 
-  useEffect(() => {
-    if (currentRepositoryId) {
-      setCurrentPath('/');
-    }
-  }, [currentRepositoryId, setCurrentPath]);
-
   // Add state for the upload dialog
   const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
   const [isUploading] = useState(isMobile);
 
   // Always call hooks, but conditionally use their results
   const directoryQuery = useDirectoryQuery(currentPath, currentRepositoryId, { enabled: type === 'files' });
-  const mediaQuery = useS3FilesQuery({ currentPath, type: 'media' }, { enabled: type === 'media' });
+  const mediaQuery = useS3FilesQuery({ currentPath }, { enabled: type === 'media' });
 
   // Combine results based on type
   const items = type === 'files' ? directoryQuery.data?.items : mediaQuery.data;
