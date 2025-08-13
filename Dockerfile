@@ -28,7 +28,10 @@ COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/public ./public
 
 # Install git
-# RUN apk add --no-cache git
+RUN apk add --no-cache git
+RUN git config --system --add safe.directory '*'
+RUN git config --global user.email "noreply@tersecms.com"
+RUN git config --global user.name "Terse CMS"
 
 # Create content directory
 RUN mkdir -p /cms/repos
