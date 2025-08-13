@@ -31,10 +31,7 @@ COPY --from=builder /app/public ./public
 RUN apk add --no-cache git
 
 # Create content directory
-RUN mkdir -p /cms/files
-
-# Hardcode MARKDOWN_ROOT_DIR
-ENV MARKDOWN_ROOT_DIR_1=/cms/files
+RUN mkdir -p /cms/repos
 
 # Expose port
 EXPOSE 3000
