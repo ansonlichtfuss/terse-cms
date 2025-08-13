@@ -28,17 +28,6 @@ const FileUploadItem: React.FC<FileUploadItemProps> = ({ upload }) => {
           Error
         </div>
       )}
-      {upload.status === 'complete' && upload.uploadedUrl && upload.file.type.startsWith('image/') ? (
-        // Display thumbnail for completed image uploads
-        // TODO: Use a proper Image component and potentially optimize/resize thumbnails
-        <img src={upload.uploadedUrl} alt={upload.file.name} className="w-full h-20 object-cover rounded-md mb-2" />
-      ) : (
-        // Placeholder or icon for other file types or during upload
-        <div className="w-full h-20 flex items-center justify-center bg-gray-200 rounded-md mb-2">
-          {/* TODO: Add file type icons */}
-          <span>{upload.file.name.substring(0, 5)}...</span> {/* Show truncated name */}
-        </div>
-      )}
       <p className="text-sm font-medium truncate w-full mb-1">{upload.file.name}</p> {/* Truncate long names */}
       {upload.status === 'pending' && <p className="text-xs text-gray-500">Pending...</p>}
       {/* Removed "Complete!" message */}

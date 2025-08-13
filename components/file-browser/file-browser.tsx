@@ -219,7 +219,7 @@ export function FileBrowser({
           {!finalLoading &&
             !finalError &&
             sortedItems.length > 0 &&
-            sortedItems.map((item) => (
+            sortedItems?.map((item) => (
               <FileItemRow
                 key={getItemPath(item)}
                 item={item}

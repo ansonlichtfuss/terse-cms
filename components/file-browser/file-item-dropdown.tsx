@@ -23,12 +23,12 @@ interface FileItemDropdownProps {
 
 export function FileItemDropdown({
   item,
-  onMoveClick,
+  onMoveClick: _,
   onRenameClick,
   onDeleteClick,
   isDeleting,
   isRenaming,
-  isMoving
+  isMoving: __
 }: FileItemDropdownProps) {
   return (
     <DropdownMenu>
@@ -46,21 +46,23 @@ export function FileItemDropdown({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        {item.type !== 'folder' && item.type !== 'directory' && (
+        {/* {item.type !== 'folder' && item.type !== 'directory' && (
           <DropdownMenuItem
             onClick={(e) => {
               e.preventDefault();
+              e.stopPropagation();
               onMoveClick(item);
             }}
             disabled={isMoving}
           >
             Move
           </DropdownMenuItem>
-        )}
+        )} */}
         {item.type === 'file' && (
           <DropdownMenuItem
             onClick={(e) => {
               e.preventDefault();
+              e.stopPropagation();
               const link = document.createElement('a');
               link.href = item.url || item.path || item.key;
               link.download = item.name || 'download';
@@ -76,6 +78,7 @@ export function FileItemDropdown({
         <DropdownMenuItem
           onClick={(e) => {
             e.preventDefault();
+            e.stopPropagation();
             onRenameClick(item);
           }}
           disabled={isRenaming}
@@ -85,6 +88,7 @@ export function FileItemDropdown({
         <DropdownMenuItem
           onClick={(e) => {
             e.preventDefault();
+            e.stopPropagation();
             onDeleteClick(item);
           }}
           destructive

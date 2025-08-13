@@ -14,7 +14,7 @@ RUN pnpm install --frozen-lockfile
 COPY . .
 
 # Build the application
-RUN npm run build
+RUN pnpm run build
 
 # Stage 2: Runner
 FROM node:lts-alpine AS runner
@@ -28,7 +28,7 @@ COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/public ./public
 
 # Install git
-RUN apk add --no-cache git
+# RUN apk add --no-cache git
 
 # Create content directory
 RUN mkdir -p /cms/repos

@@ -40,7 +40,8 @@ export async function POST(request: Request) {
 
     // Create S3 client
     const s3Client = new S3Client({
-      region: S3_REGION,
+      region: S3_REGION.startsWith('http') ? 'us-east-1' : S3_REGION, // Use a default region if a custom endpoint is provided
+      endpoint: S3_REGION.startsWith('http') ? S3_REGION : undefined, // Use endpoint if S3_REGION is a URL
       credentials: {
         accessKeyId: S3_ACCESS_KEY_ID,
         secretAccessKey: S3_SECRET_ACCESS_KEY
@@ -74,8 +75,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       success: true,
-      key,
-      url: `https://${S3_BUCKET}.s3.${S3_REGION}.amazonaws.com/${key}`
+      key
     });
   } catch (error) {
     console.error('Error uploading file to S3:', error);
