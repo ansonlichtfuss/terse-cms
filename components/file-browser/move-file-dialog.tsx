@@ -3,12 +3,13 @@
 import { ChevronRight, Folder } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
-import { Breadcrumbs } from '@/components/breadcrumbs/breadcrumbs';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useDirectoryQuery } from '@/hooks/api/use-directory-query';
 import { useRepositoryFromUrl } from '@/hooks/use-repository-from-url';
 import { cn } from '@/lib/utils';
+
+import { Breadcrumbs } from '../breadcrumbs/breadcrumbs-component';
 
 interface S3Item {
   key: string;

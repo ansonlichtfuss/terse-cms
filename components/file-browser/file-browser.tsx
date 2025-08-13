@@ -2,9 +2,8 @@
 
 import { Home } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
-import { Breadcrumbs } from '@/components/breadcrumbs/breadcrumbs';
 import { MoveFileDialog } from '@/components/file-browser/move-file-dialog';
 import { RenameFileDialog } from '@/components/rename-file-dialog';
 import { ConfirmationDialog } from '@/components/ui/confirmation-dialog';
@@ -17,6 +16,7 @@ import { useDialogState } from '@/hooks/ui/use-dialog-state';
 import { useRepositoryFromUrl } from '@/hooks/use-repository-from-url';
 import { cn } from '@/lib/utils';
 
+import { Breadcrumbs } from '../breadcrumbs/breadcrumbs-component';
 import { ScrollableContainer } from '../ui/scrollable-container';
 import { CreateFolderDialog } from './create-folder-dialog';
 import { FileBrowserActions } from './file-browser-actions';
