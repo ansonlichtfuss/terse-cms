@@ -9,7 +9,7 @@ import { useDirectoryQuery } from '@/hooks/api/use-directory-query';
 import { useRepositoryFromUrl } from '@/hooks/use-repository-from-url';
 import { cn } from '@/lib/utils';
 
-import { Breadcrumbs } from '../breadcrumbs/breadcrumbs-component';
+import { Breadcrumbs } from '../breadcrumbs/breadcrumbs';
 
 interface S3Item {
   key: string;

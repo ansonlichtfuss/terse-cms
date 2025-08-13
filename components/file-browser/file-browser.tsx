@@ -16,7 +16,7 @@ import { useDialogState } from '@/hooks/ui/use-dialog-state';
 import { useRepositoryFromUrl } from '@/hooks/use-repository-from-url';
 import { cn } from '@/lib/utils';
 
-import { Breadcrumbs } from '../breadcrumbs/breadcrumbs-component';
+import { Breadcrumbs } from '../breadcrumbs/breadcrumbs';
 import { ScrollableContainer } from '../ui/scrollable-container';
 import { CreateFolderDialog } from './create-folder-dialog';
 import { FileBrowserActions } from './file-browser-actions';

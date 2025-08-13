@@ -10,7 +10,7 @@ import {
   DialogTitle
 } from '@/components/ui/dialog';
 
-import { Breadcrumbs } from '../breadcrumbs/breadcrumbs-component';
+import { Breadcrumbs } from '../breadcrumbs/breadcrumbs';
 import { FileUploadItem } from './file-upload-item'; // Import FileUploadItem component
 import { useDragAndDrop } from './hooks/use-drag-and-drop'; // Import useDragAndDrop hook
 import { useFileUploads } from './hooks/use-file-uploads'; // Import useFileUploads hook
