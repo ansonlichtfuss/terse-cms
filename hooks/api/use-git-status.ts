@@ -4,7 +4,7 @@ import { ApiClient, queryKeys, useApiClient, useStandardInvalidation } from './s
 
 const fetchGitStatus = async (client: ApiClient): Promise<string[]> => {
   // Stage all changes before fetching status
-  await client.request('POST', '/api/git/stage', {});
+  // await client.request('POST', '/api/git/stage', {});
 
   const data = await client.request<{ modifiedFiles: string[] }>('GET', '/api/git/status');
   return data.modifiedFiles;

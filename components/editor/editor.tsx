@@ -8,7 +8,7 @@ import { EditorContent, handleToolbarAction } from '@/components/editor/editor-c
 import { EditorToolbar } from '@/components/editor/editor-toolbar';
 import { FileDetailSidebar } from '@/components/file-detail-sidebar';
 import { RenameFileDialog } from '@/components/rename-file-dialog';
-import { useGitStatus } from '@/context/git-status-context';
+import { useStandardInvalidation } from '@/hooks/api/shared';
 import { useDialogState } from '@/hooks/ui/use-dialog-state';
 import { getUserPreferences, saveUserPreferences } from '@/lib/user-preferences';
 import type { FileData } from '@/types';
@@ -27,7 +27,7 @@ export function Editor({ file, onSave }: EditorProps) {
   const [isSidebarVisible, setIsSidebarVisible] = useState(true);
   const mediaDialog = useDialogState();
   const renameDialog = useDialogState();
-  const { updateGitStatus } = useGitStatus();
+  const { invalidateGit } = useStandardInvalidation();
 
   // Reference to the textarea element
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -43,7 +43,7 @@ export function Editor({ file, onSave }: EditorProps) {
     await onSave(path, content); // Assuming onSave is async and awaits the save operation
     setFileModificationTime(new Date().toISOString());
     // Update git status after saving
-    updateGitStatus();
+    invalidateGit();
     setTimeout(() => {
       isSavingRef.current = false;
     }, 100);
